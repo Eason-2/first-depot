@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Blog Autopublisher Prototype</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f6f7fb; color: #222; }
+    nav { background: #111827; color: #fff; padding: 12px 16px; display: flex; gap: 10px; position: sticky; top: 0; }
+    nav a { color: #c7d2fe; text-decoration: none; padding: 6px 10px; border: 1px solid #374151; border-radius: 6px; }
+    nav a:hover { background: #1f2937; }
+    .wrap { max-width: 1100px; margin: 18px auto; padding: 0 16px 40px; }
+    section { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+    h2 { margin-top: 0; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .card { border: 1px dashed #9ca3af; border-radius: 8px; padding: 10px; background: #fafafa; }
+    .kpi { font-size: 12px; color: #6b7280; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#source">Source Config</a>
+    <a href="#trend">Trend Board</a>
+    <a href="#draft">Draft Studio</a>
+    <a href="#queue">Publish Queue</a>
+    <a href="#insights">Insights</a>
+  </nav>
+  <div class="wrap">
+    <section id="source">
+      <h2>Source Config</h2>
+      <p class="kpi">KPI: ingestion freshness, source health</p>
+      <div class="row">
+        <div class="card">Source status table with healthy/degraded/down badges</div>
+        <div class="card">Topic include/exclude rules and connection test button</div>
+      </div>
+    </section>
+
+    <section id="trend">
+      <h2>Trend Board</h2>
+      <p class="kpi">KPI: topic relevance and diversity</p>
+      <div class="row">
+        <div class="card">Ranked topic cards: score, confidence, source count</div>
+        <div class="card">Explainability panel and Generate Draft action</div>
+      </div>
+    </section>
+
+    <section id="draft">
+      <h2>Draft Studio</h2>
+      <p class="kpi">KPI: draft acceptance rate</p>
+      <div class="row">
+        <div class="card">Article template sections and editor</div>
+        <div class="card">Citation side panel + QA precheck status</div>
+      </div>
+    </section>
+
+    <section id="queue">
+      <h2>Publish Queue</h2>
+      <p class="kpi">KPI: publish success and latency</p>
+      <div class="row">
+        <div class="card">Job status table: queued/running/published/failed</div>
+        <div class="card">Mode selector and rollback controls</div>
+      </div>
+    </section>
+
+    <section id="insights">
+      <h2>Insights Dashboard</h2>
+      <p class="kpi">KPI: traffic growth and correction rate</p>
+      <div class="row">
+        <div class="card">Views, CTR, read time, time-to-publish</div>
+        <div class="card">QA fail reasons and generation cost trend</div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

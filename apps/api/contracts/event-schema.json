@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-blog-autopublisher/contracts/event-schema-v1.json",
+  "title": "NormalizedEventV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "source",
+    "source_item_id",
+    "title",
+    "url",
+    "published_at",
+    "fetched_at",
+    "language",
+    "content_type",
+    "ai_relevance",
+    "raw_payload_ref"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "Deterministic ID (source + source_item_id hash)."
+    },
+    "source": {
+      "type": "string",
+      "description": "Provider name, e.g. newsapi, hn, arxiv, reddit."
+    },
+    "source_item_id": {
+      "type": "string",
+      "description": "Original item ID from provider."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "fetched_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "language": {
+      "type": "string",
+      "description": "ISO language code."
+    },
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "news",
+        "research",
+        "discussion",
+        "release_note",
+        "code_repo"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "engagement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "views": {
+          "type": "number",
+          "minimum": 0
+        },
+        "upvotes": {
+          "type": "number",
+          "minimum": 0
+        },
+        "comments": {
+          "type": "number",
+          "minimum": 0
+        },
+        "shares": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "ai_relevance": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Initial relevance score from ingestion classifier."
+    },
+    "credibility": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Source credibility prior score."
+    },
+    "dedup": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "canonical_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "url_fingerprint": {
+          "type": "string"
+        },
+        "title_fingerprint": {
+          "type": "string"
+        },
+        "embedding_fingerprint": {
+          "type": "string"
+        }
+      }
+    },
+    "raw_payload_ref": {
+      "type": "string",
+      "description": "Reference path/key to stored raw payload snapshot."
+    }
+  }
+}

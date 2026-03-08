@@ -1,0 +1,34 @@
+{
+  "event_id": "newsapi_7fa83f7afed6",
+  "source": "newsapi",
+  "source_item_id": "abc123",
+  "title": "Example AI model release announcement",
+  "summary": "Vendor announces a new model and API pricing updates.",
+  "url": "https://example.com/ai-release",
+  "domain": "example.com",
+  "author": "Example Reporter",
+  "published_at": "2026-03-06T08:15:00Z",
+  "fetched_at": "2026-03-06T08:20:00Z",
+  "language": "en",
+  "content_type": "news",
+  "tags": [
+    "llm",
+    "api",
+    "pricing"
+  ],
+  "engagement": {
+    "views": 1200,
+    "upvotes": 0,
+    "comments": 45,
+    "shares": 18
+  },
+  "ai_relevance": 0.92,
+  "credibility": 0.78,
+  "dedup": {
+    "canonical_url": "https://example.com/ai-release",
+    "url_fingerprint": "u_9af23",
+    "title_fingerprint": "t_44cef",
+    "embedding_fingerprint": "e_73bc0"
+  },
+  "raw_payload_ref": "raw/newsapi/2026-03-06/abc123.json"
+}
