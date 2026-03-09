@@ -15,7 +15,14 @@ def _startup_dir() -> Path:
     return appdata / "Microsoft" / "Windows" / "Start Menu" / "Programs" / "Startup"
 
 
-def install_autostart(interval_minutes: int, run_now: bool, enable_tunnel: bool) -> None:
+def install_autostart(
+    interval_minutes: int,
+    run_now: bool,
+    enable_tunnel: bool,
+    enable_git_sync: bool = True,
+    cloudflare_token: str = "",
+    public_base_url: str = "",
+) -> None:
     if interval_minutes < 5:
         raise ValueError("interval_minutes must be >= 5")
 
@@ -25,6 +32,11 @@ def install_autostart(interval_minutes: int, run_now: bool, enable_tunnel: bool)
     runtime_dir.mkdir(parents=True, exist_ok=True)
     log_dir.mkdir(parents=True, exist_ok=True)
     token_file = runtime_dir / "admin_token.txt"
+
+    cloudflare_token = cloudflare_token.strip()
+    public_base_url = public_base_url.strip().rstrip("/")
+    if cloudflare_token:
+        enable_tunnel = True
 
     python_exe = sys.executable
     launcher = runtime_dir / "autostart_launcher.cmd"
@@ -48,6 +60,10 @@ def install_autostart(interval_minutes: int, run_now: bool, enable_tunnel: bool)
                 "set BLOG_PORT=8088",
                 f"set SCHEDULE_INTERVAL_MINUTES={interval_minutes}",
                 f"set ENABLE_CLOUDFLARE_TUNNEL={'1' if enable_tunnel else '0'}",
+                f"set ENABLE_GIT_AUTO_SYNC={'1' if enable_git_sync else '0'}",
+                "set GIT_SYNC_PATHS=deliverables/published",
+                f"set CLOUDFLARE_TUNNEL_TOKEN={cloudflare_token}",
+                f"set PUBLIC_BASE_URL={public_base_url}",
                 f"set ADMIN_TOKEN={admin_token}",
                 f'cd /d "{project_root}"',
                 start_line,
@@ -77,6 +93,8 @@ def install_autostart(interval_minutes: int, run_now: bool, enable_tunnel: bool)
     print(f"- Admin token file: {token_file}")
     print(f"- Interval minutes: {interval_minutes}")
     print(f"- Cloudflare tunnel: {'enabled' if enable_tunnel else 'disabled'}")
+    print(f"- Git auto sync: {'enabled' if enable_git_sync else 'disabled'}")
+    print(f"- Stable URL configured: {'yes' if public_base_url else 'no'}")
     print("- On next login, daemon will auto start API + scheduled publishing")
 
 
@@ -85,9 +103,27 @@ def main() -> None:
     parser.add_argument("--interval", type=int, default=30, help="Run cycle every N minutes (>=5), default 30")
     parser.add_argument("--run-now", action="store_true", help="Start daemon immediately")
     parser.add_argument("--enable-tunnel", action="store_true", help="Also start cloudflared quick tunnel")
+    parser.add_argument("--disable-git-sync", action="store_true", help="Disable auto git commit/push sync thread")
+    parser.add_argument(
+        "--cloudflare-token",
+        default="",
+        help="Cloudflare named tunnel token (enables fixed public URL mode).",
+    )
+    parser.add_argument(
+        "--public-base-url",
+        default="",
+        help="Fixed public URL (example: https://blog.example.com).",
+    )
     args = parser.parse_args()
 
-    install_autostart(interval_minutes=args.interval, run_now=args.run_now, enable_tunnel=args.enable_tunnel)
+    install_autostart(
+        interval_minutes=args.interval,
+        run_now=args.run_now,
+        enable_tunnel=args.enable_tunnel,
+        enable_git_sync=not args.disable_git_sync,
+        cloudflare_token=args.cloudflare_token or os.getenv("CLOUDFLARE_TUNNEL_TOKEN", ""),
+        public_base_url=args.public_base_url or os.getenv("PUBLIC_BASE_URL", ""),
+    )
 
 
 if __name__ == "__main__":

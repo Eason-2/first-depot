@@ -4,10 +4,12 @@ import os
 import re
 import subprocess
 import threading
+import time
 from pathlib import Path
 
 from apps.api.server import run_api_server
 from core.config import Settings
+from scripts.git_auto_sync import sync_from_env
 from workers.publishing.scheduler import AutopublishScheduler
 
 
@@ -31,13 +33,29 @@ def _run_cloudflare_tunnel(project_root: Path, api_port: int) -> None:
     local_cloudflared = runtime_dir / "tools" / "cloudflared.exe"
     cloudflared_cmd = str(local_cloudflared) if local_cloudflared.exists() else "cloudflared"
 
-    cmd = [
-        cloudflared_cmd,
-        "tunnel",
-        "--url",
-        f"http://127.0.0.1:{api_port}",
-        "--no-autoupdate",
-    ]
+    tunnel_token = os.getenv("CLOUDFLARE_TUNNEL_TOKEN", "").strip()
+    public_base_url = os.getenv("PUBLIC_BASE_URL", "").strip().rstrip("/")
+    is_named_tunnel = bool(tunnel_token)
+
+    if is_named_tunnel:
+        cmd = [
+            cloudflared_cmd,
+            "tunnel",
+            "--no-autoupdate",
+            "run",
+            "--token",
+            tunnel_token,
+        ]
+        if public_base_url:
+            url_file.write_text(public_base_url + "\n", encoding="utf-8")
+    else:
+        cmd = [
+            cloudflared_cmd,
+            "tunnel",
+            "--url",
+            f"http://127.0.0.1:{api_port}",
+            "--no-autoupdate",
+        ]
 
     try:
         proc = subprocess.Popen(
@@ -66,17 +84,35 @@ def _run_cloudflare_tunnel(project_root: Path, api_port: int) -> None:
     with log_path.open("a", encoding="utf-8") as logf:
         for line in proc.stdout or []:
             logf.write(line)
-            match = pattern.search(line)
-            if match and not found_url:
-                found_url = True
-                url_file.write_text(match.group(0) + "\n", encoding="utf-8")
+            if not is_named_tunnel:
+                match = pattern.search(line)
+                if match and not found_url:
+                    found_url = True
+                    url_file.write_text(match.group(0) + "\n", encoding="utf-8")
 
     return_code = proc.wait()
-    if not found_url and return_code != 0:
-        _write_tunnel_error(
-            err_file,
-            f"cloudflared exited with code {return_code}. See runtime/logs/tunnel.log for details.",
-        )
+    if return_code != 0:
+        message = f"cloudflared exited with code {return_code}. See runtime/logs/tunnel.log for details."
+        if is_named_tunnel and not public_base_url:
+            message += " Set PUBLIC_BASE_URL so tools can show your fixed blog URL."
+        if (not is_named_tunnel) and (not found_url):
+            _write_tunnel_error(err_file, message)
+        elif is_named_tunnel:
+            _write_tunnel_error(err_file, message)
+
+
+def _run_git_sync_loop(project_root: Path, interval_seconds: int) -> None:
+    runtime_dir = project_root / "runtime"
+    log_dir = runtime_dir / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_path = log_dir / "git_sync.log"
+
+    while True:
+        changed, detail = sync_from_env(project_root)
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        with log_path.open("a", encoding="utf-8") as logf:
+            logf.write(f"[{timestamp}] changed={str(changed).lower()} detail={detail}\n")
+        time.sleep(max(30, interval_seconds))
 
 
 def main() -> None:
@@ -97,6 +133,18 @@ def main() -> None:
             daemon=True,
         )
         tunnel_thread.start()
+
+    if os.getenv("ENABLE_GIT_AUTO_SYNC", "0").strip() == "1":
+        try:
+            sync_interval_seconds = int(os.getenv("GIT_SYNC_INTERVAL_SECONDS", "120"))
+        except ValueError:
+            sync_interval_seconds = 120
+        sync_thread = threading.Thread(
+            target=_run_git_sync_loop,
+            kwargs={"project_root": settings.project_root, "interval_seconds": sync_interval_seconds},
+            daemon=True,
+        )
+        sync_thread.start()
 
     scheduler = AutopublishScheduler(settings)
     scheduler.run_forever(max_items_per_source=10)

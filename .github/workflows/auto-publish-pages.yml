@@ -1,0 +1,92 @@
+name: Auto Publish and Deploy Pages
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: auto-publish-pages
+  cancel-in-progress: false
+
+jobs:
+  autopublish:
+    runs-on: ubuntu-latest
+    env:
+      AUTO_PUBLISH_MODE: auto
+      NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+    outputs:
+      changed: ${{ steps.commit_posts.outputs.changed }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run one publish cycle
+        run: python -m scripts.run_once
+
+      - name: Show last run status
+        if: always()
+        run: |
+          if [ -f runtime/last_run.json ]; then
+            cat runtime/last_run.json
+          fi
+
+      - name: Commit generated posts
+        id: commit_posts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add deliverables/published
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No published post changes."
+          else
+            git commit -m "auto: publish blog post ($(date -u +'%Y-%m-%dT%H:%M:%SZ'))"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: autopublish
+    if: needs.autopublish.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Build static site
+        env:
+          BLOG_CNAME: ${{ vars.BLOG_CNAME }}
+        run: |
+          if [ -n "${BLOG_CNAME}" ]; then
+            python -m scripts.export_static_site --output-dir site --cname "${BLOG_CNAME}"
+          else
+            python -m scripts.export_static_site --output-dir site
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
