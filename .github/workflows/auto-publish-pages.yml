@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   autopublish:
+    if: vars.ENABLE_CLOUD_AUTOPUBLISH == '1' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     env:
       AUTO_PUBLISH_MODE: auto
