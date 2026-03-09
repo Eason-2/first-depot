@@ -4,6 +4,7 @@ __pycache__/
 runtime/autopublisher.db
 runtime/logs/
 runtime/tools/
+runtime/*.cmd
 runtime/admin_token.txt
 runtime/public_tunnel_url.txt
 runtime/public_tunnel_error.txt

@@ -44,6 +44,17 @@ def _parse_paths(raw: str) -> list[str]:
     return [item for item in items if item]
 
 
+def _ahead_count(git_exe: str, project_root: Path) -> int | None:
+    proc = _run_git(git_exe, project_root, ["rev-list", "--count", "@{upstream}..HEAD"])
+    if proc.returncode != 0:
+        return None
+    value = (proc.stdout or "").strip()
+    try:
+        return int(value)
+    except ValueError:
+        return None
+
+
 def sync_repo_changes(
     project_root: Path,
     include_paths: list[str],
@@ -66,6 +77,15 @@ def sync_repo_changes(
 
     staged = _run_git(git_exe, project_root, ["diff", "--cached", "--quiet", "--exit-code"])
     if staged.returncode == 0:
+        ahead = _ahead_count(git_exe, project_root)
+        if ahead and ahead > 0:
+            push_args = ["push", remote]
+            if branch:
+                push_args.append(branch)
+            pushed = _run_git(git_exe, project_root, push_args)
+            if pushed.returncode != 0:
+                return False, f"git_push_failed: {pushed.stderr.strip() or pushed.stdout.strip()}"
+            return True, "pushed_pending_commits"
         return False, "no_changes"
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
