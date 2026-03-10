@@ -29,11 +29,22 @@ jobs:
       - name: Build static site
         env:
           BLOG_CNAME: ${{ vars.BLOG_CNAME }}
+          BLOG_BASE_PATH: ${{ vars.BLOG_BASE_PATH }}
         run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          OWNER_NAME="${GITHUB_REPOSITORY_OWNER}"
+          BASE_PATH="${BLOG_BASE_PATH}"
+          if [ -z "${BASE_PATH}" ]; then
+            if [ "${REPO_NAME}" = "${OWNER_NAME}.github.io" ] || [ "${REPO_NAME}" = "${OWNER_NAME,,}.github.io" ]; then
+              BASE_PATH=""
+            else
+              BASE_PATH="/${REPO_NAME}"
+            fi
+          fi
           if [ -n "${BLOG_CNAME}" ]; then
-            python -m scripts.export_static_site --output-dir site --cname "${BLOG_CNAME}"
+            python -m scripts.export_static_site --output-dir site --cname "${BLOG_CNAME}" --base-path "${BASE_PATH}"
           else
-            python -m scripts.export_static_site --output-dir site
+            python -m scripts.export_static_site --output-dir site --base-path "${BASE_PATH}"
           fi
 
       - name: Setup Pages

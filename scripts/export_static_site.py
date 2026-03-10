@@ -20,12 +20,43 @@ def _normalize_cname(raw: str) -> str:
     return value
 
 
-def export_static_site(project_root: Path, output_dir: Path, publish_dir: Path, cname: str = "") -> dict[str, object]:
+def _normalize_base_path(raw: str) -> str:
+    value = (raw or "").strip()
+    if not value or value == "/":
+        return ""
+    if "://" in value:
+        parsed = urlparse(value)
+        value = parsed.path or ""
+    if not value.startswith("/"):
+        value = "/" + value
+    value = value.rstrip("/")
+    return value
+
+
+def _apply_base_path(html: str, base_path: str) -> str:
+    if not base_path:
+        return html
+    return (
+        html.replace("href='/blog/", f"href='{base_path}/blog/")
+        .replace('href="/blog/', f'href="{base_path}/blog/')
+        .replace("href='/blog'", f"href='{base_path}/blog'")
+        .replace('href="/blog"', f'href="{base_path}/blog"')
+    )
+
+
+def export_static_site(
+    project_root: Path,
+    output_dir: Path,
+    publish_dir: Path,
+    cname: str = "",
+    base_path: str = "",
+) -> dict[str, object]:
     output_dir.mkdir(parents=True, exist_ok=True)
     blog_dir = output_dir / "blog"
     blog_dir.mkdir(parents=True, exist_ok=True)
 
-    index_html = render_blog_index(publish_dir)
+    normalized_base_path = _normalize_base_path(base_path)
+    index_html = _apply_base_path(render_blog_index(publish_dir), normalized_base_path)
     (output_dir / "index.html").write_text(index_html, encoding="utf-8")
     (blog_dir / "index.html").write_text(index_html, encoding="utf-8")
 
@@ -40,16 +71,18 @@ def export_static_site(project_root: Path, output_dir: Path, publish_dir: Path, 
         title, content = loaded
         post_dir = blog_dir / slug
         post_dir.mkdir(parents=True, exist_ok=True)
-        (post_dir / "index.html").write_text(render_blog_post(title, content), encoding="utf-8")
+        post_html = _apply_base_path(render_blog_post(title, content), normalized_base_path)
+        (post_dir / "index.html").write_text(post_html, encoding="utf-8")
         post_count += 1
 
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
+    back_to_blog = f"{normalized_base_path}/blog" if normalized_base_path else "/blog"
     (output_dir / "404.html").write_text(
         (
             "<!doctype html><html><head><meta charset='utf-8' />"
             "<meta name='viewport' content='width=device-width, initial-scale=1' />"
             "<title>404 Not Found</title></head>"
-            "<body><h1>404</h1><p>Page not found.</p><p><a href='/blog'>Back to blog</a></p></body></html>"
+            f"<body><h1>404</h1><p>Page not found.</p><p><a href='{back_to_blog}'>Back to blog</a></p></body></html>"
         ),
         encoding="utf-8",
     )
@@ -63,6 +96,7 @@ def export_static_site(project_root: Path, output_dir: Path, publish_dir: Path, 
         "publish_dir": str(publish_dir),
         "post_count": post_count,
         "cname": cname_value,
+        "base_path": normalized_base_path,
     }
 
 
@@ -75,6 +109,11 @@ def main() -> None:
         help="Directory containing markdown posts.",
     )
     parser.add_argument("--cname", default="", help="Optional custom domain (example: blog.example.com).")
+    parser.add_argument(
+        "--base-path",
+        default="",
+        help="Optional URL base path for project pages (example: /first-depot).",
+    )
     args = parser.parse_args()
 
     project_root = Path(__file__).resolve().parents[1]
@@ -85,6 +124,7 @@ def main() -> None:
         output_dir=output_dir,
         publish_dir=publish_dir,
         cname=args.cname,
+        base_path=args.base_path,
     )
 
     print("Static export complete:")
@@ -93,6 +133,8 @@ def main() -> None:
     print(f"- post_count: {result['post_count']}")
     if result["cname"]:
         print(f"- cname: {result['cname']}")
+    if result["base_path"]:
+        print(f"- base_path: {result['base_path']}")
 
 
 if __name__ == "__main__":

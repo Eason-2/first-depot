@@ -74,6 +74,7 @@ This mode keeps your blog online even when your computer is off.
 3. The workflow `.github/workflows/deploy-pages.yml` will build and publish static pages from `deliverables/published/*.md`.
 4. (Optional custom domain) set repo variable `BLOG_CNAME` to your domain, e.g. `blog.example.com`.
 5. Point DNS `CNAME` record to `<your-github-username>.github.io`.
+6. For project repos (not `<username>.github.io` repo), blog URL includes repo path: `https://<username>.github.io/<repo>/blog/`.
 
 After that, every time you edit markdown files in `deliverables/published/` and push to GitHub, the public site updates automatically.
 
@@ -96,6 +97,7 @@ Required GitHub settings:
   - `NEWSAPI_KEY` (if you want NewsAPI source)
 - (Optional custom domain) `Settings -> Secrets and variables -> Actions -> Variables`:
   - `BLOG_CNAME=blog.example.com`
+  - `BLOG_BASE_PATH=/first-depot` (optional override for project pages path)
 
 ### Local auto-publish + local auto git push (PC must stay on)
 If you want to keep generation on your local machine and still update GitHub Pages automatically, enable git auto sync in daemon:
