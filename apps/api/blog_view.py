@@ -54,7 +54,18 @@ def render_blog_index(publish_dir: Path) -> str:
             )
         body = "".join(cards)
 
-    return _layout(_SITE_NAME, f"<h1>{_SITE_NAME}</h1><p>{_SITE_TAGLINE}</p>{body}")
+    header = (
+        "<header class='page-header'>"
+        "<div class='page-title'>"
+        f"<h1>{_SITE_NAME}</h1>"
+        f"<p>{_SITE_TAGLINE}</p>"
+        "</div>"
+        "<div class='page-actions'>"
+        "<a class='action-link' href='/ai-writer'>写作助手</a>"
+        "</div>"
+        "</header>"
+    )
+    return _layout(_SITE_NAME, f"{header}{body}")
 
 
 def render_blog_post(title: str, markdown_content: str) -> str:
@@ -190,9 +201,15 @@ def _layout(title: str, body: str) -> str:
         "ul{margin:0 0 16px 0;padding-left:22px;}"
         "li{margin:0 0 8px;}"
         "code{background:#e7f2ff;padding:2px 6px;border-radius:6px;}"
+        ".page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px;}"
+        ".page-title{min-width:0;}"
+        ".page-title h1{margin:0 0 6px;}"
+        ".page-actions{flex:0 0 auto;display:flex;justify-content:flex-end;}"
+        ".action-link{display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border-radius:999px;border:1px solid rgba(29,78,216,.22);background:rgba(255,255,255,.92);box-shadow:0 8px 24px rgba(15,23,42,.06);white-space:nowrap;}"
         ".post-card{background:rgba(255,255,255,.95);border:1px solid rgba(59,130,246,.16);border-radius:14px;padding:16px 18px;margin:14px 0;}"
         ".post-meta{font-size:12px;color:#64748b;margin-bottom:6px;}"
         ".read-more{display:inline-block;margin-top:4px;}"
+        "@media (max-width:640px){.page-header{flex-direction:column;}.page-actions{justify-content:flex-start;}}"
         "</style>"
         "</head>"
         "<body>"

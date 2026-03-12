@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 from urllib.parse import urlparse
 
+from apps.api.ai_writer import render_ai_writer_page
 from apps.api.blog_view import load_post_by_slug, post_slug_from_path, render_blog_index, render_blog_post
 
 
@@ -41,6 +42,8 @@ def _apply_base_path(html: str, base_path: str) -> str:
         .replace('href="/blog/', f'href="{base_path}/blog/')
         .replace("href='/blog'", f"href='{base_path}/blog'")
         .replace('href="/blog"', f'href="{base_path}/blog"')
+        .replace("href='/ai-writer'", f"href='{base_path}/ai-writer'")
+        .replace('href="/ai-writer"', f'href="{base_path}/ai-writer"')
     )
 
 
@@ -54,11 +57,15 @@ def export_static_site(
     output_dir.mkdir(parents=True, exist_ok=True)
     blog_dir = output_dir / "blog"
     blog_dir.mkdir(parents=True, exist_ok=True)
+    ai_writer_dir = output_dir / "ai-writer"
+    ai_writer_dir.mkdir(parents=True, exist_ok=True)
 
     normalized_base_path = _normalize_base_path(base_path)
     index_html = _apply_base_path(render_blog_index(publish_dir), normalized_base_path)
+    ai_writer_html = _apply_base_path(render_ai_writer_page(), normalized_base_path)
     (output_dir / "index.html").write_text(index_html, encoding="utf-8")
     (blog_dir / "index.html").write_text(index_html, encoding="utf-8")
+    (ai_writer_dir / "index.html").write_text(ai_writer_html, encoding="utf-8")
 
     post_count = 0
     for post_path in sorted(publish_dir.glob("*.md"), reverse=True):
