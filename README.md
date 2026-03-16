@@ -218,4 +218,27 @@ curl -X POST http://<your-public-host>:8088/run-once -H "X-Admin-Token: <token>"
 
 ## Multi-agent docs
 - Coordination protocol: `docs/04-agent-collaboration-protocol.md`
+- Extension guide: `docs/06-extension-guide.md`
 - Agent prompts: `docs/agent-prompts/`
+
+## 2026-03-16 AI 工具箱接入记录
+- 已按“AI写作助手”的方式，把 `AI 工具箱` 直接接入博客服务，不再依赖单独本地网页或 iframe 外链。
+- 博客首页在“知行简报”右侧保留独立入口：`/ai-toolbox`。
+- 新增三挡位运行时：`mock` / `ollama` / `openai`。
+- 运行时接口：
+  - `GET /api/ai-toolbox/runtime`
+  - `POST /api/ai-toolbox/runtime`
+- 工具箱执行接口：
+  - `POST /api/ai-toolbox/run`
+- 健康检查：
+  - `GET /api/ai-toolbox/health`
+- 当前内置工具：学习计划、文档问答、简历优化、面试题生成、代码解释。
+- 原博客文章列表、文章详情、`/run-once` 等原有能力保持不变。
+
+### AI 工具箱可用环境变量
+- `AI_TOOLBOX_PROVIDER`：默认挡位，支持 `mock` / `ollama` / `openai`
+- `AI_TOOLBOX_BASE_URL`：工具箱模型服务地址
+- `AI_TOOLBOX_MODEL`：工具箱默认模型名
+- `AI_TOOLBOX_API_KEY`：OpenAI/兼容接口 Key
+- `AI_TOOLBOX_TIMEOUT_SECONDS`：请求超时秒数
+- `AI_TOOLBOX_MAX_RETRIES`：失败重试次数

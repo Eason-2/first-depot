@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 import threading
@@ -6,6 +6,7 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
+from apps.api.ai_toolbox import handle_ai_toolbox_get, handle_ai_toolbox_post
 from apps.api.ai_writer import handle_ai_writer_get, handle_ai_writer_post
 from apps.api.blog_view import load_post_by_slug, render_blog_index, render_blog_post
 from core.config import Settings
@@ -72,6 +73,9 @@ class ApiHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         path = urlparse(self.path).path
 
+        if handle_ai_toolbox_get(path, self):
+            return
+
         if handle_ai_writer_get(path, self):
             return
 
@@ -116,6 +120,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         content_length = int(self.headers.get("Content-Length", "0") or "0")
         body_raw = self.rfile.read(content_length) if content_length > 0 else b""
+
+        if handle_ai_toolbox_post(path, body_raw, self):
+            return
 
         if handle_ai_writer_post(path, body_raw, self):
             return
@@ -168,3 +175,6 @@ def run_api_server(host: str | None = None, port: int | None = None) -> None:
 
 if __name__ == "__main__":
     run_api_server()
+
+
+
