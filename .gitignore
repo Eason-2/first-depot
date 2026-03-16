@@ -13,3 +13,6 @@ runtime/latest_topics.json
 runtime/generation_rotation_state.json
 
 site/
+
+site_test/
+知行简报版本1.0/
