@@ -639,10 +639,10 @@ def render_ai_toolbox_page() -> str:
           <p class="eyebrow">AI 工具箱</p>
           <h1>博客内置 AI 工具箱</h1>
           <p>按“写作助手”的接入方式，直接集成到博客服务里，支持三挡位：mock / ollama / openai。</p>
-          <p><a href="/blog">返回知行简报</a>{'　' + tutorial_button if tutorial_button else ''}</p>
+          <div class="hero-link-row"><a class="back-link-button" href="/blog">返回博客</a>{tutorial_button}</div>
         </div>
         <div class="hero-actions">
-          <button id="runtime-button" type="button" class="secondary">设置挡位</button>
+          <button id="runtime-button" type="button" class="secondary">设置</button>
           <div id="runtime-summary" class="runtime-summary">当前模式：加载中</div>
         </div>
       </div>
