@@ -1,6 +1,7 @@
 ﻿const TOOL_CONFIG = window.__AI_TOOLBOX_CONFIG__ || {};
 const RUNTIME_ENDPOINT = '/api/ai-toolbox/runtime';
 const RUN_ENDPOINT = '/api/ai-toolbox/run';
+const STATIC_HINT = '当前是静态演示页，请点击“使用教程”，按 README 在本地启动后使用完整功能。';
 const PHASE_LABELS = { foundation: '基础阶段', practice: '练习阶段', project: '项目阶段', review: '复盘阶段' };
 const QUESTION_TYPE_LABELS = { fundamental: '基础理解', coding: '编码题', debugging: '排障题', scenario: '场景题' };
 const SECTION_LABELS = { skills: '技能', experience: '经历', projects: '项目' };
@@ -76,6 +77,19 @@ function showRuntimeMessage(message, kind = 'info') {
 function hideRuntimeMessage() {
   runtimeMessage.textContent = '';
   runtimeMessage.className = 'runtime-message hidden';
+}
+
+async function parseJsonResponse(response) {
+  const contentType = response.headers.get('content-type') || '';
+  const text = await response.text();
+  if (!contentType.includes('application/json')) {
+    throw new Error(STATIC_HINT);
+  }
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error(STATIC_HINT);
+  }
 }
 
 function createField(field) {
@@ -244,14 +258,15 @@ function updateRuntimeFormState() {
 async function loadRuntime() {
   try {
     const response = await fetch(RUNTIME_ENDPOINT);
-    const body = await response.json();
+    const body = await parseJsonResponse(response);
     if (!response.ok || !body?.ok || !body.data) throw new Error(body?.error || '加载失败');
     runtimeState = body.data;
     updateRuntimeSummary(runtimeState);
     setRuntimeForm(runtimeState);
-  } catch {
-    runtimeSummary.textContent = '挡位状态加载失败';
-    runtimeCurrentStatus.textContent = '暂时无法获取当前挡位。';
+  } catch (error) {
+    runtimeSummary.textContent = '当前为静态演示页';
+    runtimeCurrentStatus.textContent = STATIC_HINT;
+    showRuntimeMessage(error?.message || STATIC_HINT, 'error');
   }
 }
 
@@ -265,7 +280,7 @@ async function applyRuntime(event) {
   }
   try {
     const response = await fetch(RUNTIME_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    const body = await response.json();
+    const body = await parseJsonResponse(response);
     if (!response.ok || !body?.ok || !body.data) throw new Error(body?.error || '应用失败');
     runtimeState = body.data;
     updateRuntimeSummary(runtimeState);
@@ -294,7 +309,7 @@ async function submitPayload(event) {
   submitButton.disabled = true;
   try {
     const response = await fetch(RUN_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    const body = await response.json();
+    const body = await parseJsonResponse(response);
     lastResponse = body;
     if (response.ok && body.status === 'success') {
       setStatus('success', '已完成', '结果已生成，可以直接查看。', `HTTP ${response.status}`);
