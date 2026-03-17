@@ -2,7 +2,7 @@
 
 Automated personal blog pipeline that scans open APIs, ranks trending AI topics, generates drafts with citations, runs QA guardrails, and publishes on schedule.
 
-## 给读者：AI 写作助手 / AI 工具箱怎么用（方案 3）
+## 给读者：AI 写作助手 / AI 工具箱怎么用
 
 如果你是在博客里点进来的，请先注意：
 
@@ -122,7 +122,7 @@ Ctrl + C
 ```
 
 ## Workspace
-- Fixed root: `C:/Users/32025/projects/ai-blog-autopublisher`
+- Fixed root: `C:/Users/用户名/projects/ai-blog-autopublisher`
 - All docs and outputs stay inside this directory.
 
 ## Current MVP status
