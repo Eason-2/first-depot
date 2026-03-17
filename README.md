@@ -2,6 +2,125 @@
 
 Automated personal blog pipeline that scans open APIs, ranks trending AI topics, generates drafts with citations, runs QA guardrails, and publishes on schedule.
 
+## 给读者：AI 写作助手 / AI 工具箱怎么用（方案 3）
+
+如果你是在博客里点进来的，请先注意：
+
+- GitHub Pages 上的 `AI 写作助手` / `AI 工具箱` 页面主要是**展示入口**
+- 真正可用的方式是：**把仓库拉到你自己电脑上，再本地启动**
+- 如果你电脑里已经有 Ollama，这套方式最适合你
+
+### 你会用到的本地地址
+
+本地服务启动后，请在浏览器打开：
+
+- 博客：`http://127.0.0.1:8088/blog`
+- AI 工具箱：`http://127.0.0.1:8088/ai-toolbox`
+- AI 写作助手：`http://127.0.0.1:8088/ai-writer`
+
+> 不要直接把 GitHub Pages 页面当成在线 AI 服务来用；完整功能需要本地启动后才能使用。
+
+### 第 1 步：准备环境
+
+请先确认本机已经安装：
+
+- Python 3.11+（本项目当前也可在 3.13 运行）
+- Git
+- Ollama（如果你想用本地模型）
+
+如果你只想先体验流程，不装 Ollama 也可以，先用 `mock` 挡位。
+
+### 第 2 步：克隆仓库
+
+```bash
+git clone https://github.com/Eason-2/first-depot.git
+cd first-depot
+```
+
+如果你把仓库下载到了别的文件夹，只要后面命令都在**仓库根目录**运行即可。
+
+### 第 3 步：启动本地 API
+
+```bash
+python -m scripts.start_api
+```
+
+看到下面这类输出就说明启动成功：
+
+```text
+API server listening on http://127.0.0.1:8088
+```
+
+此时浏览器打开：
+
+```text
+http://127.0.0.1:8088/blog
+```
+
+然后你就可以从本地博客页进入 `AI 工具箱` 或 `AI 写作助手`。
+
+### 第 4 步：如果你要用 Ollama
+
+先确认 Ollama 已经启动，并且本机有模型：
+
+```bash
+ollama list
+```
+
+如果还没有模型，可以先拉一个：
+
+```bash
+ollama pull qwen2.5:3b-instruct
+```
+
+然后在页面右上角点“设置”，填：
+
+- 模式：`ollama`
+- 服务地址：`http://127.0.0.1:11434`
+- 模型：`qwen2.5:3b-instruct`
+- API Key：`local`
+
+再点击“应用”。
+
+### 第 5 步：如果你不想折腾模型
+
+直接使用默认的 `mock` 挡位即可。
+
+这适合：
+
+- 先看页面交互
+- 先试整个流程
+- 暂时没有安装 Ollama
+
+### 常见问题
+
+#### 1）为什么博客公网地址里点进去不能直接用？
+
+因为 GitHub Pages 是静态站，那里主要是展示入口；真正执行 AI 请求的是你本地启动的 API 服务。
+
+#### 2）为什么我填了 `127.0.0.1:11434` 还是不行？
+
+因为你必须先启动本地 API：
+
+```bash
+python -m scripts.start_api
+```
+
+然后访问本地地址：
+
+- `http://127.0.0.1:8088/ai-toolbox`
+- `http://127.0.0.1:8088/ai-writer`
+
+不是直接在 GitHub Pages 页面里操作。
+
+#### 3）怎么停止服务？
+
+回到运行 `python -m scripts.start_api` 的那个终端，按：
+
+```text
+Ctrl + C
+```
+
 ## Workspace
 - Fixed root: `C:/Users/32025/projects/ai-blog-autopublisher`
 - All docs and outputs stay inside this directory.
