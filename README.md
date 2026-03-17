@@ -2,6 +2,35 @@
 
 Automated personal blog pipeline that scans open APIs, ranks trending AI topics, generates drafts with citations, runs QA guardrails, and publishes on schedule.
 
+---
+
+## 这个仓库分成两部分，请按你的需求阅读
+
+### A. 如果你想了解「AI 新闻博客 自动发布」
+
+这一部分是原本的主项目，适合：
+
+- 想看博客自动采集、排序、生成、发布流程的人
+- 想搭自己的 AI 新闻博客 / 自动发布系统的人
+- 想研究 `run_once`、调度、GitHub Pages 发布链路的人
+
+你可以重点看下面这些章节：
+
+- `Quick start`
+- `Always-on fixed URL (recommended): GitHub Pages (free)`
+- `Fully automatic publishing (no manual push)`
+- `Environment variables`
+
+### B. 如果你是从博客点进来，想用「AI 写作助手 / AI 工具箱」
+
+这一部分适合：
+
+- 只想使用写作助手或工具箱的人
+- 本机已经装了 Ollama / 本地模型的人
+- 不关心博客自动发布，只关心怎么把工具跑起来的人
+
+请继续看下面这节：
+
 ## 给读者：AI 写作助手 / AI 工具箱怎么用
 
 如果你是在博客里点进来的，请先注意：
@@ -82,6 +111,35 @@ ollama pull qwen2.5:3b-instruct
 
 再点击“应用”。
 
+### 如果你已经安装好了 Ollama，并且已经下载好了模型
+
+后续其实只要 3 步：
+
+#### 1）启动本地 API
+
+```bash
+python -m scripts.start_api
+```
+
+#### 2）打开本地页面
+
+浏览器打开：
+
+- `http://127.0.0.1:8088/blog`
+- `http://127.0.0.1:8088/ai-toolbox`
+- `http://127.0.0.1:8088/ai-writer`
+
+#### 3）在页面里切到 Ollama
+
+右上角点“设置”，填写：
+
+- 模式：`ollama`
+- 服务地址：`http://127.0.0.1:11434`
+- 模型：`你的模型名`
+- API Key：`local`
+
+然后点击“应用”即可开始使用。
+
 ### 第 5 步：如果你不想折腾模型
 
 直接使用默认的 `mock` 挡位即可。
@@ -120,6 +178,10 @@ python -m scripts.start_api
 ```text
 Ctrl + C
 ```
+
+---
+
+## 下面开始是项目开发 / 部署文档（面向想搭博客自动发布的人）
 
 ## Workspace
 - Fixed root: `C:/Users/用户名/projects/ai-blog-autopublisher`
