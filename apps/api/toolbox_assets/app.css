@@ -12,6 +12,19 @@
 body { margin: 0; background: linear-gradient(180deg, #f8fbff 0%, #f6f1fb 100%); color: var(--text); }
 a { color: var(--accent-dark); text-decoration: none; font-weight: 600; }
 a:hover { text-decoration: underline; }
+.hero-link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 10px;
+}
+.hero-link-button:hover { background: var(--accent-dark); text-decoration: none; }
 .page { width: min(1180px, calc(100vw - 40px)); margin: 0 auto; padding: 24px 0 36px; }
 .hero, .panel { background: rgba(255,255,255,.92); border: 1px solid rgba(226,232,240,.95); border-radius: 18px; box-shadow: 0 14px 30px rgba(15,23,42,.06); }
 .hero { padding: 22px 24px; margin-bottom: 18px; }

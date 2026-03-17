@@ -242,3 +242,32 @@ curl -X POST http://<your-public-host>:8088/run-once -H "X-Admin-Token: <token>"
 - `AI_TOOLBOX_API_KEY`：OpenAI/兼容接口 Key
 - `AI_TOOLBOX_TIMEOUT_SECONDS`：请求超时秒数
 - `AI_TOOLBOX_MAX_RETRIES`：失败重试次数
+
+### 2026-03-16 同日补充记录（公网 Pages / 清理）
+- 已确认本地博客入口和公网 GitHub Pages 入口是两套链路：
+  - 本地服务：`http://127.0.0.1:8088/blog`
+  - 公网静态页：`https://eason-2.github.io/first-depot/blog/`
+- 已补齐 GitHub Pages 静态导出逻辑，使 `AI 工具箱` 和 `AI 写作助手` 一样可被导出到静态站。
+- 已更新静态导出脚本：
+  - `scripts/export_static_site.py`
+  - 新增导出目录：`/ai-toolbox/`
+  - 新增导出资源：`ai-toolbox/app.css`、`ai-toolbox/app.js`
+- 已验证公网访问可见：
+  - 博客页可看到 `AI工具箱` 按钮
+  - 工具箱静态入口：`https://eason-2.github.io/first-depot/ai-toolbox/`
+- 本次操作中需要注意：
+  - 机器上存在两份同名项目：`Desktop` 与 `projects`
+  - 以后以 `C:\Users\32025\projects\ai-blog-autopublisher` 为当前实际使用项目
+  - 为避免串项目，导出静态站时优先使用：
+    - `python scripts\export_static_site.py --output-dir site --base-path /first-depot`
+  - 不优先用：
+    - `python -m scripts.export_static_site`
+- 已完成仓库清理，避免误提交测试导出和历史备份：
+  - 清理 `site_test/`
+  - 清理 `知行简报版本1.0/`
+  - `.gitignore` 已加入：
+    - `site_test/`
+    - `知行简报版本1.0/`
+- 已完成清理提交并推送：
+  - commit: `8d9ba2e`
+  - message: `cleanup generated exports and backup files`

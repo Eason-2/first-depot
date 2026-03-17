@@ -96,6 +96,44 @@ TOOL_UI_CONFIG = {
 
 STOPWORDS = {"a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "is", "it", "of", "on", "or", "that", "the", "to", "with", "了", "和", "是", "在", "的", "把", "被", "并", "及", "与", "我们"}
 ASSET_DIR = Path(__file__).with_name("toolbox_assets")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _normalize_tutorial_url(raw: str) -> str:
+    value = (raw or "").strip()
+    if not value:
+        return ""
+    if value.startswith("git@github.com:"):
+        value = "https://github.com/" + value[len("git@github.com:") :]
+    elif value.startswith("github.com/"):
+        value = "https://" + value
+    if value.endswith(".git"):
+        value = value[:-4]
+    return value
+
+
+def _detect_origin_repo_url() -> str:
+    config_path = PROJECT_ROOT / ".git" / "config"
+    if not config_path.exists():
+        return ""
+    in_origin = False
+    for raw_line in config_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if line.startswith("["):
+            in_origin = line == '[remote "origin"]'
+            continue
+        if in_origin and line.startswith("url"):
+            _, _, value = line.partition("=")
+            return _normalize_tutorial_url(value)
+    return ""
+
+
+def _tutorial_url() -> str:
+    return _normalize_tutorial_url(
+        os.getenv("AI_TUTORIAL_URL", "").strip()
+        or os.getenv("GITHUB_REPO_URL", "").strip()
+        or _detect_origin_repo_url()
+    )
 
 
 def _env_int(name: str, default: int) -> int:
@@ -579,6 +617,12 @@ def handle_ai_toolbox_post(path: str, body_raw: bytes, handler: Any) -> bool:
 
 def render_ai_toolbox_page() -> str:
     tool_json = json.dumps(TOOL_UI_CONFIG, ensure_ascii=False)
+    tutorial_url = _tutorial_url()
+    tutorial_button = (
+        f'<a class="hero-link-button" href="{tutorial_url}" target="_blank" rel="noopener noreferrer">使用教程</a>'
+        if tutorial_url
+        else ""
+    )
     return f'''<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -595,7 +639,7 @@ def render_ai_toolbox_page() -> str:
           <p class="eyebrow">AI 工具箱</p>
           <h1>博客内置 AI 工具箱</h1>
           <p>按“写作助手”的接入方式，直接集成到博客服务里，支持三挡位：mock / ollama / openai。</p>
-          <p><a href="/blog">返回知行简报</a></p>
+          <p><a href="/blog">返回知行简报</a>{'　' + tutorial_button if tutorial_button else ''}</p>
         </div>
         <div class="hero-actions">
           <button id="runtime-button" type="button" class="secondary">设置挡位</button>

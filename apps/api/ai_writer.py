@@ -8,7 +8,48 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from http import HTTPStatus
+from pathlib import Path
 from typing import Any
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _normalize_tutorial_url(raw: str) -> str:
+    value = (raw or "").strip()
+    if not value:
+        return ""
+    if value.startswith("git@github.com:"):
+        value = "https://github.com/" + value[len("git@github.com:") :]
+    elif value.startswith("github.com/"):
+        value = "https://" + value
+    if value.endswith(".git"):
+        value = value[:-4]
+    return value
+
+
+def _detect_origin_repo_url() -> str:
+    config_path = PROJECT_ROOT / ".git" / "config"
+    if not config_path.exists():
+        return ""
+    in_origin = False
+    for raw_line in config_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if line.startswith("["):
+            in_origin = line == '[remote "origin"]'
+            continue
+        if in_origin and line.startswith("url"):
+            _, _, value = line.partition("=")
+            return _normalize_tutorial_url(value)
+    return ""
+
+
+def _tutorial_url() -> str:
+    return _normalize_tutorial_url(
+        os.getenv("AI_TUTORIAL_URL", "").strip()
+        or os.getenv("GITHUB_REPO_URL", "").strip()
+        or _detect_origin_repo_url()
+    )
 
 
 def _env_int(name: str, default: int) -> int:
@@ -592,6 +633,12 @@ def handle_ai_writer_post(path: str, body_raw: bytes, handler: Any) -> bool:
 
 
 def render_ai_writer_page() -> str:
+    tutorial_url = _tutorial_url()
+    tutorial_button = (
+        f"<a class='top-link-button' href='{tutorial_url}' target='_blank' rel='noopener noreferrer'>使用教程</a>"
+        if tutorial_url
+        else ""
+    )
     return (
         "<!doctype html>"
         "<html lang='zh-CN'>"
@@ -608,6 +655,8 @@ def render_ai_writer_page() -> str:
         "textarea{min-height:110px;}"
         "button{margin-top:10px;margin-right:8px;padding:8px 14px;border-radius:8px;border:1px solid #2563eb;background:#2563eb;color:#fff;cursor:pointer;}"
         "button:hover{opacity:0.92;}"
+        ".top-link-button{display:inline-flex;align-items:center;justify-content:center;margin-left:10px;padding:8px 14px;border-radius:8px;border:1px solid #2563eb;background:#2563eb;color:#fff;text-decoration:none;font-weight:600;}"
+        ".top-link-button:hover{opacity:0.92;text-decoration:none;}"
         ".grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}"
         ".result{white-space:pre-wrap;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:8px;padding:10px;margin-top:10px;}"
         ".hint{color:#475569;font-size:14px;}"
@@ -630,7 +679,9 @@ def render_ai_writer_page() -> str:
         "</style>"
         "</head>"
         "<body>"
-        "<p><a href='/blog'>返回博客</a></p>"
+        "<p><a href='/blog'>返回博客</a>"
+        + tutorial_button +
+        "</p>"
         "<div class='topbar'>"
         "<div class='intro'>"
         "<h1>AI 写作助手</h1>"
