@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 from apps.api.ai_toolbox import handle_ai_toolbox_get, handle_ai_toolbox_post
 from apps.api.ai_writer import handle_ai_writer_get, handle_ai_writer_post
 from apps.api.blog_view import load_post_by_slug, render_blog_index, render_blog_post
+from apps.api.portfolio_view import render_about_page, render_home_page, render_projects_page, render_tutorials_page
 from core.config import Settings
 from core.storage import Storage
 from workers.publishing.scheduler import AutopublishScheduler
@@ -79,7 +80,24 @@ class ApiHandler(BaseHTTPRequestHandler):
         if handle_ai_writer_get(path, self):
             return
 
-        if path in {"/", "/blog"}:
+        if path == "/":
+            html = render_home_page(self.context.settings.publish_dir)
+            self._html_response(HTTPStatus.OK, html)
+            return
+
+        if path in {"/projects", "/projects/"}:
+            self._html_response(HTTPStatus.OK, render_projects_page())
+            return
+
+        if path in {"/tutorials", "/tutorials/"}:
+            self._html_response(HTTPStatus.OK, render_tutorials_page())
+            return
+
+        if path in {"/about", "/about/"}:
+            self._html_response(HTTPStatus.OK, render_about_page())
+            return
+
+        if path in {"/blog", "/blog/"}:
             html = render_blog_index(self.context.settings.publish_dir)
             self._html_response(HTTPStatus.OK, html)
             return
@@ -175,6 +193,5 @@ def run_api_server(host: str | None = None, port: int | None = None) -> None:
 
 if __name__ == "__main__":
     run_api_server()
-
 
 

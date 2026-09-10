@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 from apps.api.ai_toolbox import render_ai_toolbox_page
 from apps.api.ai_writer import render_ai_writer_page
 from apps.api.blog_view import load_post_by_slug, post_slug_from_path, render_blog_index, render_blog_post
+from apps.api.portfolio_view import render_about_page, render_home_page, render_projects_page, render_tutorials_page
 
 
 def _normalize_cname(raw: str) -> str:
@@ -37,16 +38,13 @@ def _normalize_base_path(raw: str) -> str:
 def _apply_base_path(html: str, base_path: str) -> str:
     if not base_path:
         return html
-    return (
-        html.replace("href='/blog/", f"href='{base_path}/blog/")
-        .replace('href="/blog/', f'href="{base_path}/blog/')
-        .replace("href='/blog'", f"href='{base_path}/blog'")
-        .replace('href="/blog"', f'href="{base_path}/blog"')
-        .replace("href='/ai-writer'", f"href='{base_path}/ai-writer'")
-        .replace('href="/ai-writer"', f'href="{base_path}/ai-writer"')
-        .replace("href='/ai-toolbox'", f"href='{base_path}/ai-toolbox'")
-        .replace('href="/ai-toolbox"', f'href="{base_path}/ai-toolbox"')
-    )
+    updated = html
+    for route in ("/projects", "/tutorials", "/ai-writer", "/ai-toolbox", "/blog", "/about"):
+        updated = updated.replace(f"href='{route}", f"href='{base_path}{route}")
+        updated = updated.replace(f'href="{route}', f'href="{base_path}{route}')
+    updated = updated.replace("href='/'", f"href='{base_path}/'")
+    updated = updated.replace('href="/"', f'href="{base_path}/"')
+    return updated
 
 
 def _export_ai_toolbox_assets(project_root: Path, output_dir: Path, base_path: str) -> str:
@@ -76,20 +74,30 @@ def export_static_site(
     base_path: str = '',
 ) -> dict[str, object]:
     output_dir.mkdir(parents=True, exist_ok=True)
-    blog_dir = output_dir / 'blog'
-    blog_dir.mkdir(parents=True, exist_ok=True)
-    ai_writer_dir = output_dir / 'ai-writer'
-    ai_writer_dir.mkdir(parents=True, exist_ok=True)
-    ai_toolbox_dir = output_dir / 'ai-toolbox'
-    ai_toolbox_dir.mkdir(parents=True, exist_ok=True)
+    page_dirs = {
+        name: output_dir / name
+        for name in ('projects', 'tutorials', 'ai-writer', 'ai-toolbox', 'blog', 'about')
+    }
+    for page_dir in page_dirs.values():
+        page_dir.mkdir(parents=True, exist_ok=True)
+    blog_dir = page_dirs['blog']
+    ai_writer_dir = page_dirs['ai-writer']
+    ai_toolbox_dir = page_dirs['ai-toolbox']
 
     normalized_base_path = _normalize_base_path(base_path)
-    index_html = _apply_base_path(render_blog_index(publish_dir), normalized_base_path)
+    index_html = _apply_base_path(render_home_page(publish_dir), normalized_base_path)
+    blog_index_html = _apply_base_path(render_blog_index(publish_dir), normalized_base_path)
+    projects_html = _apply_base_path(render_projects_page(), normalized_base_path)
+    tutorials_html = _apply_base_path(render_tutorials_page(), normalized_base_path)
+    about_html = _apply_base_path(render_about_page(), normalized_base_path)
     ai_writer_html = _apply_base_path(render_ai_writer_page(), normalized_base_path)
     ai_toolbox_html = _export_ai_toolbox_assets(project_root, output_dir, normalized_base_path)
 
     (output_dir / 'index.html').write_text(index_html, encoding='utf-8')
-    (blog_dir / 'index.html').write_text(index_html, encoding='utf-8')
+    (blog_dir / 'index.html').write_text(blog_index_html, encoding='utf-8')
+    (page_dirs['projects'] / 'index.html').write_text(projects_html, encoding='utf-8')
+    (page_dirs['tutorials'] / 'index.html').write_text(tutorials_html, encoding='utf-8')
+    (page_dirs['about'] / 'index.html').write_text(about_html, encoding='utf-8')
     (ai_writer_dir / 'index.html').write_text(ai_writer_html, encoding='utf-8')
     (ai_toolbox_dir / 'index.html').write_text(ai_toolbox_html, encoding='utf-8')
 

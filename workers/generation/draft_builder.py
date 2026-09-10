@@ -4,6 +4,7 @@ import hashlib
 import html
 import json
 import re
+from collections import Counter
 from datetime import datetime, timezone
 
 from core.config import Settings
@@ -17,22 +18,41 @@ _STOPWORDS = {
     "after",
     "again",
     "agent",
+    "agents",
     "against",
+    "and",
     "among",
+    "are",
     "being",
     "between",
+    "but",
+    "can",
     "could",
     "every",
     "first",
+    "for",
     "from",
+    "has",
+    "how",
+    "its",
+    "llm",
+    "new",
+    "not",
+    "our",
     "their",
+    "the",
     "there",
     "these",
     "those",
     "under",
+    "via",
+    "was",
     "while",
+    "why",
+    "will",
     "with",
     "without",
+    "your",
 }
 _AI_TOPIC_HINTS = {
     "ai",
@@ -96,120 +116,52 @@ _OUTLINES = [
         "sources": "参考资料",
         "order": ["hook", "facts", "insight", "risk", "close", "action"],
     },
+    {
+        "hook": "这次只回答一个核心问题",
+        "facts": "先核对原始信息与出处",
+        "insight": "从事实走到判断，中间还缺什么",
+        "action": "把判断变成一轮可复现实验",
+        "risk": "哪些条件一变，结论就可能失效",
+        "close": "下一次更新重点看这些信号",
+        "sources": "参考资料",
+        "order": ["hook", "facts", "insight", "close", "risk", "action"],
+    },
+    {
+        "hook": "先界定这篇文章讨论什么",
+        "facts": "资料里可以确认的内容",
+        "insight": "证据强度与实际价值要分开看",
+        "action": "研究、试用与复盘怎么安排",
+        "risk": "当前结论的适用边界",
+        "close": "暂时结论与观察清单",
+        "sources": "参考资料",
+        "order": ["hook", "facts", "risk", "insight", "action", "close"],
+    },
+    {
+        "hook": "用决策备忘录的方式看这件事",
+        "facts": "已知事实：来源、时间与主要说法",
+        "insight": "这些信息会影响哪些判断",
+        "action": "低成本验证路径",
+        "risk": "决定投入前必须排除的误差",
+        "close": "后续跟踪指标",
+        "sources": "参考资料",
+        "order": ["hook", "insight", "risk", "facts", "action", "close"],
+    },
+    {
+        "hook": "先拆开热度、证据与可用性",
+        "facts": "来源分别提供了什么信息",
+        "insight": "把主张放回具体场景",
+        "action": "从阅读资料到动手验证",
+        "risk": "反例可能藏在哪里",
+        "close": "目前可以保留的判断",
+        "sources": "参考资料",
+        "order": ["hook", "facts", "action", "insight", "risk", "close"],
+    },
 ]
-
-_INTRO_OPENERS = [
-    "先不喊口号，先看证据。",
-    "这次不玩悬念，先把关键点摊开。",
-    "先说结论：值得跟，但不值得盲冲。",
-    "热闹归热闹，先把账算清再说。",
-]
-_INTRO_FRAMES = [
-    "把它当成一次体检，不是热搜接力赛。",
-    "先别急着上头，咖啡可以续杯，决策别续命。",
-    "这类议题最怕一眼定终身，所以先拆分看。",
-    "与其猜“会不会爆”，不如看“能不能复盘”。",
-]
-_INTRO_CLOSES = [
-    "这些信号还不构成保证，但足够进入认真评估阶段。",
-    "它不是稳赢牌，不过已经是该上桌讨论的议题。",
-    "结论不是“马上冲”，而是“可以算账并试跑”。",
-    "别把它当神话，也别当噪声，按证据推进最稳。",
-]
-_INSIGHT_LEADS = [
-    "真正贵的不是试错，而是试了半天却没留下可复用方法。",
-    "很多团队输的不是方向，而是把“讨论热度”当“执行进度”。",
-    "看起来像技术问题，最后常常卡在协同和节奏。",
-    "如果把项目比作长跑，前 5 公里冲刺通常不叫领先，叫透支。",
-]
-_ACTION_PLANS = [
-    [
-        "- 第一步（7 天）：把目标写成可量化指标，同时定义失败阈值和回滚条件。",
-        "- 第二步（30 天）：跑一个小规模试点，重点看效果、成本、稳定性三组数据。",
-        "- 第三步（90 天）：根据试点结果决定扩容或收缩，不要在证据不足时重投入。",
-        "- 每周固定复盘：记录假设、证据、结果和下周动作，减少靠感觉决策。",
-        "- 对外沟通时：能证实的才承诺，暂时不能证实的明确写清边界。",
-    ],
-    [
-        "- 如果资源紧，先盯住 2~3 个关键指标，其余先放观察席。",
-        "- 先做“低风险版”上线：保留人工兜底，别一开始就全自动。",
-        "- 每周只回答三个问题：效果有没有变好、成本有没有失控、团队有没有更顺手。",
-        "- 先把失败样本收集齐，再谈扩大范围；没有反例的成功通常不稳。",
-        "- 推进节奏建议是“短试验 + 快复盘 + 小迭代”，别搞一锤子工程。",
-    ],
-    [
-        "- 不急着做也没关系，先把可观察信号列成清单，避免“错过焦虑”。",
-        "- 可以先做一版影子流程：不影响正式业务，只验证判断是否靠谱。",
-        "- 先约定好停止条件，比约定“什么时候成功”更能省钱。",
-        "- 若跨团队协作复杂，先挑一个单点场景打样，降低沟通成本。",
-        "- 复盘时把“我们为什么猜错”写清楚，这比“我们猜对了”更值钱。",
-    ],
-    [
-        "- 把“拍脑袋会议”改成“看证据会议”：所有观点都要挂到数据或案例上。",
-        "- 先排一个两周冲刺，不求漂亮，只求能稳定复现。",
-        "- 保留一条保守路线，给业务侧一个随时可回退的安全门。",
-        "- 每次迭代只改一个关键变量，不然很难判断到底哪步有效。",
-        "- 节奏上宁可慢半拍，也别因为赶热点把后续维护成本埋雷。",
-    ],
-]
-_RISK_NOTES = [
-    [
-        "- 叙事风险：热度上来后最容易出现过度承诺，最后变成高投入返工。",
-        "- 成本风险：调用、日志、人工复核会形成长期成本，前期不算清后面会被动。",
-        "- 稳定性风险：上游接口波动、数据漂移、提示词衰减都可能让效果回落。",
-        "- 组织风险：目标不一致时，项目常见结果是“大家都很忙，但沉淀很少”。",
-    ],
-    [
-        "- 指标风险：只盯单一指标会导致“看起来变好，实际体验变差”。",
-        "- 节奏风险：为了追进度跳过验证，往往会在后期用更高成本补课。",
-        "- 依赖风险：外部接口或模型策略变化，会让历史结论快速过期。",
-        "- 沟通风险：同一词在不同团队里定义不同，误解会直接放大返工量。",
-    ],
-    [
-        "- 认知风险：把阶段性结果当长期规律，容易在扩展时踩空。",
-        "- 人力风险：关键流程过度依赖少数人，团队一忙就断档。",
-        "- 合规风险：数据边界和审计记录若没前置，后续补齐成本很高。",
-        "- 维护风险：功能先跑通但无人维护，最终会拖慢整个交付链条。",
-    ],
-    [
-        "- 情绪风险：看到同行案例就临时改方向，项目会越做越碎片化。",
-        "- 机会成本：把资源全压在热门点，可能错过更稳的增长面。",
-        "- 工程风险：缺少监控与回滚通道时，小故障也会被放大成事故。",
-        "- 可信风险：对外说得太满，一旦效果波动，团队信誉最先受损。",
-    ],
-]
-_CLOSING_NOTES = [
-    "如果只记一件事，我建议记这句：不要比谁更激动，要比谁更可验证。把判断和指标绑在一起，时间会帮你过滤噪声。",
-    "这类话题不怕慢，就怕乱。先把证据、边界和动作对齐，后面的投入才不容易失真。",
-    "真正拉开差距的通常不是第一天的判断，而是第十天还能不能持续修正。",
-    "别急着争“站哪边”，先把“怎么验证”写下来；能复盘的方案，才有长期价值。",
-]
-_EXTENSION_QUESTIONS = [
-    "更值得追问的是：这条信息会改变谁的决策、在多大范围内生效？",
-    "建议顺手核对它的适用边界，避免把局部结论当成通用规律。",
-    "如果要继续跟进，最好补一条反例，确认它不是幸存者偏差。",
-    "把它放进时间轴看更稳：短期热度和长期价值常常不是一回事。",
-    "把“证据强度”和“可执行性”分开打分，判断会更少情绪波动。",
-]
-_EXTENSION_FOLLOWUPS = [
-    "如果答案偏模糊，就先别着急扩大范围。",
-    "这一步看似慢，但通常能省下后面的返工时间。",
-    "把结论写成可复核句子，团队协作会顺很多。",
-    "先求可解释，再求可复制，节奏会更稳。",
-    "能说清楚“为什么没做”也是有效决策的一部分。",
-]
-_EXTENSION_EXTRA_NOTES = [
-    "- 高阅读量内容可以有节奏感，但真正能支持决策的文章，必须同时交代证据、边界和动作。",
-    "- 别把“观点很多”误判成“信息充分”，可复核的数据永远比漂亮表述更有用。",
-    "- 写作可以幽默，但结论要严谨；越是热议话题，越要留出回滚空间。",
-]
-
 
 class DraftBuilder:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
-        self.minimum_visible_chars = 2200
-        self.minimum_citation_events = 6
+        self.minimum_visible_chars = 1200
         self.rotation_state_path = self.settings.runtime_dir / "generation_rotation_state.json"
 
     def generate(
@@ -229,17 +181,6 @@ class DraftBuilder:
         related_events = self._select_related_events(cluster, primary_events, all_events, limit=6)
 
         citation_events = self._dedupe_events(primary_events + related_events)
-        if len(citation_events) < self.minimum_citation_events:
-            ranked_all = sorted(all_events, key=self._event_strength, reverse=True)
-            existing = {event.event_id for event in citation_events}
-            for candidate in ranked_all:
-                if candidate.event_id in existing:
-                    continue
-                citation_events.append(candidate)
-                existing.add(candidate.event_id)
-                if len(citation_events) >= self.minimum_citation_events:
-                    break
-
         citation_events = citation_events[:10]
         citations = [
             {
@@ -263,12 +204,21 @@ class DraftBuilder:
         title = self._build_chinese_title(cluster.title, variant)
 
         facts = self._build_facts(primary_events)
-        insight = self._build_insight(cluster, avg_relevance, avg_credibility, variant)
-        action_plan = self._build_action_plan(variant)
-        risks = self._build_risk_block(variant)
-        closing = self._build_closing_block(cluster.cluster_id)
+        insight = self._build_insight(cluster, primary_events, avg_relevance, avg_credibility, variant)
+        action_plan = self._build_action_plan(cluster, primary_events, variant)
+        risks = self._build_risk_block(
+            cluster,
+            citation_events,
+            avg_relevance,
+            avg_credibility,
+            total_upvotes,
+            total_comments,
+            variant,
+        )
+        closing = self._build_closing_block(cluster, primary_events, variant)
         intro = self._build_intro(
             cluster=cluster,
+            events=citation_events,
             avg_relevance=avg_relevance,
             avg_credibility=avg_credibility,
             source_count=source_count,
@@ -293,10 +243,8 @@ class DraftBuilder:
             ordered_sections.append(section_contents[section_key])
         body_content = "\n\n".join(ordered_sections)
 
-        extension_index = 1
-        while self._visible_chars(body_content) < self.minimum_visible_chars and extension_index <= 3:
-            body_content += "\n\n" + self._build_extension_block(extension_index, citation_events)
-            extension_index += 1
+        if self._visible_chars(body_content) < self.minimum_visible_chars:
+            body_content += "\n\n" + self._build_evidence_gaps(cluster, citation_events, variant)
 
         content = "\n\n".join([body_content, f"## {outline['sources']}", sources])
 
@@ -358,59 +306,25 @@ class DraftBuilder:
 
     def _build_chinese_title(self, original_title: str, variant: int) -> str:
         cleaned = self._clean_text(original_title)
-        lowered = cleaned.lower()
-        if "gpt" in lowered:
-            candidates = [
-                "GPT-5.4 真正值得看的，不只是参数和榜单",
-                "聊聊 GPT-5.4：哪些变化对业务真的有用",
-                "GPT-5.4 讨论很热，但落地要先看这几件事",
-                "看完 GPT-5.4 资料后，我会先做这三步",
-            ]
-            return candidates[variant % len(candidates)]
-        if "poet-x" in lowered:
-            candidates = [
-                "POET-X 这条路线值不值得跟：我的判断",
-                "POET-X 不只是在省显存，它改的是训练节奏",
-                "POET-X 观察：高效训练背后的取舍",
-                "POET-X 怎么看才不跑偏：从论文到落地",
-            ]
-            return candidates[variant % len(candidates)]
-        if "moongate" in lowered:
-            candidates = [
-                "Moongate 为什么火了：热度背后的硬问题",
-                "从 Moongate 讨论里，我看到的三件实事",
-                "Moongate 不只是情怀项目，难点在工程细节",
-                "看 Moongate：社区热闹之外的执行账",
-            ]
-            return candidates[variant % len(candidates)]
-        if "plasma" in lowered:
-            candidates = [
-                "Plasma Bigscreen 讨论升温，机会和限制都很明显",
-                "Plasma Bigscreen 到底值不值得追",
-                "聊聊 Plasma Bigscreen：热度之外看执行",
-                "Plasma Bigscreen 的看点，不止是界面",
-            ]
-            return candidates[variant % len(candidates)]
-        if "enterprise" in lowered and "agent" in lowered:
-            candidates = [
-                "企业 Agent Runtime 为什么被反复提起",
-                "统一运行时是不是企业 AI 的必选项",
-                "企业 Agent Runtime：我更关心这三点",
-                "别只看概念，企业 Runtime 落地看这几步",
-            ]
-            return candidates[variant % len(candidates)]
-
-        fallback = [
-            "这条 AI 话题为什么值得你认真看一眼",
-            "这波 AI 热点里，真正有价值的信息是什么",
-            "我怎么判断这条 AI 信息值不值得跟进",
-            "别急着下结论，先把这条 AI 话题看透",
+        topic = cleaned or "本轮 AI 主题"
+        if len(topic) > 52:
+            topic = topic[:49].rstrip(" -:：，,") + "..."
+        candidates = [
+            f"{topic}：核心变化与验证重点",
+            f"解读 {topic}：证据、边界与影响",
+            f"{topic} 值得关注什么？从来源到落地",
+            f"从 {topic} 看落地机会与限制",
+            f"{topic}：从原始资料到可执行判断",
+            f"围绕 {topic}，现有证据能说明什么",
+            f"{topic} 实测前先看这几项边界",
+            f"重新审视 {topic}：事实、限制与下一步",
         ]
-        return fallback[variant % len(fallback)]
+        return candidates[variant % len(candidates)]
 
     def _build_intro(
         self,
         cluster: TopicCluster,
+        events: list[NormalizedEvent],
         avg_relevance: float,
         avg_credibility: float,
         source_count: int,
@@ -418,16 +332,34 @@ class DraftBuilder:
         total_comments: float,
         variant: int,
     ) -> str:
-        opener = _INTRO_OPENERS[variant]
-        frame = _INTRO_FRAMES[self._pick_slot(cluster.cluster_id, "intro-frame", len(_INTRO_FRAMES))]
-        close = _INTRO_CLOSES[self._pick_slot(cluster.cluster_id, "intro-close", len(_INTRO_CLOSES))]
+        source_counts = Counter(event.source for event in events)
+        type_counts = Counter(self._content_type_label(event.content_type) for event in events)
+        source_profile = "、".join(f"{source} {count} 条" for source, count in source_counts.most_common())
+        evidence_profile = "、".join(f"{kind} {count} 条" for kind, count in type_counts.most_common())
+        engagement_note = (
+            f"公开互动数据合计约 {total_upvotes:.0f} 个赞、{total_comments:.0f} 条评论，可用于观察讨论强度，"
+            "但不能替代产品效果或研究结论。"
+            if total_upvotes or total_comments
+            else "当前来源没有可用的点赞、评论数据，因此本文不会用“热度高”代替证据强。"
+        )
+        openings = [
+            "这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。",
+            "判断这个主题，第一步是把发布信息、研究证据和社区反馈分开看。",
+            "这里先做证据盘点，再讨论它对产品和工程决策可能产生的影响。",
+            "与其复述热搜，不如先回答来源是否独立、结论是否能验证。",
+            "先限定讨论范围：本文只处理现有来源明确披露的内容，不为缺失信息补故事。",
+            "这次按来源、主张和验证条件三层阅读，避免把不同强度的证据混在一起。",
+            "下面把这条信息整理成一份决策备忘录，重点保留可核对项与未知项。",
+            "热度、证据和可用性是三件事；这篇文章会分别检查，不用一个分数代替全部判断。",
+        ]
+        opening = openings[variant % len(openings)]
         return (
-            f"{opener}{frame}"
-            f"当前主题“{self._clean_text(cluster.title)}”在本轮评分 {cluster.score:.1f}/100，"
-            f"并且来自 {source_count} 个来源的信号能互相印证。\n\n"
-            f"数据上看，平均相关度 {avg_relevance:.2f}、平均可信度 {avg_credibility:.2f}，"
-            f"累计约 {total_upvotes:.0f} 点赞和 {total_comments:.0f} 评论。"
-            f"{close}"
+            f"{opening}本轮聚焦“{self._clean_text(cluster.title)}”，聚类评分为 {cluster.score:.1f}/100。"
+            f"资料来自 {source_count} 个来源渠道，构成为 {source_profile or '来源未标注'}；"
+            f"证据形态包括 {evidence_profile or '类型未标注'}。\n\n"
+            f"对“{self._clean_text(cluster.title)}”而言，这些材料的平均 AI 相关度为 {avg_relevance:.2f}，"
+            f"平均可信度为 {avg_credibility:.2f}。"
+            f"{engagement_note}因此，下面的判断会把已知事实、推断和待验证项明确分开。"
         )
 
     def _build_facts(self, primary_events: list[NormalizedEvent]) -> str:
@@ -440,40 +372,203 @@ class DraftBuilder:
             )
         return "\n".join(lines)
 
-    def _build_insight(self, cluster: TopicCluster, avg_relevance: float, avg_credibility: float, variant: int) -> str:
-        lead = _INSIGHT_LEADS[variant]
+    def _build_insight(
+        self,
+        cluster: TopicCluster,
+        events: list[NormalizedEvent],
+        avg_relevance: float,
+        avg_credibility: float,
+        variant: int,
+    ) -> str:
+        first = events[0]
+        second = events[1] if len(events) > 1 else None
+        first_title = self._clean_text(first.title)
+        dominant_type = Counter(event.content_type or "unknown" for event in events).most_common(1)[0][0]
+        comparison = (
+            f"第一条材料“{first_title}”偏向{self._content_type_label(first.content_type)}，"
+            f"第二条“{self._clean_text(second.title)}”偏向{self._content_type_label(second.content_type)}。"
+            "两者回答的问题并不相同：前者更适合确认发生了什么，后者更适合发现迁移、成本或使用体验上的争议。"
+            if second
+            else f"目前只有“{first_title}”这一条核心材料，缺少第二来源对它的关键结论进行交叉验证。"
+        )
+        credibility_gap = max(event.credibility for event in events) - min(event.credibility for event in events)
+        lens = self._variant_lens(variant)
+        perspective = [
+            f"这一版先用“{lens}”检查主题，不急着扩展到所有业务场景。",
+            f"这里把“{lens}”放在首位，避免被单一亮点带偏整体判断。",
+            f"本次复盘从“{lens}”切入，因为它最容易暴露宣传口径与实际表现的差距。",
+            f"阅读这些资料时，我会持续追问“{lens}”是否有独立证据支持。",
+            f"这组材料最适合先回答“{lens}”问题，再谈更大的行业影响。",
+            f"与其汇总更多观点，这一版选择沿着“{lens}”追踪证据链。",
+            f"如果把文章当成决策备忘录，“{lens}”是这一轮的主判断轴。",
+            f"以下判断把“{lens}”与主题热度分开，分别给出证据和限制。",
+        ][variant % len(_OUTLINES)]
+        evidence_focus = {
+            "research": "研究材料还要检查数据集覆盖范围、基线设置和复现实验，论文指标不能直接替代线上效果。",
+            "paper": "研究材料还要检查数据集覆盖范围、基线设置和复现实验，论文指标不能直接替代线上效果。",
+            "discussion": "社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。",
+            "news": "新闻材料可以确认发布时间与公开能力，但商业表述需要用实际账户、价格和限制条件复核。",
+            "release": "发布说明可以确认功能边界，却通常不会完整呈现失败率、维护成本和迁移阻力。",
+        }.get(dominant_type, "公开材料可以提供线索，但仍需区分原始证据、二手转述和作者判断。")
         return (
-            f"{lead}"
-            f"我最在意的不是“谁喊得更响”，而是“哪些判断可验证”。"
-            f"像“{self._clean_text(cluster.title)}”这种议题，最常见问题不是方向错，而是验证机制弱，"
-            "导致团队做了很多动作却没留下可复用能力。\n\n"
-            f"如果把事情拆开看，相关度 {avg_relevance:.2f} 说明它确实贴近行业主线，"
-            f"可信度 {avg_credibility:.2f} 说明信息质量也还不错。"
-            "但落地时真正决定结果的，往往是执行节奏、跨团队协同和回滚机制。"
+            f"{perspective}围绕“{self._clean_text(cluster.title)}”，需要保留来源之间的证据差异。"
+            f"{comparison}\n\n"
+            f"以“{lens}”为观察轴，整体相关度均值为 {avg_relevance:.2f}，说明这些材料与主题的贴合度较高；"
+            f"可信度均值为 {avg_credibility:.2f}，来源间差值为 {credibility_gap:.2f}。"
+            f"{evidence_focus}现阶段对“{self._clean_text(cluster.title)}”更稳妥的结论是：它值得进入验证队列，"
+            "但价值大小仍要由具体场景、基线数据和失败样本决定。"
         )
 
-    def _build_action_plan(self, variant: int) -> str:
-        return "\n".join(_ACTION_PLANS[variant])
+    def _build_action_plan(self, cluster: TopicCluster, events: list[NormalizedEvent], variant: int) -> str:
+        topic = self._clean_text(cluster.title)
+        lens = self._variant_lens(variant)
+        dominant_type = Counter(event.content_type or "unknown" for event in events).most_common(1)[0][0]
+        first_title = self._clean_text(events[0].title)
+        if dominant_type == "research":
+            specific_steps = [
+                f"- 复现材料中的核心实验：以“{first_title}”给出的任务、样本和评价指标为起点，先确认结果能否重复。",
+                "- 对照基线与消融实验：记录模型、数据规模、硬件和随机种子，避免把配置差异误认为方法收益。",
+                "- 增加业务外样本：至少加入一组论文未覆盖的数据，检查结论在真实输入分布下是否仍成立。",
+            ]
+        elif dominant_type == "discussion":
+            specific_steps = [
+                f"- 回到一手资料：从“{first_title}”提到的功能、版本或项目名称反查官方发布和变更记录。",
+                "- 给社区反馈分类：把可复现问题、个人偏好和未经证实的猜测分开统计，不直接用点赞数投票。",
+                "- 复测高频争议：选两个出现次数最多的问题，在固定环境中记录输入、输出、耗时和失败条件。",
+            ]
+        else:
+            specific_steps = [
+                f"- 核对发布边界：以“{first_title}”为入口，确认版本、开放范围、价格、地区和发布日期。",
+                "- 选一个现有流程做对照：记录接入前后的质量、延迟、人工复核时间和单次运行成本。",
+                "- 检查迁移代价：列出接口变化、数据权限、监控、回滚和供应商依赖，避免只计算演示成本。",
+            ]
+        qualified_steps = [
+            f"{step} 验收时单独记录“{lens}”是否改善。" if index == 0 else
+            f"{step} 对照组也必须使用同一套“{lens}”口径。" if index == 1 else
+            f"{step} 一旦“{lens}”恶化，就回到上一步定位变量。"
+            for index, step in enumerate(specific_steps)
+        ]
+        return "\n".join(
+            qualified_steps
+            + [
+                f"- 为“{topic}”写清与“{lens}”对应的停止条件：若核心指标连续两轮没有改善，暂停扩展并回看假设。",
+                f"- 保存“{topic}”每次验证的输入、配置、结果和反例，并在复盘中解释“{lens}”为何变化。",
+            ]
+        )
 
-    def _build_risk_block(self, variant: int) -> str:
-        return "\n".join(_RISK_NOTES[variant])
+    def _build_risk_block(
+        self,
+        cluster: TopicCluster,
+        events: list[NormalizedEvent],
+        avg_relevance: float,
+        avg_credibility: float,
+        total_upvotes: float,
+        total_comments: float,
+        variant: int,
+    ) -> str:
+        source_counts = Counter(event.source for event in events)
+        repeated_source = source_counts.most_common(1)[0]
+        topic = self._clean_text(cluster.title)
+        lens = self._variant_lens(variant)
+        dominant_type = Counter(event.content_type or "unknown" for event in events).most_common(1)[0][0]
+        interaction_risk = (
+            f"- 热度误读：“{topic}”现有 {total_upvotes:.0f} 个赞和 {total_comments:.0f} 条评论只能反映关注度，"
+            "不能证明效果、成本或稳定性。"
+            if total_upvotes or total_comments
+            else f"- 热度缺口：“{topic}”的现有资料没有可用互动数据，无法判断讨论扩散范围，更不能据此推断市场接受度。"
+        )
+        type_risks = {
+            "research": [
+                f"- 外部有效性：关于“{topic}”的实验结果可能依赖特定数据集与硬件，换到业务数据后需要重新测量。",
+                f"- 复现风险：若“{topic}”没有公开代码、随机种子或完整参数，单次高分不足以支持工程选型。",
+            ],
+            "paper": [
+                f"- 外部有效性：关于“{topic}”的实验结果可能依赖特定数据集与硬件，换到业务数据后需要重新测量。",
+                f"- 复现风险：若“{topic}”没有公开代码、随机种子或完整参数，单次高分不足以支持工程选型。",
+            ],
+            "discussion": [
+                f"- 样本偏差：“{topic}”的发言者不代表全部用户，活跃讨论也可能由少数高频账号贡献。",
+                f"- 转述风险：社区对“{topic}”的截图和二手描述可能遗漏版本、配置与触发条件，应追溯原始链接。",
+            ],
+            "news": [
+                f"- 可用性风险：“{topic}”即使已经宣布，也可能受灰度范围、地区、套餐或候补名单限制。",
+                f"- 迁移风险：围绕“{topic}”评估接口变化、历史兼容性和回滚成本，不能只验证一次演示流程。",
+            ],
+            "release": [
+                f"- 可用性风险：“{topic}”即使已经发布，也可能受灰度范围、地区、套餐或调用限额约束。",
+                f"- 运维风险：接入“{topic}”前要确认监控、故障降级与版本锁定能力，避免上游变化直接影响业务。",
+            ],
+        }.get(
+            dominant_type,
+            [
+                f"- 时效风险：“{topic}”的版本、价格和能力边界可能变化，引用旧结论前应重新核对当前文档。",
+                f"- 落地风险：验证“{topic}”时要保留失败样本、人工兜底和回滚指标，不能从演示直接外推生产效果。",
+            ],
+        )
+        return "\n".join(
+            [
+                f"- 来源集中：{repeated_source[0]} 占 {repeated_source[1]}/{len(events)} 条；从“{lens}”看，转述同一公告不能算独立旁证。",
+                f"- 证据强度：平均相关度 {avg_relevance:.2f} 与平均可信度 {avg_credibility:.2f} 只是筛选信号，无法单独证明“{topic}”在“{lens}”上有效。",
+                interaction_risk,
+            ]
+            + type_risks
+        )
 
-    def _build_closing_block(self, cluster_id: str) -> str:
-        first = _CLOSING_NOTES[self._pick_slot(cluster_id, "closing-first", len(_CLOSING_NOTES))]
-        second = _CLOSING_NOTES[self._pick_slot(cluster_id, "closing-second", len(_CLOSING_NOTES))]
-        if first == second:
-            second = _CLOSING_NOTES[(self._pick_slot(cluster_id, "closing-second-alt", len(_CLOSING_NOTES)) + 1) % len(_CLOSING_NOTES)]
-        return first + "\n\n" + second
+    def _build_closing_block(self, cluster: TopicCluster, events: list[NormalizedEvent], variant: int) -> str:
+        topic = self._clean_text(cluster.title)
+        lens = self._variant_lens(variant)
+        first_title = self._clean_text(events[0].title)
+        last_title = self._clean_text(events[-1].title)
+        return (
+            f"对“{topic}”的下一轮复盘，将“{lens}”设为首要观察项。先看“{first_title}”中的具体能力是否有正式文档或可运行样例，"
+            "再看一次小规模对照能否同时改善质量、耗时和成本。只改善其中一项时，要明确另外两项付出了什么代价。\n\n"
+            f"同时跟踪“{last_title}”涉及的限制是否被后续版本修正，并为“{lens}”补充至少一个独立来源。"
+            "当一手说明、实测数据和外部反馈能够互相解释时，再决定扩大投入；如果三者冲突，就把冲突本身记录为下一轮要验证的问题。"
+        )
 
-    def _build_extension_block(self, extension_index: int, events: list[NormalizedEvent]) -> str:
-        lines = [f"## 补充观察（第 {extension_index} 轮）"]
-        for event in events[:5]:
-            question = _EXTENSION_QUESTIONS[self._pick_slot(event.event_id, "extension-question", len(_EXTENSION_QUESTIONS))]
-            followup = _EXTENSION_FOLLOWUPS[self._pick_slot(event.event_id, "extension-followup", len(_EXTENSION_FOLLOWUPS))]
-            lines.append(f"- 围绕“{self._clean_text(event.title)}”，{question}{followup}")
-        lines.append(_EXTENSION_EXTRA_NOTES[(extension_index - 1) % len(_EXTENSION_EXTRA_NOTES)])
-        lines.append("- 如果这一轮看下来仍然意见分裂，先补证据再下结论，别把音量当成胜负。")
+    def _build_evidence_gaps(self, cluster: TopicCluster, events: list[NormalizedEvent], variant: int) -> str:
+        topic = self._clean_text(cluster.title)
+        lens = self._variant_lens(variant)
+        lines = ["## 仍待确认的证据"]
+        for event in events[:4]:
+            lines.append(
+                f"- “{self._clean_text(event.title)}”目前提供的是{self._content_type_label(event.content_type)}线索；"
+                f"下一步需要核对其原始数据、适用版本和发布日期（{self._date_only(event.published_at)}）。"
+            )
+        lines.append(
+            f"- 对“{topic}”的“{lens}”判断，应至少补齐一项可重复实验、一个失败案例和一个独立来源。"
+        )
+        lines.extend(
+            [
+                f"- 主动寻找“{topic}”在“{lens}”上的反证：检查效果下降、成本上升或无法复现的记录，并说明环境差异。",
+                f"- 核对“{topic}”的时间边界，确认版本变化是否会让当前“{lens}”结论失效。",
+                f"- 建立“{topic}”的“{lens}”决策记录：分别写下已确认事实、基于事实的推断和仍未知的信息；"
+                "未知项没有补齐前，不把试验结论扩展到生产环境。",
+                f"- 给“{topic}”设置“{lens}”复核日期：到期后重新检查原始链接、版本说明与反例，过期判断不直接沿用。",
+            ]
+        )
         return "\n".join(lines)
+
+    def _variant_lens(self, variant: int) -> str:
+        return (
+            "基线对照",
+            "成本变化",
+            "失败样本",
+            "版本边界",
+            "数据质量",
+            "可复现性",
+            "维护负担",
+            "用户反馈",
+        )[variant % len(_OUTLINES)]
+
+    def _content_type_label(self, content_type: str) -> str:
+        return {
+            "research": "研究",
+            "paper": "研究",
+            "discussion": "社区讨论",
+            "news": "新闻报道",
+            "release": "产品发布",
+        }.get((content_type or "").lower(), "公开资料")
 
     def _select_related_events(
         self,
@@ -491,26 +586,16 @@ class DraftBuilder:
                 continue
             haystack_tokens = self._title_tokens(f"{event.title} {event.summary}")
             overlap = len(title_tokens.intersection(haystack_tokens))
-            ai_hint_overlap = len(_AI_TOPIC_HINTS.intersection(haystack_tokens))
-            if overlap == 0 and ai_hint_overlap == 0 and event.ai_relevance < 0.35:
+            required_overlap = min(2, len(title_tokens))
+            if required_overlap == 0 or overlap < required_overlap:
                 continue
             source_diversity_bonus = 0.5 if event.source not in cluster.sources else 0.0
+            ai_hint_overlap = len(_AI_TOPIC_HINTS.intersection(haystack_tokens))
             score = overlap * 6.0 + ai_hint_overlap * 2.0 + event.ai_relevance * 2.0 + event.credibility + source_diversity_bonus
             scored.append((score, event))
 
         scored.sort(key=lambda item: item[0], reverse=True)
-        selected = [event for _, event in scored[:limit]]
-
-        if len(selected) < limit:
-            existing = {event.event_id for event in selected}
-            high_relevance = [
-                event
-                for event in sorted(all_events, key=self._event_strength, reverse=True)
-                if event.event_id not in primary_ids and event.event_id not in existing and event.ai_relevance >= 0.35
-            ]
-            selected.extend(high_relevance[: max(0, limit - len(selected))])
-
-        return selected[:limit]
+        return [event for _, event in scored[:limit]]
 
     def _event_takeaway(self, event: NormalizedEvent) -> str:
         summary = self._clean_text(event.summary)

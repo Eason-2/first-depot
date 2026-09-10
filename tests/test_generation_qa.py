@@ -6,8 +6,9 @@ import unittest
 from pathlib import Path
 
 from core.config import Settings
-from core.models import NormalizedEvent, TopicCluster
+from core.models import ArticleDraft, NormalizedEvent, TopicCluster
 from workers.generation.draft_builder import DraftBuilder
+from workers.qa.checks.style import check_style_and_structure
 from workers.qa.pipeline import QAPipeline
 
 _CJK_PATTERN = re.compile(r"[\u4e00-\u9fff]")
@@ -85,8 +86,95 @@ class GenerationQATests(unittest.TestCase):
         self.assertTrue(qa.passed)
         self.assertEqual(draft.status, "generated")
         self.assertTrue(bool(_CJK_PATTERN.search(draft.title)))
+        self.assertIn("AI product release", draft.title)
         self.assertNotIn("**", draft.content_markdown)
-        self.assertGreaterEqual(len(_CJK_PATTERN.findall(draft.content_markdown)), 1000)
+        self.assertNotIn("补充观察（第", draft.content_markdown)
+        self.assertGreaterEqual(qa.details["style"]["visible_chars"], 1200)
+        self.assertEqual(qa.details["style"]["duplicate_long_lines"], [])
+
+    def test_titles_stay_specific_to_each_topic(self) -> None:
+        titles = [
+            self.builder._build_chinese_title("GPT-6 coding model preview", 0),
+            self.builder._build_chinese_title("Open-source voice agent toolkit", 0),
+        ]
+
+        self.assertIn("GPT-6 coding model preview", titles[0])
+        self.assertIn("Open-source voice agent toolkit", titles[1])
+        self.assertNotEqual(titles[0], titles[1])
+        self.assertNotIn("GPT-5.4", titles[0])
+
+    def test_action_plan_changes_with_evidence_type(self) -> None:
+        cluster = TopicCluster(
+            cluster_id="cluster_action",
+            title="Efficient agent evaluation",
+            representative_url="https://example.com/action",
+            event_ids=["action"],
+            sources=["example"],
+            size=1,
+            score=80.0,
+            explainability={},
+        )
+        event_fields = {
+            "event_id": "action",
+            "source": "example",
+            "source_item_id": "action",
+            "title": "Efficient agent evaluation details",
+            "summary": "",
+            "url": "https://example.com/action",
+            "domain": "example.com",
+            "author": "",
+            "published_at": "2026-03-06T00:00:00Z",
+            "fetched_at": "2026-03-06T01:00:00Z",
+            "language": "en",
+            "tags": [],
+            "engagement": {},
+            "ai_relevance": 0.9,
+            "credibility": 0.8,
+            "dedup": {},
+            "raw_payload_ref": "",
+        }
+        news_plan = self.builder._build_action_plan(cluster, [NormalizedEvent(content_type="news", **event_fields)], 0)
+        research_plan = self.builder._build_action_plan(cluster, [NormalizedEvent(content_type="research", **event_fields)], 0)
+
+        self.assertIn("核对发布边界", news_plan)
+        self.assertIn("复现材料中的核心实验", research_plan)
+        self.assertNotEqual(news_plan, research_plan)
+
+    def test_style_rejects_generic_title_and_duplicate_long_lines(self) -> None:
+        repeated = "这是一段被重复使用的长句，用来确认质量检查能够拦住明显的模板化内容。"
+        content = "\n\n".join(
+            [
+                "# 这条 AI 话题为什么值得你认真看一眼",
+                "## 结论",
+                repeated,
+                "## 事实",
+                repeated,
+                "## 证据",
+                "主题证据与具体来源需要逐项核对。" * 20,
+                "## 行动",
+                "记录输入、配置、输出和失败案例。" * 20,
+                "## 风险",
+                "来源集中时不能把转述数量当作独立证据。" * 20,
+                "## 复盘",
+                "使用实测结果决定是否扩大投入。" * 20,
+            ]
+        )
+        draft = ArticleDraft(
+            draft_id="draft_style",
+            cluster_id="cluster_style",
+            title="这条 AI 话题为什么值得你认真看一眼",
+            content_markdown=content,
+            citations=[],
+            tags=[],
+            confidence=0.8,
+            status="generated",
+        )
+
+        passed, details = check_style_and_structure(draft)
+
+        self.assertFalse(passed)
+        self.assertTrue(details["generic_title"])
+        self.assertEqual(details["duplicate_long_lines"], [repeated])
 
     def test_structure_templates_rotate_in_order(self) -> None:
         events = [
@@ -136,10 +224,14 @@ class GenerationQATests(unittest.TestCase):
             "先给忙人版结论",
             "先把话挑明",
             "别急着站队，先看证据",
+            "这次只回答一个核心问题",
+            "先界定这篇文章讨论什么",
+            "用决策备忘录的方式看这件事",
+            "先拆开热度、证据与可用性",
         ]
 
         got_h2: list[str] = []
-        for idx in range(4):
+        for idx in range(8):
             cluster = TopicCluster(
                 cluster_id=f"cluster_rotate_{idx}",
                 title="AI product release",

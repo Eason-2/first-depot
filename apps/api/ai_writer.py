@@ -11,6 +11,8 @@ from http import HTTPStatus
 from pathlib import Path
 from typing import Any
 
+from apps.api.site_view import render_site_nav, site_nav_css
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -633,12 +635,7 @@ def handle_ai_writer_post(path: str, body_raw: bytes, handler: Any) -> bool:
 
 
 def render_ai_writer_page() -> str:
-    tutorial_url = _tutorial_url()
-    tutorial_button = (
-        f"<a class='top-link-button' href='{tutorial_url}' target='_blank' rel='noopener noreferrer'>使用教程</a>"
-        if tutorial_url
-        else ""
-    )
+    tutorial_button = "<a class='top-link-button' href='/tutorials'>使用教程</a>"
     return (
         "<!doctype html>"
         "<html lang='zh-CN'>"
@@ -647,7 +644,9 @@ def render_ai_writer_page() -> str:
         "<meta name='viewport' content='width=device-width, initial-scale=1' />"
         "<title>AI 写作助手</title>"
         "<style>"
-        "body{font-family:Segoe UI,Arial,sans-serif;max-width:1240px;margin:0 auto;padding:24px;line-height:1.6;background:#f8fafc;color:#0f172a;position:relative;}"
+        "body{font-family:Segoe UI,Arial,sans-serif;margin:0;line-height:1.6;background:#f8fafc;color:#0f172a;position:relative;}"
+        ".site-nav-wrap{padding:0 24px;background:#fff;border-bottom:1px solid #e2e8f0;}"
+        ".writer-page{max-width:1240px;margin:0 auto;padding:24px;}"
         "h1{margin:0 0 8px;}"
         "section{background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:14px 16px;margin:14px 0;}"
         "label{display:block;font-weight:600;margin-top:8px;}"
@@ -677,11 +676,14 @@ def render_ai_writer_page() -> str:
         ".runtime-panel input,.runtime-panel select{padding:6px;font-size:14px;}"
         ".runtime-panel button{padding:6px 10px;font-size:13px;}"
         ".runtime-panel .result{font-size:13px;padding:8px;margin-top:8px;}"
+        + site_nav_css() +
         "@media (max-width: 900px){.grid{grid-template-columns:1fr;}.intro{padding-right:0;}.runtime-wrap{position:static;}.runtime-panel{position:fixed;top:56px;right:12px;left:12px;width:auto;}}"
         "</style>"
         "</head>"
         "<body>"
-        "<p><a class='back-link-button' href='/blog'>返回博客</a>"
+        "<div class='site-nav-wrap'>" + render_site_nav("/ai-writer") + "</div>"
+        "<main class='writer-page'>"
+        "<p><a class='back-link-button' href='/ai-toolbox'>返回工具箱</a>"
         + tutorial_button +
         "</p>"
         "<div class='topbar'>"
@@ -771,6 +773,7 @@ def render_ai_writer_page() -> str:
         "async function translateText(){show('translate','翻译中...'); try{const payload={text:val('translate_input'),source_language:val('source_language'),target_language:val('target_language')}; const res=await req('/api/ai-writer/translate',payload); if(!res.ok){show('translate',res.error||'请求失败');return;} show('translate',res.data.text);}catch(e){show('translate',errMsg(e));}}"
         "loadRuntime();"
         "</script>"
+        "</main>"
         "</body>"
         "</html>"
     )

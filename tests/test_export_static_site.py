@@ -17,14 +17,22 @@ class ExportStaticSiteTests(unittest.TestCase):
 
     def test_apply_base_path(self) -> None:
         html = (
+            "<a href='/'>Home</a>"
+            "<a href='/projects'>Projects</a>"
+            "<a href='/tutorials'>Tutorials</a>"
             "<a href='/blog'>Blog</a>"
             "<a href='/blog/post-a'>Post A</a>"
             '<a href="/blog/post-b">Post B</a>'
+            "<a href='/about'>About</a>"
         )
         updated = _apply_base_path(html, "/first-depot")
+        self.assertIn("href='/first-depot/'", updated)
+        self.assertIn("href='/first-depot/projects'", updated)
+        self.assertIn("href='/first-depot/tutorials'", updated)
         self.assertIn("href='/first-depot/blog'", updated)
         self.assertIn("href='/first-depot/blog/post-a'", updated)
         self.assertIn('href="/first-depot/blog/post-b"', updated)
+        self.assertIn("href='/first-depot/about'", updated)
 
     def test_export_static_site_with_base_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -50,6 +58,9 @@ class ExportStaticSiteTests(unittest.TestCase):
 
             self.assertEqual(result["base_path"], "/first-depot")
             self.assertTrue((output_dir / ".nojekyll").exists())
+            self.assertTrue((output_dir / "projects" / "index.html").exists())
+            self.assertTrue((output_dir / "tutorials" / "index.html").exists())
+            self.assertTrue((output_dir / "about" / "index.html").exists())
             self.assertIn("href='/first-depot/blog/2026-03-10-sample'", (output_dir / "index.html").read_text(encoding="utf-8"))
             self.assertIn("href='/first-depot/blog'", (output_dir / "blog" / "2026-03-10-sample" / "index.html").read_text(encoding="utf-8"))
             self.assertIn("href='/first-depot/blog'", (output_dir / "404.html").read_text(encoding="utf-8"))

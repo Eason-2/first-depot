@@ -15,6 +15,8 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+from apps.api.site_view import render_site_nav, site_nav_css
+
 
 SUPPORTED_TOOLS = {
     "study_planner",
@@ -617,12 +619,7 @@ def handle_ai_toolbox_post(path: str, body_raw: bytes, handler: Any) -> bool:
 
 def render_ai_toolbox_page() -> str:
     tool_json = json.dumps(TOOL_UI_CONFIG, ensure_ascii=False)
-    tutorial_url = _tutorial_url()
-    tutorial_button = (
-        f'<a class="hero-link-button" href="{tutorial_url}" target="_blank" rel="noopener noreferrer">使用教程</a>'
-        if tutorial_url
-        else ""
-    )
+    tutorial_button = '<a class="hero-link-button" href="/tutorials">使用教程</a>'
     return f'''<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -630,8 +627,10 @@ def render_ai_toolbox_page() -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI 工具箱</title>
   <link rel="stylesheet" href="/api/ai-toolbox/assets/app.css" />
+  <style>{site_nav_css()}.site-nav-wrap{{padding:0 20px;background:#fff;border-bottom:1px solid #e2e8f0;}}</style>
 </head>
 <body>
+  <div class="site-nav-wrap">{render_site_nav('/ai-toolbox')}</div>
   <main class="page">
     <section class="hero">
       <div class="hero-topbar">
@@ -639,7 +638,7 @@ def render_ai_toolbox_page() -> str:
           <p class="eyebrow">AI 工具箱</p>
           <h1>博客内置 AI 工具箱</h1>
           <p>按“写作助手”的接入方式，直接集成到博客服务里，支持三挡位：mock / ollama / openai。</p>
-          <div class="hero-link-row"><a class="back-link-button" href="/blog">返回博客</a>{tutorial_button}</div>
+          <div class="hero-link-row"><a class="back-link-button" href="/">返回首页</a>{tutorial_button}</div>
         </div>
         <div class="hero-actions">
           <button id="runtime-button" type="button" class="secondary">设置</button>
@@ -694,4 +693,3 @@ def render_ai_toolbox_page() -> str:
   <script src="/api/ai-toolbox/assets/app.js"></script>
 </body>
 </html>'''
-

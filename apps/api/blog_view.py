@@ -4,8 +4,9 @@ import re
 from html import escape
 from pathlib import Path
 
+from apps.api.site_view import render_site_page
+
 _URL_PATTERN = re.compile(r"(https?://[^\s<]+)")
-_BG_IMAGE_URL = "https://pic1.zhimg.com/v2-407d96bc59e33e239c838aedb04013b2_r.jpg?source=1940ef5c"
 _SITE_NAME = "知行简报"
 _SITE_TAGLINE = "追踪热点，也尊重常识。"
 
@@ -32,6 +33,14 @@ def load_post_by_slug(publish_dir: Path, slug: str) -> tuple[str, str] | None:
     return title, body or raw
 
 
+def read_post_summary(post_path: Path) -> tuple[str, str, str]:
+    raw = post_path.read_text(encoding="utf-8")
+    meta, content = _parse_front_matter(raw)
+    title = meta.get("title") or _extract_title(raw) or post_path.stem
+    date = post_path.stem[:10] if re.match(r"\d{4}-\d{2}-\d{2}", post_path.stem) else ""
+    return title, _build_preview(content or raw), date
+
+
 def render_blog_index(publish_dir: Path) -> str:
     posts = list_post_files(publish_dir)
     if not posts:
@@ -40,14 +49,11 @@ def render_blog_index(publish_dir: Path) -> str:
         cards = []
         for post in posts:
             slug = post_slug_from_path(post)
-            raw = post.read_text(encoding="utf-8")
-            meta, content = _parse_front_matter(raw)
-            title = meta.get("title") or _extract_title(raw) or slug
-            preview = _build_preview(content or raw)
+            title, preview, date = read_post_summary(post)
             cards.append(
                 "<article class='post-card'>"
                 f"<h2><a href='/blog/{escape(slug)}'>{escape(title)}</a></h2>"
-                f"<p class='post-meta'>{escape(slug)}</p>"
+                f"<p class='post-meta'>{escape(date)}</p>"
                 f"<p>{escape(preview)}</p>"
                 f"<a class='read-more' href='/blog/{escape(slug)}'>阅读全文</a>"
                 "</article>"
@@ -55,28 +61,35 @@ def render_blog_index(publish_dir: Path) -> str:
         body = "".join(cards)
 
     header = (
-        "<header class='page-header'>"
-        "<div class='page-title'>"
+        "<header class='page-intro'>"
+        "<p class='eyebrow'>AI briefing</p>"
         f"<h1>{_SITE_NAME}</h1>"
-        f"<p>{_SITE_TAGLINE}</p>"
-        "</div>"
-        "<div class='page-actions'>"
-        "<a class='action-link' href='/ai-toolbox'>AI工具箱</a>"
-        "<a class='action-link' href='/ai-writer'>写作助手</a>"
-        "</div>"
+        f"<p>{_SITE_TAGLINE}这里保留自动采集与发布的资讯实验，项目案例和教程请从一级导航进入。</p>"
         "</header>"
     )
-    return _layout(_SITE_NAME, f"{header}{body}")
+    return render_site_page(_SITE_NAME, f"{header}<section class='section'>{body}</section>", "/blog")
 
 
 def render_blog_post(title: str, markdown_content: str) -> str:
-    article = markdown_to_html(markdown_content)
-    return _layout(
+    article = markdown_to_html(_remove_leading_title(markdown_content, title))
+    return render_site_page(
         title,
-        "<p><a href='/blog'>返回文章列表</a></p>"
-        + f"<h1>{escape(title)}</h1>"
-        + f"<article>{article}</article>",
+        "<header class='article-header'><p><a href='/blog'>← 返回知行简报</a></p>"
+        + f"<h1>{escape(title)}</h1></header>"
+        + f"<article class='article-content'>{article}</article>",
+        "/blog/post",
     )
+
+
+def _remove_leading_title(markdown_content: str, title: str) -> str:
+    lines = markdown_content.splitlines()
+    for index, line in enumerate(lines):
+        if not line.strip():
+            continue
+        if line.strip() == f"# {title}":
+            return "\n".join(lines[:index] + lines[index + 1 :])
+        break
+    return markdown_content
 
 
 def markdown_to_html(markdown: str) -> str:
@@ -182,39 +195,4 @@ def _build_preview(content: str) -> str:
 
 
 def _layout(title: str, body: str) -> str:
-    return (
-        "<!doctype html>"
-        "<html lang='zh-CN'>"
-        "<head>"
-        "<meta charset='utf-8' />"
-        "<meta name='viewport' content='width=device-width, initial-scale=1' />"
-        f"<title>{escape(title)}</title>"
-        "<style>"
-        "body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;max-width:980px;margin:0 auto;padding:28px 18px 42px;"
-        "line-height:1.9;color:#0f172a;"
-        f"background:linear-gradient(rgba(246,251,255,.88),rgba(251,241,249,.90)),url('{_BG_IMAGE_URL}') center top/cover no-repeat;"
-        "background-attachment:scroll;}"
-        "a{color:#1d4ed8;text-decoration:none;font-weight:600;}"
-        "a:hover{text-decoration:underline;}"
-        "article{margin-top:14px;background:rgba(255,255,255,.96);border:1px solid rgba(59,130,246,.16);border-radius:14px;padding:20px;}"
-        "h1,h2,h3{line-height:1.45;color:#0b3a75;}"
-        "p{margin:0 0 14px;}"
-        "ul{margin:0 0 16px 0;padding-left:22px;}"
-        "li{margin:0 0 8px;}"
-        "code{background:#e7f2ff;padding:2px 6px;border-radius:6px;}"
-        ".page-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px;}"
-        ".page-title{min-width:0;}"
-        ".page-title h1{margin:0 0 6px;}"
-        ".page-actions{flex:0 0 auto;display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;}"
-        ".action-link{display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border-radius:999px;border:1px solid rgba(29,78,216,.22);background:rgba(255,255,255,.92);box-shadow:0 8px 24px rgba(15,23,42,.06);white-space:nowrap;}"
-        ".post-card{background:rgba(255,255,255,.95);border:1px solid rgba(59,130,246,.16);border-radius:14px;padding:16px 18px;margin:14px 0;}"
-        ".post-meta{font-size:12px;color:#64748b;margin-bottom:6px;}"
-        ".read-more{display:inline-block;margin-top:4px;}"
-        "@media (max-width:640px){.page-header{flex-direction:column;}.page-actions{justify-content:flex-start;}}"
-        "</style>"
-        "</head>"
-        "<body>"
-        f"{body}"
-        "</body>"
-        "</html>"
-    )
+    return render_site_page(title, body, "/blog")
