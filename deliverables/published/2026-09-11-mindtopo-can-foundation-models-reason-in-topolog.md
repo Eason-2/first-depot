@@ -1,6 +1,6 @@
 ---
 title: 'MindTopo: Can Foundation Models Reason in Topolog...：核心变化与验证重点'
-draft_id: 'draft_aa1adc76d214'
+draft_id: 'draft_baac95c1fd44'
 cluster_id: 'cluster_ebd40f9cdf18'
 confidence: 0.86
 tags: [ai-news, automation, longform, zh]
