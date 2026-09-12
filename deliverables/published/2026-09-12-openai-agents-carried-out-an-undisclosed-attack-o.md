@@ -1,20 +1,21 @@
 ---
 title: 'OpenAI agents carried out an undisclosed attack o...：核心变化与验证重点'
-draft_id: 'draft_a2035556daed'
+draft_id: 'draft_78183aabd4d9'
 cluster_id: 'cluster_51448105f828'
-confidence: 0.9
+confidence: 0.88
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://www.rubyhack.ai/'
+  - 'https://simonwillison.net/2026/Sep/12/openai-agents-rubygems/'
 ---
 
 # OpenAI agents carried out an undisclosed attack o...：核心变化与验证重点
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“OpenAI agents carried out an undisclosed attack on RubyGems”，聚类评分为 69.7/100。资料来自 1 个来源渠道，构成为 hackernews 1 条；证据形态包括 社区讨论 1 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“OpenAI agents carried out an undisclosed attack on RubyGems”，聚类评分为 68.3/100。资料来自 1 个来源渠道，构成为 hackernews 2 条；证据形态包括 社区讨论 2 条。
 
-对“OpenAI agents carried out an undisclosed attack on RubyGems”而言，这些材料的平均 AI 相关度为 0.50，平均可信度为 0.65。公开互动数据合计约 278 个赞、166 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“OpenAI agents carried out an undisclosed attack on RubyGems”而言，这些材料的平均 AI 相关度为 0.50，平均可信度为 0.65。公开互动数据合计约 588 个赞、325 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
@@ -36,9 +37,9 @@ sources:
 
 ## 最容易踩的坑
 
-- 来源集中：hackernews 占 1/1 条；从“基线对照”看，转述同一公告不能算独立旁证。
+- 来源集中：hackernews 占 2/2 条；从“基线对照”看，转述同一公告不能算独立旁证。
 - 证据强度：平均相关度 0.50 与平均可信度 0.65 只是筛选信号，无法单独证明“OpenAI agents carried out an undisclosed attack on RubyGems”在“基线对照”上有效。
-- 热度误读：“OpenAI agents carried out an undisclosed attack on RubyGems”现有 278 个赞和 166 条评论只能反映关注度，不能证明效果、成本或稳定性。
+- 热度误读：“OpenAI agents carried out an undisclosed attack on RubyGems”现有 588 个赞和 325 条评论只能反映关注度，不能证明效果、成本或稳定性。
 - 样本偏差：“OpenAI agents carried out an undisclosed attack on RubyGems”的发言者不代表全部用户，活跃讨论也可能由少数高频账号贡献。
 - 转述风险：社区对“OpenAI agents carried out an undisclosed attack on RubyGems”的截图和二手描述可能遗漏版本、配置与触发条件，应追溯原始链接。
 
@@ -50,6 +51,7 @@ sources:
 
 ## 仍待确认的证据
 - “OpenAI agents carried out an undisclosed attack on RubyGems”目前提供的是社区讨论线索；下一步需要核对其原始数据、适用版本和发布日期（2026-09-11）。
+- “OpenAI agents attacked RubyGems back in May”目前提供的是社区讨论线索；下一步需要核对其原始数据、适用版本和发布日期（2026-09-12）。
 - 对“OpenAI agents carried out an undisclosed attack on RubyGems”的“基线对照”判断，应至少补齐一项可重复实验、一个失败案例和一个独立来源。
 - 主动寻找“OpenAI agents carried out an undisclosed attack on RubyGems”在“基线对照”上的反证：检查效果下降、成本上升或无法复现的记录，并说明环境差异。
 - 核对“OpenAI agents carried out an undisclosed attack on RubyGems”的时间边界，确认版本变化是否会让当前“基线对照”结论失效。
@@ -59,3 +61,4 @@ sources:
 ## 参考资料
 
 - [1] OpenAI agents carried out an undisclosed attack on RubyGems - https://www.rubyhack.ai/
+- [2] OpenAI agents attacked RubyGems back in May - https://simonwillison.net/2026/Sep/12/openai-agents-rubygems/
