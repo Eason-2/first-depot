@@ -1,12 +1,11 @@
 ---
 title: 'Introducing System One Models and Jev：核心变化与验证重点'
-draft_id: 'draft_90b0bbe1fb69'
+draft_id: 'draft_fc6059edca87'
 cluster_id: 'cluster_7f4d2d9692aa'
-confidence: 0.86
+confidence: 0.91
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://typesafe.ai/blog/introducing-system-one-models-and-jev'
-  - 'https://withcapsule.app/'
   - 'https://arxiv.org/abs/2609.15963v1'
   - 'https://arxiv.org/abs/2609.15982v1'
 ---
@@ -15,9 +14,9 @@ sources:
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Introducing System One Models and Jev”，聚类评分为 65.8/100。资料来自 2 个来源渠道，构成为 hackernews 2 条、arxiv 2 条；证据形态包括 社区讨论 2 条、研究 2 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Introducing System One Models and Jev”，聚类评分为 70.6/100。资料来自 2 个来源渠道，构成为 arxiv 2 条、hackernews 1 条；证据形态包括 研究 2 条、社区讨论 1 条。
 
-对“Introducing System One Models and Jev”而言，这些材料的平均 AI 相关度为 0.65，平均可信度为 0.78。公开互动数据合计约 530 个赞、221 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“Introducing System One Models and Jev”而言，这些材料的平均 AI 相关度为 0.70，平均可信度为 0.82。公开互动数据合计约 604 个赞、200 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
@@ -27,7 +26,7 @@ sources:
 
 这一版先用“基线对照”检查主题，不急着扩展到所有业务场景。围绕“Introducing System One Models and Jev”，需要保留来源之间的证据差异。目前只有“Introducing System One Models and Jev”这一条核心材料，缺少第二来源对它的关键结论进行交叉验证。
 
-以“基线对照”为观察轴，整体相关度均值为 0.65，说明这些材料与主题的贴合度较高；可信度均值为 0.78，来源间差值为 0.00。社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。现阶段对“Introducing System One Models and Jev”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
+以“基线对照”为观察轴，整体相关度均值为 0.70，说明这些材料与主题的贴合度较高；可信度均值为 0.82，来源间差值为 0.00。社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。现阶段对“Introducing System One Models and Jev”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
 
 ## 如果你真要做，可以先从这几步开始
 
@@ -39,11 +38,11 @@ sources:
 
 ## 最容易踩的坑
 
-- 来源集中：hackernews 占 2/4 条；从“基线对照”看，转述同一公告不能算独立旁证。
-- 证据强度：平均相关度 0.65 与平均可信度 0.78 只是筛选信号，无法单独证明“Introducing System One Models and Jev”在“基线对照”上有效。
-- 热度误读：“Introducing System One Models and Jev”现有 530 个赞和 221 条评论只能反映关注度，不能证明效果、成本或稳定性。
-- 样本偏差：“Introducing System One Models and Jev”的发言者不代表全部用户，活跃讨论也可能由少数高频账号贡献。
-- 转述风险：社区对“Introducing System One Models and Jev”的截图和二手描述可能遗漏版本、配置与触发条件，应追溯原始链接。
+- 来源集中：arxiv 占 2/3 条；从“基线对照”看，转述同一公告不能算独立旁证。
+- 证据强度：平均相关度 0.70 与平均可信度 0.82 只是筛选信号，无法单独证明“Introducing System One Models and Jev”在“基线对照”上有效。
+- 热度误读：“Introducing System One Models and Jev”现有 604 个赞和 200 条评论只能反映关注度，不能证明效果、成本或稳定性。
+- 外部有效性：关于“Introducing System One Models and Jev”的实验结果可能依赖特定数据集与硬件，换到业务数据后需要重新测量。
+- 复现风险：若“Introducing System One Models and Jev”没有公开代码、随机种子或完整参数，单次高分不足以支持工程选型。
 
 ## 最后给你一个可直接落地的复盘框架
 
@@ -53,7 +52,6 @@ sources:
 
 ## 仍待确认的证据
 - “Introducing System One Models and Jev”目前提供的是社区讨论线索；下一步需要核对其原始数据、适用版本和发布日期（2026-09-15）。
-- “Show HN: Capsule – Single-file web apps that save their data into SQLite”目前提供的是社区讨论线索；下一步需要核对其原始数据、适用版本和发布日期（2026-09-15）。
 - “Adversarial Testing of Automated Program Repair Agents for Security Vulnerabilities”目前提供的是研究线索；下一步需要核对其原始数据、适用版本和发布日期（2026-09-14）。
 - “The Router Within: Eliciting Native Skill Routing from a Frozen LLM”目前提供的是研究线索；下一步需要核对其原始数据、适用版本和发布日期（2026-09-14）。
 - 对“Introducing System One Models and Jev”的“基线对照”判断，应至少补齐一项可重复实验、一个失败案例和一个独立来源。
@@ -65,6 +63,5 @@ sources:
 ## 参考资料
 
 - [1] Introducing System One Models and Jev - https://typesafe.ai/blog/introducing-system-one-models-and-jev
-- [2] Show HN: Capsule – Single-file web apps that save their data into SQLite - https://withcapsule.app/
-- [3] Adversarial Testing of Automated Program Repair Agents for Security Vulnerabilities - https://arxiv.org/abs/2609.15963v1
-- [4] The Router Within: Eliciting Native Skill Routing from a Frozen LLM - https://arxiv.org/abs/2609.15982v1
+- [2] Adversarial Testing of Automated Program Repair Agents for Security Vulnerabilities - https://arxiv.org/abs/2609.15963v1
+- [3] The Router Within: Eliciting Native Skill Routing from a Frozen LLM - https://arxiv.org/abs/2609.15982v1
