@@ -1,6 +1,6 @@
 ---
 title: 'What Breaks Under Pruning in Smart Homes, and Whe...：核心变化与验证重点'
-draft_id: 'draft_4c077c6e4aac'
+draft_id: 'draft_b099cc21ee87'
 cluster_id: 'cluster_78b16ebf7572'
 confidence: 0.86
 tags: [ai-news, automation, longform, zh]
