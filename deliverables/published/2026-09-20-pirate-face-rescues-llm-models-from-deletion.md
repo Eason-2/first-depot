@@ -1,8 +1,8 @@
 ---
 title: 'Pirate Face Rescues LLM Models from Deletion：核心变化与验证重点'
-draft_id: 'draft_e9567a526c87'
+draft_id: 'draft_686cddafb2d6'
 cluster_id: 'cluster_47dfe114f158'
-confidence: 0.88
+confidence: 0.85
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://pirateface.co/'
@@ -12,9 +12,9 @@ sources:
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Pirate Face Rescues LLM Models from Deletion”，聚类评分为 68.2/100。资料来自 1 个来源渠道，构成为 hackernews 1 条；证据形态包括 社区讨论 1 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Pirate Face Rescues LLM Models from Deletion”，聚类评分为 65.3/100。资料来自 1 个来源渠道，构成为 hackernews 1 条；证据形态包括 社区讨论 1 条。
 
-对“Pirate Face Rescues LLM Models from Deletion”而言，这些材料的平均 AI 相关度为 0.50，平均可信度为 0.65。公开互动数据合计约 256 个赞、98 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“Pirate Face Rescues LLM Models from Deletion”而言，这些材料的平均 AI 相关度为 0.50，平均可信度为 0.65。公开互动数据合计约 352 个赞、115 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
@@ -38,7 +38,7 @@ sources:
 
 - 来源集中：hackernews 占 1/1 条；从“基线对照”看，转述同一公告不能算独立旁证。
 - 证据强度：平均相关度 0.50 与平均可信度 0.65 只是筛选信号，无法单独证明“Pirate Face Rescues LLM Models from Deletion”在“基线对照”上有效。
-- 热度误读：“Pirate Face Rescues LLM Models from Deletion”现有 256 个赞和 98 条评论只能反映关注度，不能证明效果、成本或稳定性。
+- 热度误读：“Pirate Face Rescues LLM Models from Deletion”现有 352 个赞和 115 条评论只能反映关注度，不能证明效果、成本或稳定性。
 - 样本偏差：“Pirate Face Rescues LLM Models from Deletion”的发言者不代表全部用户，活跃讨论也可能由少数高频账号贡献。
 - 转述风险：社区对“Pirate Face Rescues LLM Models from Deletion”的截图和二手描述可能遗漏版本、配置与触发条件，应追溯原始链接。
 
