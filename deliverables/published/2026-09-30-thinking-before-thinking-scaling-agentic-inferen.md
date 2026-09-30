@@ -1,6 +1,6 @@
 ---
 title: 'Thinking Before Thinking: Scaling Agentic Inferen...：核心变化与验证重点'
-draft_id: 'draft_48ecd9c7f8c6'
+draft_id: 'draft_20f60115d744'
 cluster_id: 'cluster_489ef464d4ea'
 confidence: 0.89
 tags: [ai-news, automation, longform, zh]
