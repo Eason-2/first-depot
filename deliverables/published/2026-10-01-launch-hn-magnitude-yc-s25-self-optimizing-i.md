@@ -1,21 +1,20 @@
 ---
 title: 'Launch HN: Magnitude (YC S25) – Self-optimizing i...：核心变化与验证重点'
-draft_id: 'draft_6d96ba604da7'
+draft_id: 'draft_c11f0538be36'
 cluster_id: 'cluster_eb961537124b'
-confidence: 0.89
+confidence: 0.9
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://github.com/magnitudedev/magnitude'
-  - 'https://arxiv.org/abs/2609.39182v1'
 ---
 
 # Launch HN: Magnitude (YC S25) – Self-optimizing i...：核心变化与验证重点
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”，聚类评分为 69.0/100。资料来自 2 个来源渠道，构成为 hackernews 1 条、arxiv 1 条；证据形态包括 社区讨论 1 条、研究 1 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”，聚类评分为 70.1/100。资料来自 1 个来源渠道，构成为 hackernews 1 条；证据形态包括 社区讨论 1 条。
 
-对“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”而言，这些材料的平均 AI 相关度为 0.80，平均可信度为 0.78。公开互动数据合计约 124 个赞、56 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”而言，这些材料的平均 AI 相关度为 0.95，平均可信度为 0.65。公开互动数据合计约 153 个赞、77 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
@@ -25,7 +24,7 @@ sources:
 
 这一版先用“基线对照”检查主题，不急着扩展到所有业务场景。围绕“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”，需要保留来源之间的证据差异。目前只有“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”这一条核心材料，缺少第二来源对它的关键结论进行交叉验证。
 
-以“基线对照”为观察轴，整体相关度均值为 0.80，说明这些材料与主题的贴合度较高；可信度均值为 0.78，来源间差值为 0.00。社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。现阶段对“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
+以“基线对照”为观察轴，整体相关度均值为 0.95，说明这些材料与主题的贴合度较高；可信度均值为 0.65，来源间差值为 0.00。社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。现阶段对“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
 
 ## 如果你真要做，可以先从这几步开始
 
@@ -37,9 +36,9 @@ sources:
 
 ## 最容易踩的坑
 
-- 来源集中：hackernews 占 1/2 条；从“基线对照”看，转述同一公告不能算独立旁证。
-- 证据强度：平均相关度 0.80 与平均可信度 0.78 只是筛选信号，无法单独证明“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”在“基线对照”上有效。
-- 热度误读：“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”现有 124 个赞和 56 条评论只能反映关注度，不能证明效果、成本或稳定性。
+- 来源集中：hackernews 占 1/1 条；从“基线对照”看，转述同一公告不能算独立旁证。
+- 证据强度：平均相关度 0.95 与平均可信度 0.65 只是筛选信号，无法单独证明“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”在“基线对照”上有效。
+- 热度误读：“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”现有 153 个赞和 77 条评论只能反映关注度，不能证明效果、成本或稳定性。
 - 样本偏差：“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”的发言者不代表全部用户，活跃讨论也可能由少数高频账号贡献。
 - 转述风险：社区对“Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents”的截图和二手描述可能遗漏版本、配置与触发条件，应追溯原始链接。
 
@@ -52,4 +51,3 @@ sources:
 ## 参考资料
 
 - [1] Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents - https://github.com/magnitudedev/magnitude
-- [2] MEND: Label-Free Detection, Localisation, and Correction of Latent Hallucination in World Models - https://arxiv.org/abs/2609.39182v1
