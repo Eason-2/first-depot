@@ -1,8 +1,8 @@
 ---
 title: 'Reconstruct, Practice, Go Real: Guided Self-Impro...：核心变化与验证重点'
-draft_id: 'draft_0b73513e350b'
+draft_id: 'draft_cc3a119895f0'
 cluster_id: 'cluster_59a17947b928'
-confidence: 0.89
+confidence: 0.8
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://arxiv.org/abs/2610.02204v1'
@@ -13,7 +13,7 @@ sources:
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Reconstruct, Practice, Go Real: Guided Self-Improvement for Embodied Agents”，聚类评分为 69.3/100。资料来自 1 个来源渠道，构成为 arxiv 2 条；证据形态包括 研究 2 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Reconstruct, Practice, Go Real: Guided Self-Improvement for Embodied Agents”，聚类评分为 60.3/100。资料来自 1 个来源渠道，构成为 arxiv 2 条；证据形态包括 研究 2 条。
 
 对“Reconstruct, Practice, Go Real: Guided Self-Improvement for Embodied Agents”而言，这些材料的平均 AI 相关度为 0.65，平均可信度为 0.90。当前来源没有可用的点赞、评论数据，因此本文不会用“热度高”代替证据强。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
