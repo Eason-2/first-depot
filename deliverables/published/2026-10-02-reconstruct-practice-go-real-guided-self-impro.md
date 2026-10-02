@@ -1,6 +1,6 @@
 ---
 title: 'Reconstruct, Practice, Go Real: Guided Self-Impro...：核心变化与验证重点'
-draft_id: 'draft_42373b656e36'
+draft_id: 'draft_0b73513e350b'
 cluster_id: 'cluster_59a17947b928'
 confidence: 0.89
 tags: [ai-news, automation, longform, zh]
