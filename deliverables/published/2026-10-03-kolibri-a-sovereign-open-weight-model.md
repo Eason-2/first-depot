@@ -1,6 +1,6 @@
 ---
 title: 'Kolibri: A Sovereign Open-Weight Model：核心变化与验证重点'
-draft_id: 'draft_a7b7ab4d1c7e'
+draft_id: 'draft_81261a990ca5'
 cluster_id: 'cluster_4b296b46e264'
 confidence: 0.85
 tags: [ai-news, automation, longform, zh]
@@ -14,13 +14,13 @@ sources:
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Kolibri: A Sovereign Open-Weight Model”，聚类评分为 64.5/100。资料来自 2 个来源渠道，构成为 arxiv 2 条、hackernews 1 条；证据形态包括 研究 2 条、社区讨论 1 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Kolibri: A Sovereign Open-Weight Model”，聚类评分为 64.6/100。资料来自 2 个来源渠道，构成为 arxiv 2 条、hackernews 1 条；证据形态包括 研究 2 条、社区讨论 1 条。
 
-对“Kolibri: A Sovereign Open-Weight Model”而言，这些材料的平均 AI 相关度为 0.60，平均可信度为 0.82。公开互动数据合计约 396 个赞、254 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“Kolibri: A Sovereign Open-Weight Model”而言，这些材料的平均 AI 相关度为 0.60，平均可信度为 0.82。公开互动数据合计约 476 个赞、288 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
-- Kolibri: A Sovereign Open-Weight Model（hackernews，2026-10-03）。https://tej.as/blog/aleph-alpha-kolibri 相关度 0.35，可信度 0.65。
+- Kolibri: A Sovereign Open-Weight Model（hackernews，2026-10-03）。tech report: https://aleph-alpha.com/downloads/tech-report.pdf additional paper: https://tej.as/blog/aleph-alpha-kolibri 相关度 0.35，可信度 0.65。
 
 ## 为什么这件事不只是热度问题
 
@@ -40,7 +40,7 @@ sources:
 
 - 来源集中：arxiv 占 2/3 条；从“基线对照”看，转述同一公告不能算独立旁证。
 - 证据强度：平均相关度 0.60 与平均可信度 0.82 只是筛选信号，无法单独证明“Kolibri: A Sovereign Open-Weight Model”在“基线对照”上有效。
-- 热度误读：“Kolibri: A Sovereign Open-Weight Model”现有 396 个赞和 254 条评论只能反映关注度，不能证明效果、成本或稳定性。
+- 热度误读：“Kolibri: A Sovereign Open-Weight Model”现有 476 个赞和 288 条评论只能反映关注度，不能证明效果、成本或稳定性。
 - 外部有效性：关于“Kolibri: A Sovereign Open-Weight Model”的实验结果可能依赖特定数据集与硬件，换到业务数据后需要重新测量。
 - 复现风险：若“Kolibri: A Sovereign Open-Weight Model”没有公开代码、随机种子或完整参数，单次高分不足以支持工程选型。
 
