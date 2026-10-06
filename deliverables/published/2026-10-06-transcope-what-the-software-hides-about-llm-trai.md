@@ -1,6 +1,6 @@
 ---
 title: 'TranScope: What the Software Hides About LLM Trai...：核心变化与验证重点'
-draft_id: 'draft_cb92164cad57'
+draft_id: 'draft_f777f6dc89ac'
 cluster_id: 'cluster_fde234c771bf'
 confidence: 0.91
 tags: [ai-news, automation, longform, zh]
