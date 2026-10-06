@@ -64,20 +64,27 @@ def render_blog_index(publish_dir: Path) -> str:
         "<header class='page-intro'>"
         "<p class='eyebrow'>AI briefing</p>"
         f"<h1>{_SITE_NAME}</h1>"
-        f"<p>{_SITE_TAGLINE}这里保留自动采集与发布的资讯实验，项目案例和教程请从一级导航进入。</p>"
+        f"<p>{_SITE_TAGLINE}关注 AI 新工具、产品更新与研究进展，从原始来源发现值得继续了解的变化。</p>"
+        "<p class='post-meta'>简报由自动化流程整理，重要信息请核对文末来源；个人试用和学习经历另见成长记录。</p>"
+        "<div class='hero-actions'><a href='/tutorials#start-here'>第一次用 AI？从这里开始 →</a>"
+        "<a href='/about/journal'>查看成长记录 →</a></div>"
         "</header>"
     )
     return render_site_page(_SITE_NAME, f"{header}<section class='section'>{body}</section>", "/blog")
 
 
 def render_blog_post(title: str, markdown_content: str) -> str:
+    return render_article_page(title, markdown_content, "/blog", "知行简报")
+
+
+def render_article_page(title: str, markdown_content: str, collection_path: str, collection_name: str) -> str:
     article = markdown_to_html(_remove_leading_title(markdown_content, title))
     return render_site_page(
         title,
-        "<header class='article-header'><p><a href='/blog'>← 返回知行简报</a></p>"
+        f"<header class='article-header'><p><a href='{escape(collection_path, quote=True)}'>← 返回{escape(collection_name)}</a></p>"
         + f"<h1>{escape(title)}</h1></header>"
         + f"<article class='article-content'>{article}</article>",
-        "/blog/post",
+        collection_path + "/post",
     )
 
 

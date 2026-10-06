@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 from apps.api.ai_toolbox import render_ai_toolbox_page
 from apps.api.ai_writer import render_ai_writer_page
 from apps.api.blog_view import load_post_by_slug, post_slug_from_path, render_blog_index, render_blog_post
+from apps.api.journal_view import render_journal_index, render_journal_post
 from apps.api.portfolio_view import render_about_page, render_home_page, render_projects_page, render_tutorials_page
 
 
@@ -76,16 +77,17 @@ def export_static_site(
     output_dir.mkdir(parents=True, exist_ok=True)
     page_dirs = {
         name: output_dir / name
-        for name in ('projects', 'tutorials', 'ai-writer', 'ai-toolbox', 'blog', 'about')
+        for name in ('projects', 'tutorials', 'ai-writer', 'ai-toolbox', 'blog', 'about', 'about/journal')
     }
     for page_dir in page_dirs.values():
         page_dir.mkdir(parents=True, exist_ok=True)
     blog_dir = page_dirs['blog']
     ai_writer_dir = page_dirs['ai-writer']
     ai_toolbox_dir = page_dirs['ai-toolbox']
+    journal_dir = project_root / 'deliverables' / 'journal'
 
     normalized_base_path = _normalize_base_path(base_path)
-    index_html = _apply_base_path(render_home_page(publish_dir), normalized_base_path)
+    index_html = _apply_base_path(render_home_page(publish_dir, journal_dir), normalized_base_path)
     blog_index_html = _apply_base_path(render_blog_index(publish_dir), normalized_base_path)
     projects_html = _apply_base_path(render_projects_page(), normalized_base_path)
     tutorials_html = _apply_base_path(render_tutorials_page(), normalized_base_path)
@@ -100,6 +102,24 @@ def export_static_site(
     (page_dirs['about'] / 'index.html').write_text(about_html, encoding='utf-8')
     (ai_writer_dir / 'index.html').write_text(ai_writer_html, encoding='utf-8')
     (ai_toolbox_dir / 'index.html').write_text(ai_toolbox_html, encoding='utf-8')
+    (page_dirs['about/journal'] / 'index.html').write_text(
+        _apply_base_path(render_journal_index(journal_dir), normalized_base_path), encoding='utf-8'
+    )
+
+    journal_count = 0
+    for journal_path in sorted(journal_dir.glob('*.md'), reverse=True):
+        if not journal_path.is_file():
+            continue
+        slug = post_slug_from_path(journal_path)
+        loaded = load_post_by_slug(journal_dir, slug)
+        if not loaded:
+            continue
+        entry_dir = page_dirs['about/journal'] / slug
+        entry_dir.mkdir(parents=True, exist_ok=True)
+        (entry_dir / 'index.html').write_text(
+            _apply_base_path(render_journal_post(*loaded), normalized_base_path), encoding='utf-8'
+        )
+        journal_count += 1
 
     post_count = 0
     for post_path in sorted(publish_dir.glob('*.md'), reverse=True):
@@ -136,6 +156,7 @@ def export_static_site(
         'output_dir': str(output_dir),
         'publish_dir': str(publish_dir),
         'post_count': post_count,
+        'journal_count': journal_count,
         'cname': cname_value,
         'base_path': normalized_base_path,
     }
@@ -158,6 +179,7 @@ def main() -> None:
     print(f"- output_dir: {result['output_dir']}")
     print(f"- publish_dir: {result['publish_dir']}")
     print(f"- post_count: {result['post_count']}")
+    print(f"- journal_count: {result['journal_count']}")
     if result['cname']:
         print(f"- cname: {result['cname']}")
     if result['base_path']:

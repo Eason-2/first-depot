@@ -4,7 +4,7 @@ from html import escape
 
 
 SITE_NAME = "AI 应用实践"
-SITE_DESCRIPTION = "面向真实业务的 Agent、RAG、自动化与 AI 工具实践。"
+SITE_DESCRIPTION = "从第一次使用 AI 到完成自己的项目，分享入门教程、AI 资讯和实践记录。"
 
 _NAV_ITEMS = (
     ("首页", "/"),
@@ -19,7 +19,7 @@ _NAV_ITEMS = (
 def render_site_nav(active_path: str) -> str:
     links: list[str] = []
     for label, path in _NAV_ITEMS:
-        is_active = active_path == path or (path == "/blog" and active_path.startswith("/blog/"))
+        is_active = active_path == path or (path != "/" and active_path.startswith(path + "/"))
         if path == "/ai-toolbox" and active_path == "/ai-writer":
             is_active = True
         active_class = " is-active" if is_active else ""
@@ -30,7 +30,7 @@ def render_site_nav(active_path: str) -> str:
         "<header class='site-header'>"
         "<a class='site-brand' href='/' aria-label='返回首页'>"
         "<span class='site-brand-mark' aria-hidden='true'>AI</span>"
-        "<span><strong>AI 应用实践</strong><small>Agent · RAG · 自动化</small></span>"
+        "<span><strong>AI 应用实践</strong><small>入门 · 资讯 · 成长</small></span>"
         "</a>"
         f"<nav class='site-nav' aria-label='一级导航'>{''.join(links)}</nav>"
         "</header>"
@@ -40,13 +40,24 @@ def render_site_nav(active_path: str) -> str:
 def render_site_footer() -> str:
     return (
         "<footer class='site-footer'>"
-        "<div><strong>AI 应用实践</strong><p>把大模型接入真实业务，让流程可执行、可验证、可上线。</p></div>"
+        "<div><strong>AI 应用实践</strong><p>分享 AI 的用法，也记录学习与实践的过程。</p></div>"
         "<div class='footer-links'>"
         "<a href='https://github.com/Eason-2' target='_blank' rel='noopener noreferrer'>GitHub</a>"
         "<a href='/about'>关于我</a>"
         "</div>"
         "</footer>"
     )
+
+
+def render_about_nav(active_path: str) -> str:
+    links = []
+    for label, path in (("个人介绍", "/about"), ("成长记录", "/about/journal")):
+        active = active_path.rstrip("/") == path or active_path.startswith(path + "/")
+        if path == "/about":
+            active = active_path.rstrip("/") == path
+        current = " aria-current='page'" if active else ""
+        links.append(f"<a href='{path}'{current}>{label}</a>")
+    return "<nav class='section-nav' aria-label='关于我栏目'>" + "".join(links) + "</nav>"
 
 
 def site_nav_css() -> str:
@@ -65,6 +76,9 @@ def site_nav_css() -> str:
         ".site-footer{max-width:1120px;margin:64px auto 0;padding:28px 0;border-top:1px solid #dce3e8;display:flex;justify-content:space-between;gap:24px;color:#475569;}"
         ".site-footer p{margin:6px 0 0;}"
         ".footer-links{display:flex;align-items:flex-start;gap:18px;}"
+        ".section-nav{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0 0;}"
+        ".section-nav a{padding:8px 14px;border:1px solid #dce3e8;border-radius:6px;color:#475569;background:#fff;}"
+        ".section-nav a[aria-current='page']{color:#0b625c;background:#e3f2f0;border-color:#0f766e;}"
         "@media(max-width:820px){.site-header{position:static;align-items:flex-start;flex-direction:column;padding:14px 0;gap:12px;}.site-nav{justify-content:flex-start;width:100%;}.site-nav-link{padding:7px 10px}.site-footer{flex-direction:column;margin-top:44px;}}"
         "@media(max-width:620px){.site-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;padding:4px;}.site-nav-link{width:100%;text-align:center;padding:7px 3px;font-size:13px;}}"
     )
@@ -88,21 +102,25 @@ def render_site_page(title: str, body: str, active_path: str, description: str =
         ".eyebrow{margin:0 0 12px;color:var(--teal);font-size:13px;font-weight:800;text-transform:uppercase;}"
         ".hero{min-height:500px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);align-items:center;gap:54px;padding:56px 0 64px;border-bottom:1px solid var(--line);}"
         ".hero-copy{max-width:690px;}.hero-copy .lead{font-size:21px;max-width:640px;margin:20px 0 26px;color:#334155;}"
+        ".hero .hero-title{font-size:clamp(36px,4vw,54px);}.hero-note{margin:20px 0 0;font-size:14px;}"
         ".hero-actions,.tag-row,.metric-row{display:flex;flex-wrap:wrap;gap:10px;}"
         ".button-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 16px;border:1px solid var(--ink);border-radius:6px;background:var(--ink);color:#fff;}"
         ".button-link.secondary{background:transparent;color:var(--ink);}.button-link:hover{text-decoration:none;background:var(--teal);border-color:var(--teal);color:#fff;}"
         ".workflow-visual{background:#17202a;color:#fff;border-radius:8px;padding:24px;box-shadow:12px 12px 0 #f97316;}"
+        ".workflow-visual .eyebrow{color:#8ddbd0;}"
         ".workflow-visual h2{font-size:18px;color:#fff;margin-bottom:18px;}.workflow-step{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid #334155;}"
         ".workflow-step b{width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:#0f766e;font-size:12px;}.workflow-step span{color:#dbe4ea;font-size:14px;}"
         ".section{padding:64px 0 0;}.section-heading{max-width:720px;margin-bottom:26px;}.section-heading p{font-size:17px;}"
         ".grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;}.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}"
         ".card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:22px;}.card p:last-child{margin-bottom:0;}.card-kicker{color:var(--orange);font-size:12px;font-weight:800;margin-bottom:9px;}"
+        ".reading-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:18px;}"
         ".tag{display:inline-flex;padding:4px 8px;border-radius:4px;background:#e7f3f1;color:#0f766e;font-size:12px;font-weight:700;}"
         ".metric-row{margin-top:28px;}.metric{min-width:140px;padding:14px 16px;border-left:3px solid var(--orange);background:#fff;}.metric strong{display:block;font-size:27px;line-height:1.1;}.metric span{font-size:12px;color:var(--muted);}"
         ".page-intro{padding:56px 0 30px;border-bottom:1px solid var(--line);}.page-intro h1{font-size:46px;}.page-intro p{max-width:720px;font-size:18px;margin-top:14px;}"
         ".case-study{padding:32px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:250px 1fr;gap:36px;}.case-study h2{font-size:24px;}.case-body{display:grid;grid-template-columns:1fr 1fr;gap:24px;}.case-body .wide{grid-column:1/-1;}"
         ".tutorial-block{background:#fff;border:1px solid var(--line);border-radius:8px;padding:26px;margin-top:18px;}.tutorial-steps{counter-reset:step;list-style:none;padding:0;}.tutorial-steps li{counter-increment:step;position:relative;padding:0 0 22px 48px;}.tutorial-steps li:before{content:counter(step);position:absolute;left:0;top:0;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:#0f766e;color:#fff;font-weight:800;}"
         "pre{overflow:auto;background:#17202a;color:#e2e8f0;padding:16px;border-radius:6px;line-height:1.55;}code{font-family:'SFMono-Regular',Consolas,monospace;}"
+        ".prompt-example{white-space:pre-wrap;overflow-wrap:anywhere;}[id]{scroll-margin-top:110px;}"
         ".post-card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:20px;margin:14px 0;}.post-card h2{font-size:22px;margin-bottom:7px;}.post-meta{font-size:12px;color:#718096;}.read-more{display:inline-block;margin-top:4px;}"
         ".article-header{max-width:800px;padding:46px 0 24px;}.article-header h1{font-size:44px;}.article-content{max-width:860px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:34px;margin-top:14px;}.article-content h1:first-child{display:none;}.article-content h2{font-size:24px;margin-top:30px;}.article-content h3{margin-top:24px;}"
         ".about-grid{display:grid;grid-template-columns:.75fr 1.25fr;gap:30px;align-items:start;}.skill-list{display:flex;flex-wrap:wrap;gap:8px;}.timeline-item{padding:0 0 24px 22px;border-left:2px solid #cbd5e1;position:relative;}.timeline-item:before{content:'';position:absolute;left:-7px;top:7px;width:12px;height:12px;background:var(--orange);border-radius:50%;}"

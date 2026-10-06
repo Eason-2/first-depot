@@ -336,6 +336,28 @@ API endpoints:
 - Published markdown: `deliverables/published/`
 - Contracts: `apps/api/contracts/event-schema.json`
 
+## 成长记录与入门教程
+
+六个一级导航继续保留。知行简报仍从 `deliverables/published/` 读取自动发布的资讯；成长记录位于“关于我”下的 `/about/journal/`，从独立目录 `deliverables/journal/` 读取手工整理的文章。首页会展示最新三篇成长记录，两类文章不会混入对方列表。
+
+新增成长记录时，在 `deliverables/journal/` 创建 `YYYY-MM-DD-short-slug.md`，例如：
+
+```markdown
+---
+title: '这次尝试中遇到的一个问题'
+---
+
+# 这次尝试中遇到的一个问题
+
+写下具体经过、当时的选择和仍需验证的想法。
+```
+
+文件名决定日期与网址，发布后尽量保持文件名稳定。该目录只放准备公开的文章，草稿留在目录外；支持普通段落、标题、无序列表和直接写出的网页地址。文章篇幅、结构不受资讯生成器的固定规则限制，个人经历需要作者核实。
+
+`/tutorials/#start-here` 是零基础入口，包含对话工具入口、虚构练习材料、结果核对和追问示例；原有本地工具箱教程仍在同一页。教程内容在 `apps/api/portfolio_view.py` 维护。
+
+运行 `python -m scripts.export_static_site --output-dir site` 后即可预览；推送到 `main` 会通过现有 Pages 工作流发布首页、简报、教程与成长记录。
+
 ## Testing
 ```bash
 python -m unittest discover -s tests -p "test_*.py"
