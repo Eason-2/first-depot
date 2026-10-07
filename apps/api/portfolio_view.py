@@ -4,6 +4,7 @@ from html import escape
 from pathlib import Path
 
 from apps.api.blog_view import list_post_files, post_slug_from_path, read_post_summary
+from apps.api.codex_guide import render_codex_guide
 from apps.api.journal_view import render_journal_cards
 from apps.api.site_view import SITE_NAME, render_about_nav, render_site_page
 
@@ -38,16 +39,16 @@ def render_home_page(publish_dir: Path, journal_dir: Path | None = None) -> str:
         "<div class='hero-actions'><a class='button-link' href='/tutorials#codex-start'>第一次使用 Codex</a><a class='button-link secondary' href='/blog'>发现 AI 新资讯</a></div>"
         "<p class='hero-note'>想了解我的 AI 应用开发实践？<a href='/projects'>看看项目案例 →</a></p></div>"
         "<aside class='workflow-visual' aria-label='第一次使用 Codex 的练习路线'>"
-        "<p class='eyebrow'>Your first Codex task</p><h2>让 Codex 带你做出一个小网页</h2>"
-        "<div class='workflow-step'><b>01</b><span><strong>打开项目文件夹</strong><br />先让 Codex 只读了解文件，不急着修改</span></div>"
-        "<div class='workflow-step'><b>02</b><span><strong>说清楚第一个任务</strong><br />从一个最小的个人介绍网页开始</span></div>"
-        "<div class='workflow-step'><b>03</b><span><strong>查看、运行、再确认</strong><br />读懂修改内容，检查结果后再继续</span></div>"
+        "<p class='eyebrow'>从没有账号开始</p><h2>还不知道 Codex 是什么？</h2>"
+        "<div class='workflow-step'><b>01</b><span><strong>先把账号和 Key 弄明白</strong><br />知道需要准备什么，再决定是否付费</span></div>"
+        "<div class='workflow-step'><b>02</b><span><strong>下载应用，用账号登录</strong><br />一条路线，按步骤找到操作入口</span></div>"
+        "<div class='workflow-step'><b>03</b><span><strong>用中文做出第一张网页</strong><br />找到生成的文件，双击打开，亲眼检查</span></div>"
         "</aside></section>"
-        "<section class='section'><div class='section-heading'><p class='eyebrow'>Start with Codex</p><h2>零基础，从 Codex 的第一个任务开始</h2><p>不要求你先会编程。先让 Codex 读懂一个安全的小项目，再用计划、修改和检查完成一个小网页。</p></div>"
+        "<section class='section'><div class='section-heading'><p class='eyebrow'>第一课</p><h2>从“它是什么”，到“我做出来了”</h2><p>没有账号、不懂 Key、没写过代码，都从准备步骤开始。教程先说明使用条件，再带你在电脑上做一张学习名片。</p></div>"
         "<div class='grid-3'>"
-        "<article class='card'><p class='card-kicker'>01 · 认识入口</p><h3><a href='/tutorials#choose-tool'>打开 Codex</a></h3><p>先选择网页、桌面应用或进阶工具，知道它将访问哪个项目。</p></article>"
-        "<article class='card'><p class='card-kicker'>02 · 第一个任务</p><h3><a href='/tutorials#first-task'>做一个个人介绍网页</a></h3><p>先让 Codex 给计划，再决定是否执行，边做边理解文件变化。</p></article>"
-        "<article class='card'><p class='card-kicker'>03 · 检查结果</p><h3><a href='/tutorials#check-result'>看懂修改并运行</a></h3><p>查看差异、打开页面、运行检查，把安全边界放在每一步。</p></article>"
+        "<article class='card'><p class='card-kicker'>01 · 先答疑</p><h3><a href='/tutorials#codex-account'>没账号、没 Key，怎么办？</a></h3><p>分清账号、订阅和密钥，知道哪一种才是这节课需要的。</p></article>"
+        "<article class='card'><p class='card-kicker'>02 · 跟着操作</p><h3><a href='/tutorials#choose-tool'>下载、登录，再开始</a></h3><p>使用桌面应用，按顺序准备一个专门存放作品的文件夹。</p></article>"
+        "<article class='card'><p class='card-kicker'>03 · 做出成品</p><h3><a href='/tutorials#first-task'>做一张自己的学习名片</a></h3><p>复制中文需求，打开生成的网页，再试着改一个兴趣标签。</p></article>"
         "</div></section>"
         "<section class='section'><div class='section-heading'><p class='eyebrow'>Briefing</p><h2>最新知行简报</h2><p>发现 AI 新工具、产品更新与研究进展，保留原始来源，方便继续追踪。</p></div>"
         f"<div class='grid-3'>{_latest_posts(publish_dir)}</div><p style='margin-top:20px'><a href='/blog'>查看全部简报 →</a></p></section>"
@@ -79,38 +80,10 @@ def render_projects_page() -> str:
 
 def render_tutorials_page() -> str:
     body = (
-        "<header class='page-intro'><p class='eyebrow'>Practical tutorials</p><h1>实战教程</h1><p>从第一次使用 Codex 开始，带着一个小项目理解 AI 如何读文件、改代码和运行检查。</p>"
-        "<div class='hero-actions'><a href='#codex-start'>从零开始使用 Codex ↓</a><a href='#local-toolbox'>本地工具箱 ↓</a><a href='#learning-path'>进阶路线 ↓</a></div></header>"
-        "<section class='section' id='codex-start'><div class='section-heading'><p class='eyebrow'>Beginner Codex guide</p><h2>从零开始使用 Codex</h2><p>这是一条给纯小白的路线：先认识入口，再让 Codex 只读分析一个安全的小项目，最后完成一个可以在浏览器打开的个人介绍网页。</p></div>"
-        "<article class='tutorial-block' id='choose-tool'><h3>1. 先认识 Codex，选择适合你的入口</h3>"
-        "<p>Codex 是一个编程助手，可以阅读你选择的项目文件夹，协助编写或修改代码，并帮助你运行检查。它不是“按一下就全部完成”的按钮：你要看懂它准备做什么，检查修改结果，再决定下一步。</p>"
-        "<p>第一次使用，最简单的是 <a href='https://chatgpt.com/codex' target='_blank' rel='noopener noreferrer'>网页 Codex</a>，不需要安装；如果你想处理电脑上的本地项目，可以安装 <a href='https://chatgpt.com/download' target='_blank' rel='noopener noreferrer'>ChatGPT 桌面应用</a>，登录后选择 Codex。CLI 和 IDE 扩展适合已经熟悉终端或编辑器的读者，可以留到后面。</p>"
-        "<p>官方的 <a href='https://developers.openai.com/codex/quickstart' target='_blank' rel='noopener noreferrer'>Codex Quickstart</a> 会随着产品更新，登录方式和界面以官方页面当时的说明为准。</p></article>"
-        "<article class='tutorial-block'><h3>2. 准备一个安全的小项目</h3>"
-        "<p>在电脑上新建一个空文件夹，例如 <code>my-first-codex-project</code>。不要一开始选择整个磁盘，也不要把密码、API Key、Cookie、身份证号或客户资料放进去。重要项目先复制一份备份，或用 Git 保存一个可以回退的版本。</p>"
-        "<p>打开 Codex 后，创建项目或选择这个文件夹。你会看到一个可以输入任务的对话区域；如果使用网页入口，则按页面提示进入 Codex 工作区。</p></article>"
-        "<article class='tutorial-block' id='first-task'><h3>3. 发出第一条“只读”指令</h3><p>第一次先让 Codex 观察，不让它改文件。把下面这段话复制进去：</p>"
-        "<pre class='prompt-example'><code>你是我的编程学习助手。\n先不要修改任何文件。\n请阅读当前项目结构，用普通中文告诉我：\n1. 当前有哪些文件；\n2. 每个文件可能负责什么；\n3. 如果我要做一个最简单的个人介绍网页，建议先从哪一步开始。\n不要运行删除、上传、发布或付费相关操作。</code></pre>"
-        "<p>读完回答后，重点看它是否真的理解了当前文件夹。如果它误解了目录或提出了你不需要的操作，先追问或停止，不要急着执行。</p></article>"
-        "<article class='tutorial-block'><h3>4. 做一个最小的个人介绍网页</h3><p>确认 Codex 的计划后，再把任务说小、说清楚：</p>"
-        "<pre class='prompt-example'><code>请帮我创建一个最简单的个人介绍网页。\n先给我实现计划和准备修改的文件，暂时不要执行。\n网页包含：一句自我介绍、三个兴趣标签、一个联系方式占位符。\n使用最基础的 HTML 和 CSS，不要引入外部依赖。</code></pre>"
-        "<p>先读计划，确认文件范围和实现方式都合理，再明确告诉它可以执行。第一次练习的目标是理解“提出需求 → 看计划 → 执行”，而不是一次完成很大的项目。</p></article>"
-        "<article class='tutorial-block' id='check-result'><h3>5. 查看修改、打开网页、运行检查</h3>"
-        "<p>执行后不要只看一句“已完成”。让 Codex 解释它做了什么：</p>"
-        "<pre class='prompt-example'><code>请说明你刚才修改了哪些文件、每个文件为什么要改，\n并列出我应该重点检查的地方。</code></pre>"
-        "<p>查看 diff 或文件内容，确认没有多余改动。然后继续询问如何验证：</p>"
-        "<pre class='prompt-example'><code>请告诉我如何在本地打开这个网页。\n如果需要运行命令，请先解释每条命令的作用，\n不要自动执行删除、上传、发布或修改系统设置的命令。</code></pre>"
-        "<p>按照说明在浏览器打开网页，检查文字、样式和链接是否符合预期。遇到报错时，把完整错误和相关文件交给 Codex，让它先分析原因，再提出最小修复方案。</p></article>"
-        "<article class='tutorial-block'><h3>6. 记住这几条安全边界</h3>"
-        "<ul><li>不要粘贴密码、API Key、Cookie、私密文件或客户信息。</li>"
-        "<li>不要让 Codex 直接删除大量文件，也不要在不了解作用时运行命令。</li>"
-        "<li>发布到 GitHub、推送代码、发送外部消息或产生付费操作前，先看清目标和变更。</li>"
-        "<li>养成“先看计划，再看修改，最后运行检查”的习惯；重要项目先备份并使用 Git。</li></ul>"
-        "<p>如果你不确定某一步是否安全，可以直接问：“这条命令会读取、修改或上传什么？如果失败会怎样？”让 Codex 先用普通话解释。</p>"
-        "<a href='https://developers.openai.com/codex/developer-commands' target='_blank' rel='noopener noreferrer'>继续了解 Codex 的命令与工作方式 →</a></article>"
-        "<article class='tutorial-block'><h3>完成第一次任务后，下一步学什么？</h3><p>你可以先修改网页文字和样式，再让 Codex 修复一个小 bug、写一个简单 Python 脚本，最后给项目增加测试。熟悉这条协作流程后，再进入 Agent、RAG 和工具调用。</p>"
-        "<a href='/blog'>去知行简报发现 AI 新工具与产品变化 →</a></article></section>"
-        "<section class='section' id='local-toolbox'><div class='section-heading'><p class='eyebrow'>Local tools</p><h2>在本地启动 AI 工具箱</h2><p>已经会用对话工具，并想尝试本地运行时，可以继续这一节。需要安装软件并使用终端；Mock 模式用于体验流程，Ollama 模式用于接入本地模型。</p></div>"
+        "<header class='page-intro'><p class='eyebrow'>动手学 AI</p><h1>实战教程</h1><p>从注册账号、弄懂 Key 开始。每一步都写清怎么做、做到哪里算成功。</p>"
+        "<div class='hero-actions'><a href='#codex-start'>零基础第一课 ↓</a><a href='#local-toolbox'>选读：本地工具箱 ↓</a><a href='#learning-path'>后续主题 ↓</a></div></header>"
+        + render_codex_guide() +
+        "<section class='section' id='local-toolbox'><div class='section-heading'><p class='eyebrow'>选读 · 需要编程环境</p><h2>在本地启动 AI 工具箱</h2><p>这是另一条工具实践路线，不是 Codex 第一课的后续必做步骤。需要安装软件并使用终端；Mock 模式用于体验流程，Ollama 模式用于接入本地模型。</p></div>"
         "<div class='tutorial-block'><ol class='tutorial-steps'>"
         "<li><h3>准备环境</h3><p>安装 Python 3.11 或更高版本和 Git。需要本地模型时，再安装 Ollama。</p></li>"
         "<li><h3>克隆并进入项目</h3><pre><code>git clone https://github.com/Eason-2/first-depot.git\ncd first-depot</code></pre></li>"
@@ -126,7 +99,7 @@ def render_tutorials_page() -> str:
         "<article class='card'><p class='card-kicker'>04 · DELIVERY</p><h3>把 AI 服务部署成可维护应用</h3><p>FastAPI、Docker、日志、健康检查、密钥管理和持续部署。</p></article>"
         "</div></section>"
     )
-    return render_site_page("实战教程", body, "/tutorials", "AI 工具、Agent、RAG 和自动化开发实战教程。")
+    return render_site_page("实战教程", body, "/tutorials", "从账号注册、API Key 与费用说明开始，使用 Codex 桌面端做出第一个网页。")
 
 
 def render_about_page() -> str:
