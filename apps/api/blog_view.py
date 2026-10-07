@@ -66,7 +66,7 @@ def render_blog_index(publish_dir: Path) -> str:
         f"<h1>{_SITE_NAME}</h1>"
         f"<p>{_SITE_TAGLINE}关注 AI 新工具、产品更新与研究进展，从原始来源发现值得继续了解的变化。</p>"
         "<p class='post-meta'>简报由自动化流程整理，重要信息请核对文末来源；个人试用和学习经历另见成长记录。</p>"
-        "<div class='hero-actions'><a href='/tutorials#start-here'>第一次用 AI？从这里开始 →</a>"
+        "<div class='hero-actions'><a href='/tutorials#codex-start'>第一次用 Codex？从这里开始 →</a>"
         "<a href='/about/journal'>查看成长记录 →</a></div>"
         "</header>"
     )

@@ -354,7 +354,7 @@ title: '这次尝试中遇到的一个问题'
 
 文件名决定日期与网址，发布后尽量保持文件名稳定。该目录只放准备公开的文章，草稿留在目录外；支持普通段落、标题、无序列表和直接写出的网页地址。文章篇幅、结构不受资讯生成器的固定规则限制，个人经历需要作者核实。
 
-`/tutorials/#start-here` 是零基础入口，包含对话工具入口、虚构练习材料、结果核对和追问示例；原有本地工具箱教程仍在同一页。教程内容在 `apps/api/portfolio_view.py` 维护。
+`/tutorials/#codex-start` 是 Codex 零基础入口，包含入口选择、安全项目准备、只读分析、首次网页任务、查看修改和运行检查；原有本地工具箱教程仍在同一页。教程内容在 `apps/api/portfolio_view.py` 维护。
 
 运行 `python -m scripts.export_static_site --output-dir site` 后即可预览；推送到 `main` 会通过现有 Pages 工作流发布首页、简报、教程与成长记录。
 

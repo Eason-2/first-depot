@@ -59,7 +59,7 @@ class JournalRouteTests(unittest.TestCase):
                 self.assertIn("一个学习问题", home)
                 self.assertIn("资讯标题", home)
                 self.assertIn("href='/about/journal'", get("/about/"))
-                self.assertIn("id='start-here'", get("/tutorials/"))
+                self.assertIn("id='codex-start'", get("/tutorials/"))
                 for path in ("/about/journal/missing", "/about/journal/2026-10-06-news", "/about/journal/%2e%2e%2foutside"):
                     with self.assertRaises(HTTPError) as error:
                         get(path)

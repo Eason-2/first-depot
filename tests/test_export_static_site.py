@@ -90,7 +90,7 @@ class ExportStaticSiteTests(unittest.TestCase):
 
             self.assertEqual((result["post_count"], result["journal_count"]), (1, 4))
             self.assertIn("资讯样本", home)
-            self.assertIn("href='/first-depot/tutorials#start-here'", home)
+            self.assertIn("href='/first-depot/tutorials#codex-start'", home)
             self.assertIn("href='/first-depot/about/journal/2026-10-04-note'", home)
             self.assertNotIn("2026-10-01-note", home)
             self.assertLess(home.index("2026-10-04-note"), home.index("2026-10-03-note"))
