@@ -1,6 +1,6 @@
 ---
 title: 'Agent in a Bottle: Can LLM Agents Turn Their Capa...：核心变化与验证重点'
-draft_id: 'draft_53ea89353988'
+draft_id: 'draft_c36686e7e930'
 cluster_id: 'cluster_b3981a2bfc4e'
 confidence: 0.89
 tags: [ai-news, automation, longform, zh]
