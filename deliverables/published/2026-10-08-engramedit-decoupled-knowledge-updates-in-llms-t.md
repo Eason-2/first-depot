@@ -1,6 +1,6 @@
 ---
 title: 'EngramEdit: Decoupled Knowledge Updates in LLMs t...：核心变化与验证重点'
-draft_id: 'draft_4eee0e6de419'
+draft_id: 'draft_4e8239e2b2a0'
 cluster_id: 'cluster_bce1f597661f'
 confidence: 0.86
 tags: [ai-news, automation, longform, zh]
