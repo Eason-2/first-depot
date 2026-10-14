@@ -1,6 +1,6 @@
 ---
 title: 'Hybrid Reasoning Agents：核心变化与验证重点'
-draft_id: 'draft_ac6b97c50bee'
+draft_id: 'draft_9688f71748cb'
 cluster_id: 'cluster_7cf11e1f9dca'
 confidence: 0.89
 tags: [ai-news, automation, longform, zh]
