@@ -1,6 +1,6 @@
 ---
 title: 'Price of Anarchy of First-Price Auctions in Agent...：核心变化与验证重点'
-draft_id: 'draft_15c16a62d535'
+draft_id: 'draft_e43ef83838ed'
 cluster_id: 'cluster_a897e6631747'
 confidence: 0.89
 tags: [ai-news, automation, longform, zh]
