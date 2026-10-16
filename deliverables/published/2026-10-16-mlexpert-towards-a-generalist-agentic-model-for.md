@@ -1,6 +1,6 @@
 ---
 title: 'MLExpert: Towards a Generalist Agentic Model for...：核心变化与验证重点'
-draft_id: 'draft_1800f1671ad0'
+draft_id: 'draft_8e2769c753f5'
 cluster_id: 'cluster_2e2ca0691ce6'
 confidence: 0.89
 tags: [ai-news, automation, longform, zh]
