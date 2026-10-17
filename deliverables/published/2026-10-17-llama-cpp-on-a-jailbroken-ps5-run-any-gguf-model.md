@@ -1,20 +1,22 @@
 ---
 title: 'Llama.cpp on a jailbroken PS5: run any GGUF model...：核心变化与验证重点'
-draft_id: 'draft_ecdf9d80a424'
+draft_id: 'draft_9ecdf2d7ae5a'
 cluster_id: 'cluster_cc13086fe6af'
-confidence: 0.81
+confidence: 0.83
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://github.com/cobanov/PS5LM'
+  - 'https://arxiv.org/abs/2610.22344v1'
+  - 'https://arxiv.org/abs/2610.22358v1'
 ---
 
 # Llama.cpp on a jailbroken PS5: run any GGUF model...：核心变化与验证重点
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”，聚类评分为 61.0/100。资料来自 1 个来源渠道，构成为 hackernews 1 条；证据形态包括 社区讨论 1 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”，聚类评分为 62.7/100。资料来自 2 个来源渠道，构成为 arxiv 2 条、hackernews 1 条；证据形态包括 研究 2 条、社区讨论 1 条。
 
-对“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”而言，这些材料的平均 AI 相关度为 0.50，平均可信度为 0.65。公开互动数据合计约 231 个赞、62 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”而言，这些材料的平均 AI 相关度为 0.65，平均可信度为 0.82。公开互动数据合计约 284 个赞、72 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
@@ -24,7 +26,7 @@ sources:
 
 这一版先用“基线对照”检查主题，不急着扩展到所有业务场景。围绕“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”，需要保留来源之间的证据差异。目前只有“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”这一条核心材料，缺少第二来源对它的关键结论进行交叉验证。
 
-以“基线对照”为观察轴，整体相关度均值为 0.50，说明这些材料与主题的贴合度较高；可信度均值为 0.65，来源间差值为 0.00。社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。现阶段对“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
+以“基线对照”为观察轴，整体相关度均值为 0.65，说明这些材料与主题的贴合度较高；可信度均值为 0.82，来源间差值为 0.00。社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。现阶段对“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
 
 ## 如果你真要做，可以先从这几步开始
 
@@ -36,11 +38,11 @@ sources:
 
 ## 最容易踩的坑
 
-- 来源集中：hackernews 占 1/1 条；从“基线对照”看，转述同一公告不能算独立旁证。
-- 证据强度：平均相关度 0.50 与平均可信度 0.65 只是筛选信号，无法单独证明“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”在“基线对照”上有效。
-- 热度误读：“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”现有 231 个赞和 62 条评论只能反映关注度，不能证明效果、成本或稳定性。
-- 样本偏差：“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”的发言者不代表全部用户，活跃讨论也可能由少数高频账号贡献。
-- 转述风险：社区对“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”的截图和二手描述可能遗漏版本、配置与触发条件，应追溯原始链接。
+- 来源集中：arxiv 占 2/3 条；从“基线对照”看，转述同一公告不能算独立旁证。
+- 证据强度：平均相关度 0.65 与平均可信度 0.82 只是筛选信号，无法单独证明“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”在“基线对照”上有效。
+- 热度误读：“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”现有 284 个赞和 72 条评论只能反映关注度，不能证明效果、成本或稳定性。
+- 外部有效性：关于“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”的实验结果可能依赖特定数据集与硬件，换到业务数据后需要重新测量。
+- 复现风险：若“Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console”没有公开代码、随机种子或完整参数，单次高分不足以支持工程选型。
 
 ## 最后给你一个可直接落地的复盘框架
 
@@ -51,3 +53,5 @@ sources:
 ## 参考资料
 
 - [1] Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console - https://github.com/cobanov/PS5LM
+- [2] MLExpert: Towards a Generalist Agentic Model for Autonomous Machine Learning Engineering - https://arxiv.org/abs/2610.22344v1
+- [3] PathFM: Fast Generative Forecasting of Multivariate Trajectories - https://arxiv.org/abs/2610.22358v1
