@@ -1,25 +1,24 @@
 ---
 title: 'Hybrid Reasoning Agents: LLM agents that think in...：核心变化与验证重点'
-draft_id: 'draft_9e3864aa72d7'
+draft_id: 'draft_e51c3c175b8a'
 cluster_id: 'cluster_95d7aad4ae1a'
-confidence: 0.89
+confidence: 0.87
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://arxiv.org/abs/2610.18861'
-  - 'https://arxiv.org/abs/2610.22364v1'
-  - 'https://arxiv.org/abs/2610.22341v1'
-  - 'https://arxiv.org/abs/2610.22353v1'
-  - 'https://arxiv.org/abs/2610.22344v1'
-  - 'https://arxiv.org/abs/2610.22362v1'
+  - 'https://arxiv.org/abs/2610.23854v1'
+  - 'https://arxiv.org/abs/2610.23821v1'
+  - 'https://arxiv.org/abs/2610.23847v1'
+  - 'https://arxiv.org/abs/2610.23831v1'
 ---
 
 # Hybrid Reasoning Agents: LLM agents that think in...：核心变化与验证重点
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”，聚类评分为 68.8/100。资料来自 2 个来源渠道，构成为 arxiv 5 条、hackernews 1 条；证据形态包括 研究 5 条、社区讨论 1 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”，聚类评分为 67.3/100。资料来自 2 个来源渠道，构成为 arxiv 4 条、hackernews 1 条；证据形态包括 研究 4 条、社区讨论 1 条。
 
-对“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”而言，这些材料的平均 AI 相关度为 0.57，平均可信度为 0.90。公开互动数据合计约 155 个赞、91 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”而言，这些材料的平均 AI 相关度为 0.59，平均可信度为 0.90。公开互动数据合计约 278 个赞、155 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
@@ -29,7 +28,7 @@ sources:
 
 这一版先用“基线对照”检查主题，不急着扩展到所有业务场景。围绕“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”，需要保留来源之间的证据差异。目前只有“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”这一条核心材料，缺少第二来源对它的关键结论进行交叉验证。
 
-以“基线对照”为观察轴，整体相关度均值为 0.57，说明这些材料与主题的贴合度较高；可信度均值为 0.90，来源间差值为 0.00。社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。现阶段对“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
+以“基线对照”为观察轴，整体相关度均值为 0.59，说明这些材料与主题的贴合度较高；可信度均值为 0.90，来源间差值为 0.00。社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。现阶段对“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
 
 ## 如果你真要做，可以先从这几步开始
 
@@ -41,9 +40,9 @@ sources:
 
 ## 最容易踩的坑
 
-- 来源集中：arxiv 占 5/6 条；从“基线对照”看，转述同一公告不能算独立旁证。
-- 证据强度：平均相关度 0.57 与平均可信度 0.90 只是筛选信号，无法单独证明“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”在“基线对照”上有效。
-- 热度误读：“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”现有 155 个赞和 91 条评论只能反映关注度，不能证明效果、成本或稳定性。
+- 来源集中：arxiv 占 4/5 条；从“基线对照”看，转述同一公告不能算独立旁证。
+- 证据强度：平均相关度 0.59 与平均可信度 0.90 只是筛选信号，无法单独证明“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”在“基线对照”上有效。
+- 热度误读：“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”现有 278 个赞和 155 条评论只能反映关注度，不能证明效果、成本或稳定性。
 - 外部有效性：关于“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”的实验结果可能依赖特定数据集与硬件，换到业务数据后需要重新测量。
 - 复现风险：若“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”没有公开代码、随机种子或完整参数，单次高分不足以支持工程选型。
 
@@ -56,8 +55,7 @@ sources:
 ## 参考资料
 
 - [1] Hybrid Reasoning Agents: LLM agents that think in latent space, act through text - https://arxiv.org/abs/2610.18861
-- [2] T2-z: Test-Time Optimization of Environment Latents for Robotic World Models - https://arxiv.org/abs/2610.22364v1
-- [3] 3DCodeVerse: Exploring 3D Worlds as Code - https://arxiv.org/abs/2610.22341v1
-- [4] Rethinking Routing Exploration in Modern Mixture-of-Experts - https://arxiv.org/abs/2610.22353v1
-- [5] MLExpert: Towards a Generalist Agentic Model for Autonomous Machine Learning Engineering - https://arxiv.org/abs/2610.22344v1
-- [6] CoDA: Co-Evolution of Data Engines and Action Policies - https://arxiv.org/abs/2610.22362v1
+- [2] Rethinking the design space of Vanilla Pixel Diffusion Transformers - https://arxiv.org/abs/2610.23854v1
+- [3] Learning without relearning physical symmetry: an SO(3)-equivariant convolutional network (CNN) on the sphere - https://arxiv.org/abs/2610.23821v1
+- [4] Behavioral Couplings: From Formation to Behavioral Emergence in Language Models - https://arxiv.org/abs/2610.23847v1
+- [5] Beyond the Answer: Student-Conditioned Trace Construction for Reasoning Distillation - https://arxiv.org/abs/2610.23831v1
