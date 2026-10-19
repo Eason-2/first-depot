@@ -1,8 +1,8 @@
 ---
 title: 'Hybrid Reasoning Agents: LLM agents that think in...：核心变化与验证重点'
-draft_id: 'draft_e51c3c175b8a'
+draft_id: 'draft_3b525836a1b1'
 cluster_id: 'cluster_95d7aad4ae1a'
-confidence: 0.87
+confidence: 0.91
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://arxiv.org/abs/2610.18861'
@@ -16,9 +16,9 @@ sources:
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”，聚类评分为 67.3/100。资料来自 2 个来源渠道，构成为 arxiv 4 条、hackernews 1 条；证据形态包括 研究 4 条、社区讨论 1 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”，聚类评分为 71.3/100。资料来自 2 个来源渠道，构成为 arxiv 4 条、hackernews 1 条；证据形态包括 研究 4 条、社区讨论 1 条。
 
-对“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”而言，这些材料的平均 AI 相关度为 0.59，平均可信度为 0.90。公开互动数据合计约 278 个赞、155 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”而言，这些材料的平均 AI 相关度为 0.59，平均可信度为 0.90。公开互动数据合计约 398 个赞、192 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
@@ -42,7 +42,7 @@ sources:
 
 - 来源集中：arxiv 占 4/5 条；从“基线对照”看，转述同一公告不能算独立旁证。
 - 证据强度：平均相关度 0.59 与平均可信度 0.90 只是筛选信号，无法单独证明“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”在“基线对照”上有效。
-- 热度误读：“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”现有 278 个赞和 155 条评论只能反映关注度，不能证明效果、成本或稳定性。
+- 热度误读：“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”现有 398 个赞和 192 条评论只能反映关注度，不能证明效果、成本或稳定性。
 - 外部有效性：关于“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”的实验结果可能依赖特定数据集与硬件，换到业务数据后需要重新测量。
 - 复现风险：若“Hybrid Reasoning Agents: LLM agents that think in latent space, act through text”没有公开代码、随机种子或完整参数，单次高分不足以支持工程选型。
 
