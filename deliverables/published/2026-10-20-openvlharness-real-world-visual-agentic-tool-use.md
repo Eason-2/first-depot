@@ -1,12 +1,13 @@
 ---
 title: 'OpenVLHarness: Real World Visual Agentic Tool-Use...：核心变化与验证重点'
-draft_id: 'draft_1681c608ac42'
+draft_id: 'draft_737a51af3d5a'
 cluster_id: 'cluster_a583ca39a8da'
 confidence: 0.91
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://arxiv.org/abs/2610.26860v1'
   - 'https://arxiv.org/abs/2610.26845v1'
+  - 'https://news.ycombinator.com/item?id=50167583'
   - 'https://arxiv.org/abs/2610.26847v1'
   - 'https://arxiv.org/abs/2610.26856v1'
   - 'https://arxiv.org/abs/2610.26863v1'
@@ -17,9 +18,9 @@ sources:
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”，聚类评分为 70.6/100。资料来自 1 个来源渠道，构成为 arxiv 6 条；证据形态包括 研究 6 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”，聚类评分为 70.6/100。资料来自 2 个来源渠道，构成为 arxiv 6 条、hackernews 1 条；证据形态包括 研究 6 条、社区讨论 1 条。
 
-对“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”而言，这些材料的平均 AI 相关度为 0.63，平均可信度为 0.90。当前来源没有可用的点赞、评论数据，因此本文不会用“热度高”代替证据强。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”而言，这些材料的平均 AI 相关度为 0.66，平均可信度为 0.88。公开互动数据合计约 10 个赞、0 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
@@ -29,7 +30,7 @@ sources:
 
 这一版先用“基线对照”检查主题，不急着扩展到所有业务场景。围绕“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”，需要保留来源之间的证据差异。目前只有“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”这一条核心材料，缺少第二来源对它的关键结论进行交叉验证。
 
-以“基线对照”为观察轴，整体相关度均值为 0.63，说明这些材料与主题的贴合度较高；可信度均值为 0.90，来源间差值为 0.00。研究材料还要检查数据集覆盖范围、基线设置和复现实验，论文指标不能直接替代线上效果。现阶段对“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
+以“基线对照”为观察轴，整体相关度均值为 0.66，说明这些材料与主题的贴合度较高；可信度均值为 0.88，来源间差值为 0.00。研究材料还要检查数据集覆盖范围、基线设置和复现实验，论文指标不能直接替代线上效果。现阶段对“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
 
 ## 如果你真要做，可以先从这几步开始
 
@@ -41,9 +42,9 @@ sources:
 
 ## 最容易踩的坑
 
-- 来源集中：arxiv 占 6/6 条；从“基线对照”看，转述同一公告不能算独立旁证。
-- 证据强度：平均相关度 0.63 与平均可信度 0.90 只是筛选信号，无法单独证明“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”在“基线对照”上有效。
-- 热度缺口：“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”的现有资料没有可用互动数据，无法判断讨论扩散范围，更不能据此推断市场接受度。
+- 来源集中：arxiv 占 6/7 条；从“基线对照”看，转述同一公告不能算独立旁证。
+- 证据强度：平均相关度 0.66 与平均可信度 0.88 只是筛选信号，无法单独证明“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”在“基线对照”上有效。
+- 热度误读：“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”现有 10 个赞和 0 条评论只能反映关注度，不能证明效果、成本或稳定性。
 - 外部有效性：关于“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”的实验结果可能依赖特定数据集与硬件，换到业务数据后需要重新测量。
 - 复现风险：若“OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory”没有公开代码、随机种子或完整参数，单次高分不足以支持工程选型。
 
@@ -57,7 +58,8 @@ sources:
 
 - [1] OpenVLHarness: Real World Visual Agentic Tool-Use with Multimodal Memory - https://arxiv.org/abs/2610.26860v1
 - [2] Train An Imaginative Agent - https://arxiv.org/abs/2610.26845v1
-- [3] WeAct: Dynamic Weight Switching as Agent Actions - https://arxiv.org/abs/2610.26847v1
-- [4] Reinforcement Learning with Visually Attributable On-Policy Self-Distillation - https://arxiv.org/abs/2610.26856v1
-- [5] Text-to-Image Generative Modeling Without Language Pretraining - https://arxiv.org/abs/2610.26863v1
-- [6] SARP: An On-SSD Index for KVCache with Fast Prefix Matching and Recovery - https://arxiv.org/abs/2610.26849v1
+- [3] Launch HN: Respan (YC W24) – Open-source Rust AI gateway built around plugins - https://news.ycombinator.com/item?id=50167583
+- [4] WeAct: Dynamic Weight Switching as Agent Actions - https://arxiv.org/abs/2610.26847v1
+- [5] Reinforcement Learning with Visually Attributable On-Policy Self-Distillation - https://arxiv.org/abs/2610.26856v1
+- [6] Text-to-Image Generative Modeling Without Language Pretraining - https://arxiv.org/abs/2610.26863v1
+- [7] SARP: An On-SSD Index for KVCache with Fast Prefix Matching and Recovery - https://arxiv.org/abs/2610.26849v1
