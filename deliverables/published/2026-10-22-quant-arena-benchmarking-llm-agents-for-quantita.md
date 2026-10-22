@@ -1,6 +1,6 @@
 ---
 title: 'Quant-Arena: Benchmarking LLM Agents for Quantita...：核心变化与验证重点'
-draft_id: 'draft_0b097cace514'
+draft_id: 'draft_cb677ca34c13'
 cluster_id: 'cluster_1a39649fcee5'
 confidence: 0.89
 tags: [ai-news, automation, longform, zh]
