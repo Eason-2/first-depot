@@ -1,20 +1,22 @@
 ---
 title: 'Every AI model has the same "controversial" take...：核心变化与验证重点'
-draft_id: 'draft_ec38c2109aec'
+draft_id: 'draft_b11efc6251c6'
 cluster_id: 'cluster_29f236d5041b'
-confidence: 0.84
+confidence: 0.88
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://www.modelcompare.ai/blog/ai-models-controversial-take-on-humans'
+  - 'https://arxiv.org/abs/2610.31657v1'
+  - 'https://arxiv.org/abs/2610.31662v1'
 ---
 
 # Every AI model has the same "controversial" take...：核心变化与验证重点
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Every AI model has the same "controversial" take on humans”，聚类评分为 64.3/100。资料来自 1 个来源渠道，构成为 hackernews 1 条；证据形态包括 社区讨论 1 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“Every AI model has the same "controversial" take on humans”，聚类评分为 68.3/100。资料来自 2 个来源渠道，构成为 arxiv 2 条、hackernews 1 条；证据形态包括 研究 2 条、社区讨论 1 条。
 
-对“Every AI model has the same "controversial" take on humans”而言，这些材料的平均 AI 相关度为 0.50，平均可信度为 0.65。公开互动数据合计约 242 个赞、308 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“Every AI model has the same "controversial" take on humans”而言，这些材料的平均 AI 相关度为 0.65，平均可信度为 0.82。公开互动数据合计约 484 个赞、485 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
@@ -24,7 +26,7 @@ sources:
 
 这一版先用“基线对照”检查主题，不急着扩展到所有业务场景。围绕“Every AI model has the same "controversial" take on humans”，需要保留来源之间的证据差异。目前只有“Every AI model has the same "controversial" take on humans”这一条核心材料，缺少第二来源对它的关键结论进行交叉验证。
 
-以“基线对照”为观察轴，整体相关度均值为 0.50，说明这些材料与主题的贴合度较高；可信度均值为 0.65，来源间差值为 0.00。社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。现阶段对“Every AI model has the same "controversial" take on humans”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
+以“基线对照”为观察轴，整体相关度均值为 0.65，说明这些材料与主题的贴合度较高；可信度均值为 0.82，来源间差值为 0.00。社区讨论适合暴露问题，却容易受样本选择和情绪影响，关键说法仍需回到一手资料确认。现阶段对“Every AI model has the same "controversial" take on humans”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
 
 ## 如果你真要做，可以先从这几步开始
 
@@ -36,11 +38,11 @@ sources:
 
 ## 最容易踩的坑
 
-- 来源集中：hackernews 占 1/1 条；从“基线对照”看，转述同一公告不能算独立旁证。
-- 证据强度：平均相关度 0.50 与平均可信度 0.65 只是筛选信号，无法单独证明“Every AI model has the same "controversial" take on humans”在“基线对照”上有效。
-- 热度误读：“Every AI model has the same "controversial" take on humans”现有 242 个赞和 308 条评论只能反映关注度，不能证明效果、成本或稳定性。
-- 样本偏差：“Every AI model has the same "controversial" take on humans”的发言者不代表全部用户，活跃讨论也可能由少数高频账号贡献。
-- 转述风险：社区对“Every AI model has the same "controversial" take on humans”的截图和二手描述可能遗漏版本、配置与触发条件，应追溯原始链接。
+- 来源集中：arxiv 占 2/3 条；从“基线对照”看，转述同一公告不能算独立旁证。
+- 证据强度：平均相关度 0.65 与平均可信度 0.82 只是筛选信号，无法单独证明“Every AI model has the same "controversial" take on humans”在“基线对照”上有效。
+- 热度误读：“Every AI model has the same "controversial" take on humans”现有 484 个赞和 485 条评论只能反映关注度，不能证明效果、成本或稳定性。
+- 外部有效性：关于“Every AI model has the same "controversial" take on humans”的实验结果可能依赖特定数据集与硬件，换到业务数据后需要重新测量。
+- 复现风险：若“Every AI model has the same "controversial" take on humans”没有公开代码、随机种子或完整参数，单次高分不足以支持工程选型。
 
 ## 最后给你一个可直接落地的复盘框架
 
@@ -51,3 +53,5 @@ sources:
 ## 参考资料
 
 - [1] Every AI model has the same "controversial" take on humans - https://www.modelcompare.ai/blog/ai-models-controversial-take-on-humans
+- [2] Cost-Aware Abstention for LLM-Based IT Ticket Classification - https://arxiv.org/abs/2610.31657v1
+- [3] Reliable AI-Assisted Decisions via Selective Auditing - https://arxiv.org/abs/2610.31662v1
