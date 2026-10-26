@@ -80,10 +80,10 @@ def render_projects_page() -> str:
 
 def render_tutorials_page() -> str:
     body = (
-        "<header class='page-intro'><p class='eyebrow'>动手学 AI</p><h1>实战教程</h1><p>先解决安装与配置，再开始学习用法。默认展示 Windows，使用 Mac 可以在第一课顶部切换。</p>"
-        "<div class='hero-actions'><a href='#codex-start'>零基础第一课 ↓</a><a href='#local-toolbox'>选读：本地工具箱 ↓</a><a href='#learning-path'>后续主题 ↓</a></div></header>"
+        "<div class='tutorials-page'>"
         + render_codex_guide() +
-        "<section class='section' id='local-toolbox'><div class='section-heading'><p class='eyebrow'>选读 · 需要编程环境</p><h2>在本地启动 AI 工具箱</h2><p>这是另一条工具实践路线，不是 Codex 第一课的后续必做步骤。需要安装软件并使用终端；Mock 模式用于体验流程，Ollama 模式用于接入本地模型。</p></div>"
+        "<details class='tutorial-supplement' id='local-toolbox'><summary><span><strong>另一个项目：本地 AI 工具箱</strong><span>需要 Python 和 Git · 有基础后再看</span></span></summary>"
+        "<p>Mock 模式只演示流程；接入 Ollama 后才会调用本地模型。</p>"
         "<div class='tutorial-block'><ol class='tutorial-steps'>"
         "<li><h3>准备环境</h3><p>安装 Python 3.11 或更高版本和 Git。需要本地模型时，再安装 Ollama。</p></li>"
         "<li><h3>克隆并进入项目</h3><pre><code>git clone https://github.com/Eason-2/first-depot.git\ncd first-depot</code></pre></li>"
@@ -91,13 +91,8 @@ def render_tutorials_page() -> str:
         "<li><h3>打开工具箱</h3><pre><code>http://127.0.0.1:8088/ai-toolbox</code></pre><p>先使用默认 Mock 模式验证界面和工作流。</p></li>"
         "<li><h3>切换到 Ollama</h3><pre><code>ollama pull qwen2.5:3b-instruct</code></pre><p>在“设置”中选择 <code>ollama</code>，地址填写 <code>http://127.0.0.1:11434</code>，模型填写对应名称。</p></li>"
         "<li><h3>验证与排错</h3><p>先检查本地 API 是否运行，再检查 Ollama 模型名称和地址。公网 GitHub Pages 仅展示界面，不会连接你电脑上的本地服务。</p></li>"
-        "</ol><div class='hero-actions'><a class='button-link' href='/ai-toolbox'>打开 AI 工具箱</a><a class='button-link secondary' href='https://github.com/Eason-2/first-depot' target='_blank' rel='noopener noreferrer'>查看源码</a></div></div></section>"
-        "<section class='section' id='learning-path'><div class='section-heading'><p class='eyebrow'>Learning path</p><h2>后续教程路线</h2><p>以下是待补充的进阶主题，完整教程尚未发布。</p></div><div class='grid-2'>"
-        "<article class='card'><p class='card-kicker'>01 · TOOL CALLING</p><h3>为 Agent 设计一个可靠工具</h3><p>输入 Schema、参数校验、返回格式、超时重试和人工确认。</p></article>"
-        "<article class='card'><p class='card-kicker'>02 · RAG</p><h3>让文档问答给出引用依据</h3><p>文档清洗、切分、召回、重排、上下文组装与拒答策略。</p></article>"
-        "<article class='card'><p class='card-kicker'>03 · WORKFLOW</p><h3>用 LangGraph 管理状态流转</h3><p>将多步骤任务拆成节点，并处理失败回退和断点恢复。</p></article>"
-        "<article class='card'><p class='card-kicker'>04 · DELIVERY</p><h3>把 AI 服务部署成可维护应用</h3><p>FastAPI、Docker、日志、健康检查、密钥管理和持续部署。</p></article>"
-        "</div></section>"
+        "</ol><div class='hero-actions'><a class='button-link' href='/ai-toolbox'>打开 AI 工具箱</a><a class='button-link secondary' href='https://github.com/Eason-2/first-depot' target='_blank' rel='noopener noreferrer'>查看源码</a></div></div></details>"
+        "<aside class='tutorial-planned' id='learning-path'><p>计划补充：工具调用、文档问答、LangGraph 工作流与服务部署。完整教程尚未发布。</p></aside></div>"
     )
     return render_site_page("实战教程", body, "/tutorials", "Windows 默认、macOS 可切换的 AI 配置教程：安装 Codex、登录账号、创建 API Key、设置环境变量、验证调用与排错。")
 

@@ -358,7 +358,9 @@ title: '这次尝试中遇到的一个问题'
 
 教程选用 Codex CLI，依次覆盖账号与费用条件、Node.js / npm 安装、Codex 安装与 PATH、账号登录或 API Key 认证、练习目录和首次实际回复。API 路线包含官方平台创建 Key、Windows 用户环境变量、Mac 隐藏输入临时变量、存在性检查与登录状态检查；不要求把真实 Key 放进命令历史或仓库。网页制作作为配置成功后的选做练习。旧 `#start-here`、`#choose-tool`、`#first-task`、`#check-result` 等入口仍可访问；直接访问 `#setup-key` 或排错锚点会展开相应内容。复制按钮遇到剪贴板权限限制时会选中文字供手动复制。
 
-正文及轻量交互在 `apps/api/codex_guide.py` 维护，首页与其他教程在 `apps/api/portfolio_view.py` 维护，样式在 `apps/api/site_view.py`。2026-10-26 对照本机 Codex CLI 0.153.2 的 `--help`、`login --help` 和安装包说明核对命令；官方 CLI、认证、Windows 与费用文档访问返回 403，当前系统要求、套餐价格、免费额度及地区可用性未复核。Windows 全新安装、真实新账号注册和真实计费调用未逐项实测，不应把页面自动化验证写成安装实测。更新相关内容时须重新核对官方资料。
+教程默认分步阅读：桌面侧栏显示六个章节，手机用下拉目录；“阅读全文”可显示全部步骤。账号和 API 两条路线按读者选择显示，直达 `#setup-key` 会切到 API 路线并显示登录章节。上一/下一步、浏览器前进/后退、旧锚点保持可用。禁用 JavaScript 时退回完整正文。文案以具体操作为主，术语和排错按需展开；网页练习和本地工具箱默认折叠，版本限制移到文末。
+
+正文在 `apps/api/codex_guide.py`，交互在 `apps/api/codex_guide_script.py`，独立样式在 `apps/api/codex_guide_styles.py`（仅教程页面注入）；首页与其他教程在 `apps/api/portfolio_view.py` 维护。2026-10-26 对照本机 Codex CLI 0.153.2 的 `--help`、`login --help` 和安装包说明核对命令；官方 CLI、认证、Windows 与费用文档访问返回 403，当前系统要求、套餐价格、免费额度及地区可用性未复核。Windows 全新安装、真实新账号注册和真实计费调用未逐项实测，不应把页面自动化验证写成安装实测。更新相关内容时须重新核对官方资料。
 
 运行 `python -m scripts.export_static_site --output-dir site` 后即可预览；推送到 `main` 会通过现有 Pages 工作流发布首页、简报、教程与成长记录。
 
