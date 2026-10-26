@@ -354,9 +354,11 @@ title: '这次尝试中遇到的一个问题'
 
 文件名决定日期与网址，发布后尽量保持文件名稳定。该目录只放准备公开的文章，草稿留在目录外；支持普通段落、标题、无序列表和直接写出的网页地址。文章篇幅、结构不受资讯生成器的固定规则限制，个人经历需要作者核实。
 
-`/tutorials/#codex-start` 是 Codex 零基础入口，先解释账号、订阅、API Key 与费用边界，再沿桌面应用的账号登录路线完成注册、安装、选择文件夹、生成单文件网页、双击检查和一次修改。每一步包含完成标志，排错区用可展开的问题列出账号、额度、入口混淆等情况。不要把网页端的 GitHub/云端流程混入本课本地文件夹练习。
+`/tutorials/#codex-start` 是“先把 AI 用起来”的零基础入口。首次加载固定展示 Windows / PowerShell；通过原生单选控件手动切换 macOS / zsh，命令、路径和环境变量步骤随之切换，不根据访客系统自动选择，也不保存上次选择。禁用 JavaScript 时同时展示带系统标签的两套说明。
 
-入门正文在 `apps/api/codex_guide.py` 维护，首页与其他教程在 `apps/api/portfolio_view.py` 维护，样式在 `apps/api/site_view.py`。保留旧 `#start-here` 锚点；本地工具箱在同页作为选读。页面中的学习名片只是成品内容示意，不是 Codex 操作截图。登录和桌面端路径参考本次会话先前保存的官方 Quickstart；认证和费用页面本次访问返回 403，当前套餐价格、免费额度及地区可用性未复核，页面对此作了说明。更新这些信息时应重新核对官方资料。
+教程选用 Codex CLI，依次覆盖账号与费用条件、Node.js / npm 安装、Codex 安装与 PATH、账号登录或 API Key 认证、练习目录和首次实际回复。API 路线包含官方平台创建 Key、Windows 用户环境变量、Mac 隐藏输入临时变量、存在性检查与登录状态检查；不要求把真实 Key 放进命令历史或仓库。网页制作作为配置成功后的选做练习。旧 `#start-here`、`#choose-tool`、`#first-task`、`#check-result` 等入口仍可访问；直接访问 `#setup-key` 或排错锚点会展开相应内容。复制按钮遇到剪贴板权限限制时会选中文字供手动复制。
+
+正文及轻量交互在 `apps/api/codex_guide.py` 维护，首页与其他教程在 `apps/api/portfolio_view.py` 维护，样式在 `apps/api/site_view.py`。2026-10-26 对照本机 Codex CLI 0.153.2 的 `--help`、`login --help` 和安装包说明核对命令；官方 CLI、认证、Windows 与费用文档访问返回 403，当前系统要求、套餐价格、免费额度及地区可用性未复核。Windows 全新安装、真实新账号注册和真实计费调用未逐项实测，不应把页面自动化验证写成安装实测。更新相关内容时须重新核对官方资料。
 
 运行 `python -m scripts.export_static_site --output-dir site` 后即可预览；推送到 `main` 会通过现有 Pages 工作流发布首页、简报、教程与成长记录。
 

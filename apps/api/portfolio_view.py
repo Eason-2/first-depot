@@ -34,21 +34,21 @@ def render_home_page(publish_dir: Path, journal_dir: Path | None = None) -> str:
         "<section class='hero'>"
         "<div class='hero-copy'>"
         "<p class='eyebrow'>Learn · Explore · Build</p>"
-        "<h1 class='hero-title'>从第一次提问，<br />到做出自己的作品。</h1>"
-        "<p class='lead'>分享能跟着操作的 AI 教程，发现值得关注的新变化，也记录我的尝试、踩坑和想法。</p>"
-        "<div class='hero-actions'><a class='button-link' href='/tutorials#codex-start'>第一次使用 Codex</a><a class='button-link secondary' href='/blog'>发现 AI 新资讯</a></div>"
+        "<h1 class='hero-title'>先把 AI 用起来，<br />再做出自己的作品。</h1>"
+        "<p class='lead'>从安装、账号、Key 和环境变量开始，把第一次配置走通。这里也分享 AI 新变化，记录我的尝试、踩坑和想法。</p>"
+        "<div class='hero-actions'><a class='button-link' href='/tutorials#codex-start'>先把 AI 用起来</a><a class='button-link secondary' href='/blog'>发现 AI 新资讯</a></div>"
         "<p class='hero-note'>想了解我的 AI 应用开发实践？<a href='/projects'>看看项目案例 →</a></p></div>"
-        "<aside class='workflow-visual' aria-label='第一次使用 Codex 的练习路线'>"
-        "<p class='eyebrow'>从没有账号开始</p><h2>还不知道 Codex 是什么？</h2>"
-        "<div class='workflow-step'><b>01</b><span><strong>先把账号和 Key 弄明白</strong><br />知道需要准备什么，再决定是否付费</span></div>"
-        "<div class='workflow-step'><b>02</b><span><strong>下载应用，用账号登录</strong><br />一条路线，按步骤找到操作入口</span></div>"
-        "<div class='workflow-step'><b>03</b><span><strong>用中文做出第一张网页</strong><br />找到生成的文件，双击打开，亲眼检查</span></div>"
+        "<aside class='workflow-visual' aria-label='第一次配置 AI 工具的路线'>"
+        "<p class='eyebrow'>Windows 默认 · Mac 可切换</p><h2>从不会配置，到收到第一条回复</h2>"
+        "<div class='workflow-step'><b>01</b><span><strong>选好系统，安装工具</strong><br />打开哪个窗口、输入什么，逐步说明</span></div>"
+        "<div class='workflow-step'><b>02</b><span><strong>把账号和 Key 配置好</strong><br />分清两种登录方式，检查环境变量</span></div>"
+        "<div class='workflow-step'><b>03</b><span><strong>收到回复，确认能用</strong><br />先完成一次调用，再开始实际练习</span></div>"
         "</aside></section>"
-        "<section class='section'><div class='section-heading'><p class='eyebrow'>第一课</p><h2>从“它是什么”，到“我做出来了”</h2><p>没有账号、不懂 Key、没写过代码，都从准备步骤开始。教程先说明使用条件，再带你在电脑上做一张学习名片。</p></div>"
+        "<section class='section'><div class='section-heading'><p class='eyebrow'>第一课</p><h2>先解决卡住你的那一步</h2><p>这次用 Codex 命令行版走通安装与配置。Windows 和 Mac 分开讲，每一步都说明成功的标志；已经能用，再去做网页练习。</p></div>"
         "<div class='grid-3'>"
-        "<article class='card'><p class='card-kicker'>01 · 先答疑</p><h3><a href='/tutorials#codex-account'>没账号、没 Key，怎么办？</a></h3><p>分清账号、订阅和密钥，知道哪一种才是这节课需要的。</p></article>"
-        "<article class='card'><p class='card-kicker'>02 · 跟着操作</p><h3><a href='/tutorials#choose-tool'>下载、登录，再开始</a></h3><p>使用桌面应用，按顺序准备一个专门存放作品的文件夹。</p></article>"
-        "<article class='card'><p class='card-kicker'>03 · 做出成品</p><h3><a href='/tutorials#first-task'>做一张自己的学习名片</a></h3><p>复制中文需求，打开生成的网页，再试着改一个兴趣标签。</p></article>"
+        "<article class='card'><p class='card-kicker'>01 · 从头开始</p><h3><a href='/tutorials#setup-terminal'>软件怎么装，命令在哪输？</a></h3><p>从打开 PowerShell 或 Mac 终端开始，安装基础环境和 Codex，检查版本。</p></article>"
+        "<article class='card'><p class='card-kicker'>02 · 配置卡点</p><h3><a href='/tutorials#setup-key'>Key 填哪，环境变量怎么设？</a></h3><p>从创建自己的 Key，到让工具读到它，解释每一步的作用与费用边界。</p></article>"
+        "<article class='card'><p class='card-kicker'>03 · 找到原因</p><h3><a href='/tutorials#codex-help'>照着做了，为什么还是报错？</a></h3><p>按找不到命令、读不到 Key、认证失败、额度和网络问题逐项排查。</p></article>"
         "</div></section>"
         "<section class='section'><div class='section-heading'><p class='eyebrow'>Briefing</p><h2>最新知行简报</h2><p>发现 AI 新工具、产品更新与研究进展，保留原始来源，方便继续追踪。</p></div>"
         f"<div class='grid-3'>{_latest_posts(publish_dir)}</div><p style='margin-top:20px'><a href='/blog'>查看全部简报 →</a></p></section>"
@@ -80,7 +80,7 @@ def render_projects_page() -> str:
 
 def render_tutorials_page() -> str:
     body = (
-        "<header class='page-intro'><p class='eyebrow'>动手学 AI</p><h1>实战教程</h1><p>从注册账号、弄懂 Key 开始。每一步都写清怎么做、做到哪里算成功。</p>"
+        "<header class='page-intro'><p class='eyebrow'>动手学 AI</p><h1>实战教程</h1><p>先解决安装与配置，再开始学习用法。默认展示 Windows，使用 Mac 可以在第一课顶部切换。</p>"
         "<div class='hero-actions'><a href='#codex-start'>零基础第一课 ↓</a><a href='#local-toolbox'>选读：本地工具箱 ↓</a><a href='#learning-path'>后续主题 ↓</a></div></header>"
         + render_codex_guide() +
         "<section class='section' id='local-toolbox'><div class='section-heading'><p class='eyebrow'>选读 · 需要编程环境</p><h2>在本地启动 AI 工具箱</h2><p>这是另一条工具实践路线，不是 Codex 第一课的后续必做步骤。需要安装软件并使用终端；Mock 模式用于体验流程，Ollama 模式用于接入本地模型。</p></div>"
@@ -99,7 +99,7 @@ def render_tutorials_page() -> str:
         "<article class='card'><p class='card-kicker'>04 · DELIVERY</p><h3>把 AI 服务部署成可维护应用</h3><p>FastAPI、Docker、日志、健康检查、密钥管理和持续部署。</p></article>"
         "</div></section>"
     )
-    return render_site_page("实战教程", body, "/tutorials", "从账号注册、API Key 与费用说明开始，使用 Codex 桌面端做出第一个网页。")
+    return render_site_page("实战教程", body, "/tutorials", "Windows 默认、macOS 可切换的 AI 配置教程：安装 Codex、登录账号、创建 API Key、设置环境变量、验证调用与排错。")
 
 
 def render_about_page() -> str:

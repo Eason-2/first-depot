@@ -28,7 +28,7 @@ class SiteViewTests(unittest.TestCase):
         self.assertIn("AI 应用开发", home)
         self.assertNotIn("黄逸山", home)
         self.assertIn("AI 测试文章", home)
-        self.assertIn("第一次使用 Codex", home)
+        self.assertIn("先把 AI 用起来", home)
         self.assertIn("商品自动化上架 Agent", render_projects_page())
         tutorials = render_tutorials_page()
         self.assertIn("从零开始使用 Codex", tutorials)
