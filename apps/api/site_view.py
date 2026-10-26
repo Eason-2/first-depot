@@ -3,6 +3,7 @@ from __future__ import annotations
 from html import escape
 
 from apps.api.codex_guide_styles import GUIDE_STYLES
+from apps.api.portfolio_styles import PORTFOLIO_STYLES
 
 
 SITE_NAME = "AI 应用实践"
@@ -130,7 +131,10 @@ def render_site_page(title: str, body: str, active_path: str, description: str =
         "@media(max-width:900px){.hero{grid-template-columns:1fr;min-height:auto;padding:42px 0 52px;}.grid-3{grid-template-columns:1fr 1fr;}.case-study{grid-template-columns:1fr;gap:12px;}.about-grid{grid-template-columns:1fr;}}"
         "@media(max-width:620px){.site-shell{padding:0 16px 36px;}.grid-3,.grid-2,.case-body{grid-template-columns:1fr;}.case-body .wide{grid-column:auto;}.hero{gap:32px;}.hero h1{font-size:44px;}.hero-copy .lead{font-size:18px;}.workflow-visual{box-shadow:7px 7px 0 #f97316;}.page-intro h1,.article-header h1{font-size:34px;}.section{padding-top:48px;}.article-content{padding:22px;}.metric{flex:1 1 130px;}}"
         + (GUIDE_STYLES if active_path == "/tutorials" else "") +
-        "</style></head><body><div class='site-shell'>"
+        (PORTFOLIO_STYLES if active_path in ("/", "/projects") else "") +
+        "</style></head>"
+        + ("<body class='portfolio-shell'>" if active_path in ("/", "/projects") else "<body>") +
+        "<div class='site-shell'>"
         f"{render_site_nav(active_path)}<main>{body}</main>{render_site_footer()}"
         "</div></body></html>"
     )

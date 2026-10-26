@@ -5,7 +5,6 @@ from pathlib import Path
 
 from apps.api.blog_view import list_post_files, post_slug_from_path, read_post_summary
 from apps.api.codex_guide import render_codex_guide
-from apps.api.journal_view import render_journal_cards
 from apps.api.site_view import SITE_NAME, render_about_nav, render_site_page
 
 
@@ -17,63 +16,152 @@ def _latest_posts(publish_dir: Path, limit: int = 3) -> str:
     cards: list[str] = []
     for post in list_post_files(publish_dir)[:limit]:
         slug = post_slug_from_path(post)
-        title, preview, date = read_post_summary(post)
+        title, _, date = read_post_summary(post)
+        # The home index uses the topic; the article retains its full title.
+        title = title.removesuffix("：核心变化与验证重点")
         cards.append(
-            "<article class='card'>"
-            f"<p class='card-kicker'>{escape(date)}</p>"
+            "<article class='dispatch-row'>"
+            f"<time datetime='{escape(date)}'>{escape(date)}</time>"
             f"<h3><a href='/blog/{escape(slug)}'>{escape(title)}</a></h3>"
-            f"<p>{escape(preview)}</p>"
+            "<span aria-hidden='true'>↗</span>"
             "</article>"
         )
     return "".join(cards) or "<p>暂时还没有简报。</p>"
 
 
+def _recent_notes(journal_dir: Path) -> str:
+    notes: list[str] = []
+    for post in list_post_files(journal_dir)[:3]:
+        title, _, date = read_post_summary(post)
+        href = "/about/journal/" + post_slug_from_path(post)
+        notes.append(
+            "<article class='card'>"
+            f"<p class='card-kicker'>{escape(date)} · 成长记录</p>"
+            f"<h3><a href='{escape(href, quote=True)}'>{escape(title)}</a></h3>"
+            f"<a href='{escape(href, quote=True)}'>继续阅读 →</a>"
+            "</article>"
+        )
+    return "".join(notes) or "<p>第一篇记录还在整理中。</p>"
+
+
+def _publishing_diagram() -> str:
+    return (
+        "<figure class='publishing-sheet'>"
+        "<figcaption><span>知行简报</span><span>发布流程 / 示意</span></figcaption>"
+        "<div class='source-line'><span>Hacker News</span><span>arXiv</span><span>NewsAPI</span></div>"
+        "<ol class='publishing-flow'>"
+        "<li><span>01</span><div><strong>收集与筛选</strong><small>归一化 · 聚类 · 排序</small></div></li>"
+        "<li><span>02</span><div><strong>生成文章</strong><small>整理内容，附上来源</small></div></li>"
+        "<li><span>03</span><div><strong>检查后发布</strong><small>引用与结构检查 → GitHub Pages</small></div></li>"
+        "</ol><p class='sheet-footnote'><span aria-hidden='true'>↳</span> 检查未通过的文章，不进入发布步骤。</p>"
+        "</figure>"
+    )
+
+
 def render_home_page(publish_dir: Path, journal_dir: Path | None = None) -> str:
     journal_dir = journal_dir if journal_dir is not None else publish_dir.parent / "journal"
     body = (
-        "<section class='hero'>"
-        "<div class='hero-copy'>"
-        "<p class='eyebrow'>Learn · Explore · Build</p>"
-        "<h1 class='hero-title'>先把 AI 用起来，<br />再做出自己的作品。</h1>"
-        "<p class='lead'>从安装、账号、Key 和环境变量开始，把第一次配置走通。这里也分享 AI 新变化，记录我的尝试、踩坑和想法。</p>"
-        "<div class='hero-actions'><a class='button-link' href='/tutorials#codex-start'>先把 AI 用起来</a><a class='button-link secondary' href='/blog'>发现 AI 新资讯</a></div>"
-        "<p class='hero-note'>想了解我的 AI 应用开发实践？<a href='/projects'>看看项目案例 →</a></p></div>"
-        "<aside class='workflow-visual' aria-label='第一次配置 AI 工具的路线'>"
-        "<p class='eyebrow'>Windows 默认 · Mac 可切换</p><h2>从不会配置，到收到第一条回复</h2>"
-        "<div class='workflow-step'><b>01</b><span><strong>选好系统，安装工具</strong><br />打开哪个窗口、输入什么，逐步说明</span></div>"
-        "<div class='workflow-step'><b>02</b><span><strong>把账号和 Key 配置好</strong><br />分清两种登录方式，检查环境变量</span></div>"
-        "<div class='workflow-step'><b>03</b><span><strong>收到回复，确认能用</strong><br />先完成一次调用，再开始实际练习</span></div>"
+        "<div class='portfolio-page home-notebook'>"
+        "<section class='notebook-opening' aria-labelledby='home-title'>"
+        "<div class='opening-copy'><p class='folio-label'>个人博客 <span>/</span> AI 应用开发</p>"
+        "<h1 id='home-title'>边用，<br /><em>边记。</em></h1>"
+        "<p class='opening-intro'>我把用 AI 的过程放在这里。<br />从第一次安装，到做项目时的尝试和想法。</p>"
+        "<a class='ink-button' href='/tutorials#codex-start'>先把 AI 用起来 <span aria-hidden='true'>↗</span></a>"
+        "<a class='quiet-link opening-secondary' href='/about/journal'>读读我的近况 <span aria-hidden='true'>→</span></a></div>"
+        "<aside class='starter-cover' aria-labelledby='starter-title'>"
+        "<div class='cover-top'><span>入门手册</span><span>01</span></div>"
+        "<p class='cover-margin'>给还没用过 Codex 的你</p>"
+        "<h2 id='starter-title'>装在哪？<br />Key 填哪？<br /><span>从这里开始。</span></h2>"
+        "<p class='cover-caption'>打开哪个窗口、输入哪条命令，<br />按步骤来，直到收到第一条回复。</p>"
+        "<a class='cover-link' href='/tutorials#codex-start'>打开安装教程 <span aria-hidden='true'>↗</span></a>"
+        "<div class='cover-bottom'><span>Windows 默认</span><span>可切换 macOS</span></div>"
         "</aside></section>"
-        "<section class='section'><div class='section-heading'><p class='eyebrow'>第一课</p><h2>先解决卡住你的那一步</h2><p>这次用 Codex 命令行版走通安装与配置。Windows 和 Mac 分开讲，每一步都说明成功的标志；已经能用，再去做网页练习。</p></div>"
-        "<div class='grid-3'>"
-        "<article class='card'><p class='card-kicker'>01 · 从头开始</p><h3><a href='/tutorials#setup-terminal'>软件怎么装，命令在哪输？</a></h3><p>从打开 PowerShell 或 Mac 终端开始，安装基础环境和 Codex，检查版本。</p></article>"
-        "<article class='card'><p class='card-kicker'>02 · 配置卡点</p><h3><a href='/tutorials#setup-key'>Key 填哪，环境变量怎么设？</a></h3><p>从创建自己的 Key，到让工具读到它，解释每一步的作用与费用边界。</p></article>"
-        "<article class='card'><p class='card-kicker'>03 · 找到原因</p><h3><a href='/tutorials#codex-help'>照着做了，为什么还是报错？</a></h3><p>按找不到命令、读不到 Key、认证失败、额度和网络问题逐项排查。</p></article>"
+        "<nav class='quick-index' aria-label='常见配置问题'>"
+        "<span>已经卡在某一步？</span>"
+        "<a href='/tutorials#setup-terminal'>打开终端 <span aria-hidden='true'>↗</span></a>"
+        "<a href='/tutorials#setup-key'>配置 Key <span aria-hidden='true'>↗</span></a>"
+        "<a href='/tutorials#codex-help'>查找报错 <span aria-hidden='true'>↗</span></a></nav>"
+        "<section class='notebook-section' aria-labelledby='work-title'>"
+        "<div class='editorial-heading'><div><p class='folio-label'>01 / 项目选录</p><h2 id='work-title'>做过的项目</h2></div>"
+        "<a class='quiet-link' href='/projects'>全部项目 <span aria-hidden='true'>↗</span></a></div>"
+        "<div class='home-feature'>" + _publishing_diagram() +
+        "<div class='feature-copy'><p class='folio-label'>个人项目 · 源码公开</p>"
+        "<h3><a href='/projects#news-publisher'>这个博客，<br />也是一个项目。</a></h3>"
+        "<p>知行简报背后有一套自动发布程序：收集 AI 资讯、筛选选题、生成文章，再发布到网站。</p>"
+        "<p>程序能按时运行之后，标题重复、文章读起来太像，又成了要继续改的问题。</p>"
+        "<a class='text-link' href='/projects#news-publisher'>看看它是怎么做的 <span aria-hidden='true'>→</span></a>"
+        "</div></div>"
+        "<div class='other-work'>"
+        "<a href='/projects#listing-agent'><span class='work-index'>02</span><span><strong>商品自动化上架 Agent</strong><small>从整理商品资料，到填写 Shopify 页面</small></span><span aria-hidden='true'>↗</span></a>"
+        "<a href='/projects#support-assistant'><span class='work-index'>03</span><span><strong>TikTok 智能客服</strong><small>查商品与售后资料，再回答用户的问题</small></span><span aria-hidden='true'>↗</span></a>"
         "</div></section>"
-        "<section class='section'><div class='section-heading'><p class='eyebrow'>Briefing</p><h2>最新知行简报</h2><p>发现 AI 新工具、产品更新与研究进展，保留原始来源，方便继续追踪。</p></div>"
-        f"<div class='grid-3'>{_latest_posts(publish_dir)}</div><p style='margin-top:20px'><a href='/blog'>查看全部简报 →</a></p></section>"
-        "<section class='section'><div class='section-heading'><p class='eyebrow'>Learning in public</p><h2>最近的实践与思考</h2><p>亲自试过的方法、项目里的卡点，以及仍在琢磨的想法。</p></div>"
-        f"<div class='reading-grid'>{render_journal_cards(journal_dir, limit=3)}</div>"
-        "<p style='margin-top:20px'><a href='/about/journal'>查看全部成长记录 →</a></p></section>"
-        "<section class='section'><div class='section-heading'><p class='eyebrow'>Selected work</p><h2>从模型调用走到业务执行</h2><p>项目不仅展示结果，也说明流程、技术取舍、失败处理和效果衡量。</p></div>"
-        "<div class='grid-3'>"
-        "<article class='card'><p class='card-kicker'>AGENT · E-COMMERCE</p><h3>商品自动化上架 Agent</h3><p>串联市场调研、竞品分析、Listing 生成、规则校验与 Shopify 页面执行。</p>" + _tag_row(("LangGraph", "Tool Calling", "Playwright")) + "</article>"
-        "<article class='card'><p class='card-kicker'>RAG · CUSTOMER SERVICE</p><h3>TikTok 智能客服</h3><p>基于企业知识库回答商品、物流与售后问题，用检索筛选和业务边界降低幻觉。</p>" + _tag_row(("RAG", "FastAPI", "结构化输出")) + "</article>"
-        "<article class='card'><p class='card-kicker'>AUTOMATION · CONTENT</p><h3>AI 资讯自动发布系统</h3><p>完成采集、聚类排序、长文生成、QA、GitHub Actions 与 Pages 发布闭环。</p>" + _tag_row(("Python", "QA", "GitHub Actions")) + "</article>"
-        "</div><p style='margin-top:20px'><a href='/projects'>查看完整项目与技术细节 →</a></p></section>"
+        "<div class='reading-desk'>"
+        "<section aria-labelledby='briefing-title'><div class='editorial-heading'><div>"
+        "<p class='folio-label'>02 / 关注外面的变化</p><h2 id='briefing-title'>知行简报</h2></div>"
+        "<a class='quiet-link' href='/blog'>全部简报 ↗</a></div>"
+        "<p class='section-caption'>AI 产品、工具和研究的新消息，文章里附有来源。</p>"
+        f"<div class='dispatch-list'>{_latest_posts(publish_dir)}</div></section>"
+        "<section class='journal-column' aria-labelledby='journal-title'><div class='editorial-heading'><div>"
+        "<p class='folio-label'>03 / 留一点自己的记录</p><h2 id='journal-title'>最近在想</h2></div></div>"
+        f"<div class='journal-notes'>{_recent_notes(journal_dir)}</div>"
+        "<a class='quiet-link' href='/about/journal'>全部成长记录 ↗</a></section></div>"
+        "<aside class='closing-note'><p>刚开始时，我也卡在安装、Key 和环境变量上。</p>"
+        "<a class='text-link' href='/tutorials#codex-start'>所以，教程从这些地方讲起 <span aria-hidden='true'>→</span></a></aside></div>"
     )
     return render_site_page(SITE_NAME, body, "/")
 
 
 def render_projects_page() -> str:
     body = (
-        "<header class='page-intro'><p class='eyebrow'>Project cases</p><h1>项目案例</h1><p>围绕真实业务问题，展示我如何完成流程拆解、模型接入、工具执行、质量控制和部署迭代。</p></header>"
-        "<section class='case-study'><div><p class='card-kicker'>01 · AGENT</p><h2>商品自动化上架 Agent</h2>" + _tag_row(("LangGraph", "Function Calling", "Playwright", "Shopify")) + "</div>"
-        "<div class='case-body'><div><h3>业务问题</h3><p>商品资料分散，市场调研、竞品分析、Listing 编写和页面录入依赖人工串联，耗时且容易遗漏规则。</p></div><div><h3>我的工作</h3><p>将流程拆为可复用节点，定义输入输出、状态流转、失败回退和人工确认；封装数据处理与浏览器自动化工具。</p></div><div><h3>工程处理</h3><p>使用结构化输出约束标题、卖点、描述与标签，在写入前完成必填项、格式和业务规则校验，并加入超时重试与异常捕获。</p></div><div><h3>结果</h3><p>形成从调研到 Shopify 上架的完整闭环，市场调研耗时减少约 90%，商品上架耗时减少约 70%。</p></div></div></section>"
-        "<section class='case-study'><div><p class='card-kicker'>02 · RAG</p><h2>TikTok 智能客服机器人</h2>" + _tag_row(("RAG", "知识库", "Prompt 约束", "FastAPI")) + "</div>"
-        "<div class='case-body'><div><h3>业务问题</h3><p>商品、物流与售后规则散落在不同资料中，人工客服重复回答高频问题，且模型容易产生无依据内容。</p></div><div><h3>我的工作</h3><p>清洗并分类企业资料，搭建问题解析、知识检索、上下文组装、Prompt 约束与 LLM 生成链路。</p></div><div><h3>工程处理</h3><p>按问题类型优化召回筛选与回答策略，明确业务边界；无法找到依据时转人工处理，而不是强行生成。</p></div><div><h3>结果</h3><p>约 90% 的常见咨询可由机器人自动处理，人工客服处理量降低约 80%，资源转向复杂售后场景。</p></div></div></section>"
-        "<section class='case-study'><div><p class='card-kicker'>03 · AUTOMATION</p><h2>AI 资讯博客自动化发布系统</h2>" + _tag_row(("Python", "Hacker News", "arXiv", "GitHub Pages")) + "</div>"
-        "<div class='case-body'><div><h3>业务问题</h3><p>资讯采集、筛选、写作与发布步骤分散，难以保持固定更新节奏，也缺少统一质量门槛。</p></div><div><h3>我的工作</h3><p>独立搭建采集、标准化、聚类排序、长文生成、QA 和发布链路，并提供本地 HTTP API。</p></div><div><h3>工程处理</h3><p>加入引用覆盖、结构风格和安全词检查，通过 GitHub Actions 定时运行并部署到 GitHub Pages。</p></div><div><h3>下一轮优化</h3><p>正在提高选题相关性、标题区分度和重复检测，把稳定发布进一步升级为稳定产出有价值的内容。</p></div></div></section>"
+        "<div class='portfolio-page project-notebook'>"
+        "<header class='projects-opening'><p class='folio-label'>项目案例 <span>/</span> 过程与记录</p>"
+        "<div><h1>做过的<br /><em>几个项目。</em></h1>"
+        "<p>一个自己维护的博客，<br />两段工作中的 AI 应用实践。<br />这里写具体做法，也写还没解决好的问题。</p></div></header>"
+        "<nav class='project-index' aria-label='项目目录'>"
+        "<a href='#news-publisher'><span>01</span> 资讯发布 <span aria-hidden='true'>↓</span></a>"
+        "<a href='#listing-agent'><span>02</span> 商品上架 <span aria-hidden='true'>↓</span></a>"
+        "<a href='#support-assistant'><span>03</span> 智能客服 <span aria-hidden='true'>↓</span></a></nav>"
+        "<article class='project-story' id='news-publisher' aria-labelledby='publisher-title'>"
+        "<header class='story-heading'><span class='story-number'>01</span><div><p class='folio-label'>个人项目 · 源码公开</p>"
+        "<h2 id='publisher-title'>让知行简报自己更新</h2><p>AI 资讯博客自动化发布系统</p></div></header>"
+        "<div class='publisher-layout'><div class='story-prose'>"
+        "<p class='story-lead'>你正在看的这个网站，<br />就是它的发布结果。</p>"
+        "<p>我想持续关注 AI 资讯，又不想每次都重复找来源、整理文章、上传网页。这套程序把这些步骤接了起来。</p>"
+        "<p>我负责从采集到发布的代码。内容先做标准化、聚类和排序，生成文章后检查引用与结构，再交给 GitHub Actions 导出静态页面。</p>"
+        "<div class='project-actions'><a class='ink-button' href='/blog'>看知行简报 <span aria-hidden='true'>↗</span></a>"
+        "<a class='text-link' href='https://github.com/Eason-2/first-depot' target='_blank' rel='noopener noreferrer'>看源码 ↗</a></div>"
+        + _tag_row(("Python", "SQLite", "GitHub Actions", "GitHub Pages")) +
+        "</div>" + _publishing_diagram() + "</div>"
+        "<aside class='project-afterword'><span>还在改的地方</span><p>能定时发出来，只解决了一半。前面的文章出现过标题相近、段落像套模板的问题。标题和结构已经调整过，后续仍要逐篇看内容，不能把“发布成功”当成写得好。</p></aside></article>"
+        "<article class='project-story' id='listing-agent' aria-labelledby='listing-title'>"
+        "<header class='story-heading'><span class='story-number'>02</span><div><p class='folio-label'>工作实践 · 商品运营</p>"
+        "<h2 id='listing-title'>把商品资料填进上架页面</h2><p>商品自动化上架 Agent</p></div></header>"
+        "<div class='listing-layout'><div class='listing-sheet'>"
+        "<p class='folio-label'>处理流程 / 示意</p>"
+        "<div class='listing-input'><span>输入</span><strong>商品资料 · 市场与竞品信息</strong></div>"
+        "<div class='listing-fields'><span>标题</span><span>卖点</span><span>描述</span><span>标签</span></div>"
+        "<div class='listing-check'><span aria-hidden='true'>↳</span><p><strong>写入前检查</strong><br />必填项、格式、业务规则与人工确认</p></div>"
+        "<div class='listing-output'><span>输出</span><strong>Shopify 商品页面</strong></div>"
+        "</div><div class='story-prose'><h3>重复的不只是写文案。</h3>"
+        "<p>整理商品资料、看竞品、写标题和卖点，最后还要一项项填进后台。中间任何一步漏了信息，后面都要回头补。</p>"
+        "<p>我负责把这些步骤拆成工作流节点，约定每一步传什么数据，再用 Playwright 处理页面填写。LangGraph 管理步骤之间的状态，工具调用负责执行具体操作。</p>"
+        "<h3>生成完，还不能直接上架。</h3>"
+        "<p>标题、描述和标签先按约定格式输出；写入页面前，再检查字段和业务规则。遇到失败要有回退和人工确认的位置。</p>"
+        + _tag_row(("LangGraph", "Function Calling", "Playwright", "Shopify")) + "</div></div></article>"
+        "<article class='project-story' id='support-assistant' aria-labelledby='support-title'>"
+        "<header class='story-heading'><span class='story-number'>03</span><div><p class='folio-label'>工作实践 · 客服知识库</p>"
+        "<h2 id='support-title'>先查资料，再回答</h2><p>TikTok 智能客服机器人</p></div></header>"
+        "<div class='support-layout'><div class='story-prose'><p class='story-lead'>商品、物流、售后，<br />答案要有出处。</p>"
+        "<p>这类咨询的问题经常重复，依据却分散在不同资料里。我负责清洗、分类企业资料，再串起问题解析、知识检索和回答生成。</p>"
+        "<p>检索结果会按问题类型筛选，和回答规则一起交给模型。找不到依据的问题，转给人工处理。</p>"
+        + _tag_row(("RAG", "知识库", "Prompt 约束", "FastAPI")) + "</div>"
+        "<aside class='answer-sheet' aria-label='客服回答流程示意'><p class='folio-label'>回答之前</p>"
+        "<h3>资料里，<br />有这个答案吗？</h3>"
+        "<div class='answer-route'><span>有依据</span><p>用检索到的资料组织回答</p><span aria-hidden='true'>↗</span></div>"
+        "<div class='answer-route'><span>没找到</span><p>交给人工继续处理</p><span aria-hidden='true'>→</span></div>"
+        "<p class='answer-note'>流程示意，不展示真实客户对话。</p></aside></div></article>"
+        "<aside class='closing-note'><p>项目之外，也写一些学习中的事。</p>"
+        "<a class='text-link' href='/about/journal'>去看成长记录 <span aria-hidden='true'>→</span></a></aside></div>"
     )
     return render_site_page("项目案例", body, "/projects", "AI Agent、RAG、业务自动化与内容发布项目案例。")
 

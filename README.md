@@ -364,6 +364,8 @@ title: '这次尝试中遇到的一个问题'
 
 运行 `python -m scripts.export_static_site --output-dir site` 后即可预览；推送到 `main` 会通过现有 Pages 工作流发布首页、简报、教程与成长记录。
 
+首页与项目案例的正文在 `apps/api/portfolio_view.py`，杂志式排版在 `apps/api/portfolio_styles.py`，仅对这两页注入。首页保留最新三篇简报和三篇成长记录的入口，以短标题列表减少摘要堆积；简报入口省略旧生成器的固定标题尾缀，原文标题保持原样。项目案例以公开的博客项目为首项，商品上架与客服项目展示流程示意，不使用虚构截图或缺少统计口径的提效数字。
+
 ## Testing
 ```bash
 python -m unittest discover -s tests -p "test_*.py"
