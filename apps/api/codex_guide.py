@@ -242,7 +242,7 @@ def render_codex_guide() -> str:
   <header class='lesson-cover' id='start-here'>
     <div><p class='eyebrow'>实战教程 / 01</p><h1 id='codex-guide-title'>把 Codex 装好，<br />再问它第一句话。</h1>
       <p class='cover-description' id='choose-tool'>Codex 是能按你的描述读写文件的 AI 助手。这里用命令行版，从下载安装到登录，按顺序做完六步。</p>
-      <div class='hero-actions'><a class='button-link' href='#codex-account'>开始安装 <span aria-hidden='true'>↗</span></a><a href='#codex-help'>找一个报错</a></div>
+      <div class='hero-actions'><a class='button-link' href='#codex-account'>开始安装</a><a href='#codex-help'>找一个报错</a></div>
       <p class='cover-meta'>从零开始使用 Codex · Windows / macOS<br />无需编程基础 · 需要可用账号与网络</p>
     </div>
     <aside class='lesson-demo' aria-label='本课目标示意'>
@@ -253,7 +253,7 @@ def render_codex_guide() -> str:
       <small>对话示意，实际界面可能不同。</small>
     </aside>
   </header>
-  <div class='lesson-intro-line'><p>只在自己的电脑上安装工具，这一课不用购买服务器。</p><a href='#setup-key'>已经卡在 Key 配置？直接看这里 →</a></div>
+  <div class='lesson-intro-line'><p>只在自己的电脑上安装工具，这一课不用购买服务器。</p><a href='#setup-key'>已经卡在 Key 配置？直接看这里</a></div>
   <noscript><style>.codex-guide [data-guide-os][hidden],.codex-guide [data-auth][hidden]{display:block!important}.lesson-os-settings{display:none}</style><p>当前浏览器未启用 JavaScript，下面显示完整教程及两套系统步骤，请选择与你的电脑对应的部分。</p></noscript>
   <div class='lesson-frame'>
     <aside class='lesson-sidebar' id='guide-system' aria-label='教程设置与目录'>
@@ -266,7 +266,7 @@ def render_codex_guide() -> str:
         + f"<nav aria-label='教程章节'><ol>{links}</ol></nav>"
         + f"<div class='lesson-mobile-navigation' data-enhance hidden><label class='lesson-select-label' for='guide-step-select'>跳到某一步</label><select id='guide-step-select'>{options}</select></div>"
         + """
-      <a class='lesson-help-link' href='#codex-help'>遇到问题？查看排错 ↗</a>
+      <a class='lesson-help-link' href='#codex-help'>遇到问题？查看排错</a>
       <span id='guide-os-status' class='lesson-sr-only' role='status'></span>
     </aside>
     <div class='lesson-paper'>
@@ -274,10 +274,10 @@ def render_codex_guide() -> str:
 """
         + lessons
         + """
-      <nav class='lesson-controls' aria-label='翻到上一或下一步' data-enhance hidden><a href='#codex-account' data-previous>← 上一步</a><a href='#setup-terminal' data-next>下一步：安装 Node.js →</a></nav>
+      <nav class='lesson-controls' aria-label='翻到上一或下一步' data-enhance hidden><a href='#codex-account' data-previous>上一步</a><a href='#setup-terminal' data-next>下一步：安装 Node.js</a></nav>
     </div>
   </div>
-  <div class='lesson-afterword'><p>不需要一次记住所有命令。哪一步出错，就记下那一步和解决方法，下次换电脑时还能用。</p><a href='/about/journal'>我的实践记录 ↗</a></div>
+  <div class='lesson-afterword'><p>不需要一次记住所有命令。哪一步出错，就记下那一步和解决方法，下次换电脑时还能用。</p><a href='/about/journal'>我的实践记录</a></div>
 """
         + _help()
         + _exercise()

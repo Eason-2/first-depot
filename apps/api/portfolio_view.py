@@ -3,7 +3,7 @@ from __future__ import annotations
 from html import escape
 from pathlib import Path
 
-from apps.api.blog_view import list_post_files, post_slug_from_path, read_post_summary
+from apps.api.blog_view import list_post_files, post_slug_from_path, read_post_summary, render_news_metadata
 from apps.api.codex_guide import render_codex_guide
 from apps.api.site_view import SITE_NAME, render_about_nav, render_site_page
 
@@ -21,9 +21,8 @@ def _latest_posts(publish_dir: Path, limit: int = 3) -> str:
         title = title.removesuffix("：核心变化与验证重点")
         cards.append(
             "<article class='dispatch-row'>"
-            f"<time datetime='{escape(date)}'>{escape(date)}</time>"
+            + render_news_metadata(post, date) +
             f"<h3><a href='/blog/{escape(slug)}'>{escape(title)}</a></h3>"
-            "<span aria-hidden='true'>↗</span>"
             "</article>"
         )
     return "".join(cards) or "<p>暂时还没有简报。</p>"
@@ -38,7 +37,7 @@ def _recent_notes(journal_dir: Path) -> str:
             "<article class='card'>"
             f"<p class='card-kicker'>{escape(date)} · 成长记录</p>"
             f"<h3><a href='{escape(href, quote=True)}'>{escape(title)}</a></h3>"
-            f"<a href='{escape(href, quote=True)}'>继续阅读 →</a>"
+            f"<a href='{escape(href, quote=True)}'>继续阅读</a>"
             "</article>"
         )
     return "".join(notes) or "<p>第一篇记录还在整理中。</p>"
@@ -66,47 +65,47 @@ def render_home_page(publish_dir: Path, journal_dir: Path | None = None) -> str:
         "<div class='opening-copy'><p class='folio-label'>个人博客 <span>/</span> AI 应用开发</p>"
         "<h1 id='home-title'>边用，<br /><em>边记。</em></h1>"
         "<p class='opening-intro'>我把用 AI 的过程放在这里。<br />从第一次安装，到做项目时的尝试和想法。</p>"
-        "<a class='ink-button' href='/tutorials#codex-start'>先把 AI 用起来 <span aria-hidden='true'>↗</span></a>"
-        "<a class='quiet-link opening-secondary' href='/about/journal'>读读我的近况 <span aria-hidden='true'>→</span></a></div>"
+        "<div class='opening-actions'><a class='ink-button' href='/tutorials#codex-start'>先把 AI 用起来</a>"
+        "<a class='quiet-link' href='/blog'>看 AI 新闻</a></div></div>"
         "<aside class='starter-cover' aria-labelledby='starter-title'>"
         "<div class='cover-top'><span>入门手册</span><span>01</span></div>"
         "<p class='cover-margin'>给还没用过 Codex 的你</p>"
         "<h2 id='starter-title'>装在哪？<br />Key 填哪？<br /><span>从这里开始。</span></h2>"
         "<p class='cover-caption'>打开哪个窗口、输入哪条命令，<br />按步骤来，直到收到第一条回复。</p>"
-        "<a class='cover-link' href='/tutorials#codex-start'>打开安装教程 <span aria-hidden='true'>↗</span></a>"
+        "<a class='cover-link' href='/tutorials#codex-start'>打开安装教程</a>"
         "<div class='cover-bottom'><span>Windows 默认</span><span>可切换 macOS</span></div>"
         "</aside></section>"
         "<nav class='quick-index' aria-label='常见配置问题'>"
         "<span>已经卡在某一步？</span>"
-        "<a href='/tutorials#setup-terminal'>打开终端 <span aria-hidden='true'>↗</span></a>"
-        "<a href='/tutorials#setup-key'>配置 Key <span aria-hidden='true'>↗</span></a>"
-        "<a href='/tutorials#codex-help'>查找报错 <span aria-hidden='true'>↗</span></a></nav>"
+        "<a href='/tutorials#setup-terminal'>打开终端</a>"
+        "<a href='/tutorials#setup-key'>配置 Key</a>"
+        "<a href='/tutorials#codex-help'>查找报错</a></nav>"
+        "<div class='reading-desk'>"
+        "<section class='home-news' aria-labelledby='briefing-title'><div class='editorial-heading'><div>"
+        "<p class='folio-label'>知行简报 · AI 新闻</p><h2 id='briefing-title'>AI 新闻与产品动态</h2></div>"
+        "<a class='quiet-link' href='/blog'>浏览全部资讯</a></div>"
+        "<p class='section-caption'>模型发布、工具更新、研究进展。每篇附上消息来源。</p>"
+        f"<div class='dispatch-list'>{_latest_posts(publish_dir)}</div></section>"
+        "<section class='journal-column' aria-labelledby='journal-title'><div class='editorial-heading'><div>"
+        "<p class='folio-label'>个人记录</p><h2 id='journal-title'>最近在想</h2></div></div>"
+        f"<div class='journal-notes'>{_recent_notes(journal_dir)}</div>"
+        "<a class='quiet-link' href='/about/journal'>全部成长记录</a></section></div>"
         "<section class='notebook-section' aria-labelledby='work-title'>"
-        "<div class='editorial-heading'><div><p class='folio-label'>01 / 项目选录</p><h2 id='work-title'>做过的项目</h2></div>"
-        "<a class='quiet-link' href='/projects'>全部项目 <span aria-hidden='true'>↗</span></a></div>"
+        "<div class='editorial-heading'><div><p class='folio-label'>项目选录</p><h2 id='work-title'>做过的项目</h2></div>"
+        "<a class='quiet-link' href='/projects'>全部项目</a></div>"
         "<div class='home-feature'>" + _publishing_diagram() +
         "<div class='feature-copy'><p class='folio-label'>个人项目 · 源码公开</p>"
         "<h3><a href='/projects#news-publisher'>这个博客，<br />也是一个项目。</a></h3>"
         "<p>知行简报背后有一套自动发布程序：收集 AI 资讯、筛选选题、生成文章，再发布到网站。</p>"
         "<p>程序能按时运行之后，标题重复、文章读起来太像，又成了要继续改的问题。</p>"
-        "<a class='text-link' href='/projects#news-publisher'>看看它是怎么做的 <span aria-hidden='true'>→</span></a>"
+        "<a class='text-link' href='/projects#news-publisher'>看看它是怎么做的</a>"
         "</div></div>"
         "<div class='other-work'>"
-        "<a href='/projects#listing-agent'><span class='work-index'>02</span><span><strong>商品自动化上架 Agent</strong><small>从整理商品资料，到填写 Shopify 页面</small></span><span aria-hidden='true'>↗</span></a>"
-        "<a href='/projects#support-assistant'><span class='work-index'>03</span><span><strong>TikTok 智能客服</strong><small>查商品与售后资料，再回答用户的问题</small></span><span aria-hidden='true'>↗</span></a>"
+        "<a href='/projects#listing-agent'><span class='work-index'>02</span><span><strong>商品自动化上架 Agent</strong><small>从整理商品资料，到填写 Shopify 页面</small></span></a>"
+        "<a href='/projects#support-assistant'><span class='work-index'>03</span><span><strong>TikTok 智能客服</strong><small>查商品与售后资料，再回答用户的问题</small></span></a>"
         "</div></section>"
-        "<div class='reading-desk'>"
-        "<section aria-labelledby='briefing-title'><div class='editorial-heading'><div>"
-        "<p class='folio-label'>02 / 关注外面的变化</p><h2 id='briefing-title'>知行简报</h2></div>"
-        "<a class='quiet-link' href='/blog'>全部简报 ↗</a></div>"
-        "<p class='section-caption'>AI 产品、工具和研究的新消息，文章里附有来源。</p>"
-        f"<div class='dispatch-list'>{_latest_posts(publish_dir)}</div></section>"
-        "<section class='journal-column' aria-labelledby='journal-title'><div class='editorial-heading'><div>"
-        "<p class='folio-label'>03 / 留一点自己的记录</p><h2 id='journal-title'>最近在想</h2></div></div>"
-        f"<div class='journal-notes'>{_recent_notes(journal_dir)}</div>"
-        "<a class='quiet-link' href='/about/journal'>全部成长记录 ↗</a></section></div>"
         "<aside class='closing-note'><p>刚开始时，我也卡在安装、Key 和环境变量上。</p>"
-        "<a class='text-link' href='/tutorials#codex-start'>所以，教程从这些地方讲起 <span aria-hidden='true'>→</span></a></aside></div>"
+        "<a class='text-link' href='/tutorials#codex-start'>所以，教程从这些地方讲起</a></aside></div>"
     )
     return render_site_page(SITE_NAME, body, "/")
 
@@ -118,9 +117,9 @@ def render_projects_page() -> str:
         "<div><h1>做过的<br /><em>几个项目。</em></h1>"
         "<p>一个自己维护的博客，<br />两段工作中的 AI 应用实践。<br />这里写具体做法，也写还没解决好的问题。</p></div></header>"
         "<nav class='project-index' aria-label='项目目录'>"
-        "<a href='#news-publisher'><span>01</span> 资讯发布 <span aria-hidden='true'>↓</span></a>"
-        "<a href='#listing-agent'><span>02</span> 商品上架 <span aria-hidden='true'>↓</span></a>"
-        "<a href='#support-assistant'><span>03</span> 智能客服 <span aria-hidden='true'>↓</span></a></nav>"
+        "<a href='#news-publisher'><span>01</span> 资讯发布</a>"
+        "<a href='#listing-agent'><span>02</span> 商品上架</a>"
+        "<a href='#support-assistant'><span>03</span> 智能客服</a></nav>"
         "<article class='project-story' id='news-publisher' aria-labelledby='publisher-title'>"
         "<header class='story-heading'><span class='story-number'>01</span><div><p class='folio-label'>个人项目 · 源码公开</p>"
         "<h2 id='publisher-title'>让知行简报自己更新</h2><p>AI 资讯博客自动化发布系统</p></div></header>"
@@ -128,8 +127,8 @@ def render_projects_page() -> str:
         "<p class='story-lead'>你正在看的这个网站，<br />就是它的发布结果。</p>"
         "<p>我想持续关注 AI 资讯，又不想每次都重复找来源、整理文章、上传网页。这套程序把这些步骤接了起来。</p>"
         "<p>我负责从采集到发布的代码。内容先做标准化、聚类和排序，生成文章后检查引用与结构，再交给 GitHub Actions 导出静态页面。</p>"
-        "<div class='project-actions'><a class='ink-button' href='/blog'>看知行简报 <span aria-hidden='true'>↗</span></a>"
-        "<a class='text-link' href='https://github.com/Eason-2/first-depot' target='_blank' rel='noopener noreferrer'>看源码 ↗</a></div>"
+        "<div class='project-actions'><a class='ink-button' href='/blog'>看知行简报</a>"
+        "<a class='quiet-link' href='https://github.com/Eason-2/first-depot' target='_blank' rel='noopener noreferrer'>看源码</a></div>"
         + _tag_row(("Python", "SQLite", "GitHub Actions", "GitHub Pages")) +
         "</div>" + _publishing_diagram() + "</div>"
         "<aside class='project-afterword'><span>还在改的地方</span><p>能定时发出来，只解决了一半。前面的文章出现过标题相近、段落像套模板的问题。标题和结构已经调整过，后续仍要逐篇看内容，不能把“发布成功”当成写得好。</p></aside></article>"
@@ -157,11 +156,11 @@ def render_projects_page() -> str:
         + _tag_row(("RAG", "知识库", "Prompt 约束", "FastAPI")) + "</div>"
         "<aside class='answer-sheet' aria-label='客服回答流程示意'><p class='folio-label'>回答之前</p>"
         "<h3>资料里，<br />有这个答案吗？</h3>"
-        "<div class='answer-route'><span>有依据</span><p>用检索到的资料组织回答</p><span aria-hidden='true'>↗</span></div>"
-        "<div class='answer-route'><span>没找到</span><p>交给人工继续处理</p><span aria-hidden='true'>→</span></div>"
+        "<div class='answer-route'><span>有依据</span><p>用检索到的资料组织回答</p></div>"
+        "<div class='answer-route'><span>没找到</span><p>交给人工继续处理</p></div>"
         "<p class='answer-note'>流程示意，不展示真实客户对话。</p></aside></div></article>"
         "<aside class='closing-note'><p>项目之外，也写一些学习中的事。</p>"
-        "<a class='text-link' href='/about/journal'>去看成长记录 <span aria-hidden='true'>→</span></a></aside></div>"
+        "<a class='text-link' href='/about/journal'>去看成长记录</a></aside></div>"
     )
     return render_site_page("项目案例", body, "/projects", "AI Agent、RAG、业务自动化与内容发布项目案例。")
 
@@ -189,8 +188,8 @@ def render_about_page() -> str:
     body = (
         "<header class='page-intro'><p class='eyebrow'>About</p><h1>关于我</h1><p>计算机科学与技术专业，方向是 AI Agent、LLM 应用开发与大模型工程化落地。这里也记录学习过程，以及做项目时的思考。</p></header>"
         + render_about_nav("/about") +
-        "<section class='section'><div class='card'><p class='card-kicker'>LEARNING IN PUBLIC</p><h2>成长记录</h2><p>工具试用、项目进展、踩坑和想法，写下过程里值得留下的部分。</p><a class='button-link secondary' href='/about/journal'>阅读我的实践与思考 →</a></div></section>"
-        "<section class='section about-grid'><div class='card'><p class='card-kicker'>CURRENT FOCUS</p><h2>让 AI 真正进入业务流程</h2><p>我关注的不只是模型回答得好不好，也关注它能否调用工具、遵守规则、处理异常、留下日志并稳定部署。</p><p><a href='https://github.com/Eason-2' target='_blank' rel='noopener noreferrer'>查看我的 GitHub →</a></p></div>"
+        "<section class='section'><div class='card'><p class='card-kicker'>LEARNING IN PUBLIC</p><h2>成长记录</h2><p>工具试用、项目进展、踩坑和想法，写下过程里值得留下的部分。</p><a class='button-link secondary' href='/about/journal'>阅读我的实践与思考</a></div></section>"
+        "<section class='section about-grid'><div class='card'><p class='card-kicker'>CURRENT FOCUS</p><h2>让 AI 真正进入业务流程</h2><p>我关注的不只是模型回答得好不好，也关注它能否调用工具、遵守规则、处理异常、留下日志并稳定部署。</p><p><a href='https://github.com/Eason-2' target='_blank' rel='noopener noreferrer'>查看我的 GitHub</a></p></div>"
         "<div><div class='timeline-item'><h3>AI Agent 开发实习</h3><p>参与跨境电商商品智能运营、TikTok 智能客服和运营流程自动化，负责 Workflow、工具调用、RAG 与服务工程化。</p></div>"
         "<div class='timeline-item'><h3>AI 资讯博客自动化发布系统</h3><p>独立完成从数据源到静态站发布的端到端链路，并持续优化内容质量和用户体验。</p></div>"
         "<div class='timeline-item'><h3>Web 开发实践</h3><p>具备页面开发、接口联调、性能优化、回归测试和线上问题复盘经验。</p></div></div></section>"

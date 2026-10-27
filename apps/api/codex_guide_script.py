@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     previous.hidden = current === 0;
     previous.href = '#' + steps[Math.max(0, current - 1)].id;
     next.href = current < steps.length - 1 ? '#' + steps[current + 1].id : '#first-task';
-    next.textContent = current < steps.length - 1 ? '下一步：' + steps[current + 1].dataset.shortTitle + ' →' : '选做：做一个网页 →';
+    next.textContent = current < steps.length - 1 ? '下一步：' + steps[current + 1].dataset.shortTitle : '选做：做一个网页';
     guide.querySelector('.lesson-controls').hidden = fullText;
   }
   function revealHash(scroll = true) {

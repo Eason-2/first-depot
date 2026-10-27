@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from apps.api.site_view import render_site_nav, site_nav_css
+from apps.api.control_styles import CONTROL_STYLES
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -676,7 +677,7 @@ def render_ai_writer_page() -> str:
         ".runtime-panel input,.runtime-panel select{padding:6px;font-size:14px;}"
         ".runtime-panel button{padding:6px 10px;font-size:13px;}"
         ".runtime-panel .result{font-size:13px;padding:8px;margin-top:8px;}"
-        + site_nav_css() +
+        + site_nav_css() + CONTROL_STYLES +
         "@media (max-width: 900px){.grid{grid-template-columns:1fr;}.intro{padding-right:0;}.runtime-wrap{position:static;}.runtime-panel{position:fixed;top:56px;right:12px;left:12px;width:auto;}}"
         "</style>"
         "</head>"
@@ -694,13 +695,13 @@ def render_ai_writer_page() -> str:
         "<div class='runtime-wrap'>"
         "<button class='runtime-toggle' onclick='toggleRuntimePanel()'>设置</button>"
         "<aside id='runtime_panel' class='runtime-panel hidden'>"
-        "<div class='runtime-head'><h2>运行挡位</h2><button class='runtime-close' onclick='closeRuntimePanel()'>×</button></div>"
+        "<div class='runtime-head'><h2>运行挡位</h2><button class='runtime-close' aria-label='关闭设置' onclick='closeRuntimePanel()'>关闭</button></div>"
         "<p class='hint'>只影响当前服务，重启后恢复默认配置。</p>"
         "<div><label>模式</label><select id='provider' onchange='onProviderChange()'><option value='mock'>mock（演示）</option><option value='ollama'>ollama（本地）</option><option value='openai'>openai（远程/兼容）</option></select></div>"
         "<div><label>服务地址</label><input id='base_url' placeholder='例如：http://127.0.0.1:11434' /></div>"
         "<div><label>模型</label><input id='model_name' placeholder='例如：qwen2.5:3b-instruct' /></div>"
         "<div><label>API Key</label><input id='api_key' type='password' placeholder='mock 可留空，ollama 可填 local' /></div>"
-        "<button onclick='fillRecommended()'>推荐值</button>"
+        "<button class='secondary' onclick='fillRecommended()'>推荐值</button>"
         "<button onclick='applyRuntime()'>应用</button>"
         "<div id='runtime' class='result'>运行模式检测中...</div>"
         "<div id='runtime_apply' class='hint'></div>"

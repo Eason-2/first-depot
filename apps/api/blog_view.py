@@ -3,12 +3,12 @@ from __future__ import annotations
 import re
 from html import escape
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from apps.api.site_view import render_site_page
 
 _URL_PATTERN = re.compile(r"(https?://[^\s<]+)")
 _SITE_NAME = "知行简报"
-_SITE_TAGLINE = "追踪热点，也尊重常识。"
 
 
 def list_post_files(publish_dir: Path) -> list[Path]:
@@ -41,6 +41,38 @@ def read_post_summary(post_path: Path) -> tuple[str, str, str]:
     return title, _build_preview(content or raw), date
 
 
+def render_news_metadata(post_path: Path, date: str) -> str:
+    raw = post_path.read_text(encoding="utf-8").lstrip("\ufeff")
+    header = raw.split("\n---", 1)[0] if raw.startswith("---\n") else ""
+    domains: list[str] = []
+    in_sources = False
+    for line in header.splitlines():
+        if line.strip() == "sources:":
+            in_sources = True
+            continue
+        if in_sources and line and not line[0].isspace():
+            break
+        if not in_sources or not line.strip().startswith("- "):
+            continue
+        url = line.strip()[2:].strip().strip("'\"")
+        try:
+            parsed = urlsplit(url)
+            domain = (parsed.hostname or "").removeprefix("www.")
+        except ValueError:
+            continue
+        if parsed.scheme in ("http", "https") and domain and domain not in domains:
+            domains.append(domain)
+    sources = "来源 · " + " / ".join(domains[:2]) if domains else "来源见正文"
+    if len(domains) > 2:
+        sources += f" 等 {len(domains)} 个来源"
+    timestamp = f"<time datetime='{escape(date, quote=True)}'>{escape(date)}</time>" if date else ""
+    return (
+        "<div class='news-meta'><span class='news-type'>AI 资讯</span>"
+        + timestamp
+        + f"<span class='news-sources'>{escape(sources)}</span></div>"
+    )
+
+
 def render_blog_index(publish_dir: Path) -> str:
     posts = list_post_files(publish_dir)
     if not posts:
@@ -49,28 +81,33 @@ def render_blog_index(publish_dir: Path) -> str:
         cards = []
         for post in posts:
             slug = post_slug_from_path(post)
-            title, preview, date = read_post_summary(post)
+            title, _, date = read_post_summary(post)
+            title = title.removesuffix("：核心变化与验证重点")
             cards.append(
-                "<article class='post-card'>"
+                "<article class='news-item'>"
+                + render_news_metadata(post, date) +
                 f"<h2><a href='/blog/{escape(slug)}'>{escape(title)}</a></h2>"
-                f"<p class='post-meta'>{escape(date)}</p>"
-                f"<p>{escape(preview)}</p>"
-                f"<a class='read-more' href='/blog/{escape(slug)}'>阅读全文</a>"
+                f"<a class='ui-link' href='/blog/{escape(slug)}' aria-label='阅读全文：{escape(title, quote=True)}'>阅读全文</a>"
                 "</article>"
             )
         body = "".join(cards)
 
+    latest_date = read_post_summary(posts[0])[2] if posts else ""
+    updated = f"最近更新 {escape(latest_date)}" if latest_date else "AI 资讯索引"
     header = (
-        "<header class='page-intro'>"
-        "<p class='eyebrow'>AI briefing</p>"
-        f"<h1>{_SITE_NAME}</h1>"
-        f"<p>{_SITE_TAGLINE}关注 AI 新工具、产品更新与研究进展，从原始来源发现值得继续了解的变化。</p>"
-        "<p class='post-meta'>简报由自动化流程整理，重要信息请核对文末来源；个人试用和学习经历另见成长记录。</p>"
-        "<div class='hero-actions'><a href='/tutorials#codex-start'>第一次用 Codex？从这里开始 →</a>"
-        "<a href='/about/journal'>查看成长记录 →</a></div>"
-        "</header>"
+        "<header class='news-masthead'><div class='news-edition'>"
+        f"<strong>{_SITE_NAME}</strong><span>{updated}</span></div>"
+        "<h1>AI 新闻与产品动态</h1>"
+        "<p>新模型发布、工具更新、研究进展。每篇附上消息来源，方便回到原文继续看。</p>"
+        "<div class='news-topics' aria-label='关注范围'><span>模型与产品</span><span>工具与应用</span><span>研究与行业</span></div></header>"
+        "<p class='news-disclosure'>本站通过自动化流程整理公开资讯；重要信息请核对原始来源。</p>"
     )
-    return render_site_page(_SITE_NAME, f"{header}<section class='section'>{body}</section>", "/blog")
+    return render_site_page(
+        _SITE_NAME,
+        f"<div class='news-room'>{header}<section class='news-archive' aria-labelledby='latest-news'>"
+        f"<div class='news-archive-heading'><h2 id='latest-news'>最新资讯</h2><span>{len(posts)} 篇归档 · 按日期排序</span></div>{body}</section></div>",
+        "/blog", "知行简报：AI 新闻、模型发布、工具更新与研究进展，附原始消息来源。",
+    )
 
 
 def render_blog_post(title: str, markdown_content: str) -> str:

@@ -9,7 +9,7 @@
   --border: rgba(203,213,225,.92);
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: linear-gradient(180deg, #f8fbff 0%, #f6f1fb 100%); color: var(--text); }
+body { margin: 0; background: #f5f8fd; color: var(--text); }
 a { color: var(--accent-dark); text-decoration: none; font-weight: 600; }
 a:hover { text-decoration: underline; }
 .back-link-button {
@@ -50,7 +50,7 @@ h1, h2, h3 { margin: 0 0 10px; }
 p, li, small { color: var(--muted); }
 .field { display: flex; flex-direction: column; gap: 8px; font-weight: 600; }
 .field.compact { min-width: 240px; }
-.fields-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.fields-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
 .tool-intro { margin: 18px 0; padding: 16px; border-radius: 12px; background: rgba(238,244,255,.76); }
 .tool-form { display: flex; flex-direction: column; gap: 16px; }
 textarea, input, select, button { font: inherit; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,.96); padding: 10px 12px; }
@@ -81,7 +81,7 @@ button:disabled { opacity: .75; cursor: wait; }
 .code-toggle { margin-top: 14px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
 .code-toggle summary { cursor: pointer; padding: 12px 14px; font-weight: 700; }
 .code-preview { margin: 0; padding: 14px; white-space: pre-wrap; word-break: break-word; border-top: 1px solid var(--border); background: #0f172a; color: #e2e8f0; overflow: auto; }
-.runtime-overlay { position: fixed; inset: 0; z-index: 20; background: rgba(15,23,42,.36); display: flex; align-items: flex-start; justify-content: flex-end; padding: 24px; }
+.runtime-overlay { position: fixed; inset: 0; z-index: 60; background: rgba(15,23,42,.36); display: flex; align-items: flex-start; justify-content: flex-end; padding: 24px; overflow-y: auto; }
 .runtime-overlay.hidden { display: none; }
 .runtime-modal { width: min(460px, 100%); background: rgba(255,255,255,.98); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 22px 48px rgba(15,23,42,.2); padding: 20px; }
 .runtime-form { display: flex; flex-direction: column; gap: 14px; }

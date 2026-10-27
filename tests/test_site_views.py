@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from apps.api.blog_view import render_blog_post
+from apps.api.blog_view import render_blog_post, render_news_metadata
 from apps.api.portfolio_view import render_about_page, render_home_page, render_projects_page, render_tutorials_page
 from apps.api.site_view import render_site_nav
 
@@ -40,6 +40,35 @@ class SiteViewTests(unittest.TestCase):
     def test_blog_post_does_not_repeat_markdown_title(self) -> None:
         html = render_blog_post("示例标题", "# 示例标题\n\n正文。")
         self.assertEqual(html.count(">示例标题</h1>"), 1)
+
+    def test_news_sources_use_unique_domains_from_declared_sources(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            post = Path(tmp) / "news.md"
+            post.write_text(
+                "---\ntitle: 'Example'\nsources:\n"
+                "  - 'https://www.example.com/first'\n"
+                "  - 'https://example.com/second'\n"
+                "  - 'https://arxiv.org/abs/1234'\n"
+                "  - 'https://[invalid'\n"
+                "  - 'javascript:alert(1)'\n"
+                "---\n\nAn unrelated URL: https://unrelated.example/\n",
+                encoding="utf-8",
+            )
+            metadata = render_news_metadata(post, "2026-10-27")
+        self.assertIn("来源 · example.com / arxiv.org", metadata)
+        self.assertEqual(metadata.count("example.com"), 1)
+        self.assertNotIn("unrelated.example", metadata)
+        self.assertNotIn("javascript:", metadata)
+        self.assertIn("datetime='2026-10-27'", metadata)
+
+    def test_news_without_declared_sources_does_not_invent_attribution(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            post = Path(tmp) / "news.md"
+            post.write_text("# Article\n\nsources:\n  - https://unrelated.example/", encoding="utf-8")
+            metadata = render_news_metadata(post, "")
+        self.assertIn("来源见正文", metadata)
+        self.assertNotIn("<time", metadata)
+        self.assertNotIn("unrelated.example", metadata)
 
 
 if __name__ == "__main__":

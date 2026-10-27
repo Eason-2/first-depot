@@ -20,7 +20,7 @@ def render_journal_cards(journal_dir: Path, limit: int | None = None) -> str:
             f"<p class='card-kicker'>{escape(date)} · 成长记录</p>"
             f"<h3><a href='{escape(href, quote=True)}'>{escape(title)}</a></h3>"
             f"<p>{escape(preview)}</p>"
-            f"<a href='{escape(href, quote=True)}'>继续阅读 →</a>"
+            f"<a href='{escape(href, quote=True)}'>继续阅读</a>"
             "</article>"
         )
     return "".join(cards) or "<p>第一篇记录还在整理中。可以先看看项目案例和实战教程。</p>"

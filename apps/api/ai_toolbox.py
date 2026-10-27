@@ -16,6 +16,7 @@ from typing import Any
 from uuid import uuid4
 
 from apps.api.site_view import render_site_nav, site_nav_css
+from apps.api.control_styles import CONTROL_STYLES
 
 
 SUPPORTED_TOOLS = {
@@ -627,7 +628,7 @@ def render_ai_toolbox_page() -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI 工具箱</title>
   <link rel="stylesheet" href="/api/ai-toolbox/assets/app.css" />
-  <style>{site_nav_css()}.site-nav-wrap{{padding:0 20px;background:#fff;border-bottom:1px solid #e2e8f0;}}</style>
+  <style>{site_nav_css()}{CONTROL_STYLES}.site-nav-wrap{{padding:0 20px;background:#fff;border-bottom:1px solid #e2e8f0;}}</style>
 </head>
 <body>
   <div class="site-nav-wrap">{render_site_nav('/ai-toolbox')}</div>
