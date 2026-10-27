@@ -1,6 +1,6 @@
 ---
 title: 'ACARE: Agent-Context-Aware Reranker for Iterative...：核心变化与验证重点'
-draft_id: 'draft_1a7aedafe56a'
+draft_id: 'draft_632a913a1aee'
 cluster_id: 'cluster_12ffff275872'
 confidence: 0.86
 tags: [ai-news, automation, longform, zh]
