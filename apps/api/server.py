@@ -10,6 +10,7 @@ from apps.api.ai_toolbox import handle_ai_toolbox_get, handle_ai_toolbox_post
 from apps.api.ai_writer import handle_ai_writer_get, handle_ai_writer_post
 from apps.api.blog_view import load_post_by_slug, render_blog_index, render_blog_post
 from apps.api.journal_view import render_journal_index, render_journal_post
+from apps.api.guide_assets import handle_guide_asset
 from apps.api.portfolio_view import render_about_page, render_home_page, render_projects_page, render_tutorials_page
 from core.config import Settings
 from core.storage import Storage
@@ -74,6 +75,9 @@ class ApiHandler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         path = urlparse(self.path).path
+
+        if handle_guide_asset(path, self):
+            return
 
         if handle_ai_toolbox_get(path, self):
             return

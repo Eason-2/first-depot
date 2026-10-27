@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 from scripts.export_static_site import _apply_base_path, _normalize_base_path, export_static_site
+from apps.api.guide_assets import ASSET_DIR, ASSET_NAMES
 
 
 class ExportStaticSiteTests(unittest.TestCase):
@@ -24,6 +25,9 @@ class ExportStaticSiteTests(unittest.TestCase):
             "<a href='/blog/post-a'>Post A</a>"
             '<a href="/blog/post-b">Post B</a>'
             "<a href='/about'>About</a>"
+            "<img src='/tutorials/assets/node-windows-download.webp' />"
+            '<img src="/tutorials/assets/node-macos-download.webp" />'
+            "<source srcset='/tutorials/assets/node-windows-mobile.webp' />"
         )
         updated = _apply_base_path(html, "/first-depot")
         self.assertIn("href='/first-depot/'", updated)
@@ -33,6 +37,9 @@ class ExportStaticSiteTests(unittest.TestCase):
         self.assertIn("href='/first-depot/blog/post-a'", updated)
         self.assertIn('href="/first-depot/blog/post-b"', updated)
         self.assertIn("href='/first-depot/about'", updated)
+        self.assertIn("src='/first-depot/tutorials/assets/node-windows-download.webp'", updated)
+        self.assertIn('src="/first-depot/tutorials/assets/node-macos-download.webp"', updated)
+        self.assertIn("srcset='/first-depot/tutorials/assets/node-windows-mobile.webp'", updated)
 
     def test_export_static_site_with_base_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -60,6 +67,10 @@ class ExportStaticSiteTests(unittest.TestCase):
             self.assertTrue((output_dir / ".nojekyll").exists())
             self.assertTrue((output_dir / "projects" / "index.html").exists())
             self.assertTrue((output_dir / "tutorials" / "index.html").exists())
+            for name in ASSET_NAMES:
+                self.assertEqual((output_dir / 'tutorials/assets' / name).read_bytes(), (ASSET_DIR / name).read_bytes())
+            tutorials = (output_dir / 'tutorials/index.html').read_text(encoding='utf-8')
+            self.assertIn("src='/first-depot/tutorials/assets/node-windows-download.webp'", tutorials)
             self.assertTrue((output_dir / "about" / "index.html").exists())
             self.assertTrue((output_dir / "about" / "journal" / "index.html").exists())
             self.assertEqual(result["journal_count"], 0)

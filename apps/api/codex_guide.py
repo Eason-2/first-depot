@@ -5,6 +5,7 @@ from __future__ import annotations
 from html import escape
 
 from apps.api.codex_guide_script import GUIDE_SCRIPT
+from apps.api.codex_walkthrough import render_walkthrough
 
 
 STEPS = (
@@ -46,17 +47,25 @@ def _step(index: int, body: str) -> str:
         "<header class='lesson-step-header'>"
         f"<span class='lesson-step-number' aria-hidden='true'>{index + 1:02d}</span><div>"
         "<p class='step-settings'><a href='#guide-system'>切换系统 / 跳转章节 ↑</a></p>"
-        f"<h2>{title}</h2><p class='step-lead'>{description}</p></div></header>{body}</article>"
+        f"<h2>{title}</h2></div></header>"
+        + (_route_choices() if index == 0 else "")
+        + render_walkthrough(index, _code)
+        + f"<details class='lesson-text'><summary>完整文字步骤与补充说明</summary><div>{body}</div></details></article>"
     )
 
 
-def _account() -> str:
+def _route_choices() -> str:
     return """
 <div class='lesson-route-choices' role='group' aria-label='选择登录方式'>
   <button type='button' data-route-choice='account' aria-pressed='true' hidden><small>用已有的产品账号</small><strong>ChatGPT 账号</strong><small>不需要填写 API Key</small></button>
   <button type='button' data-route-choice='api' aria-pressed='false' hidden><small>用开发者接口</small><strong>API Key</strong><small>单独按 API 用量计费</small></button>
 </div>
-<div data-auth='account' id='codex-signup'>
+"""
+
+
+def _account() -> str:
+    return """
+<div data-auth='account'>
   <ol>
     <li>打开 <a href='https://chatgpt.com/' target='_blank' rel='noopener noreferrer'>ChatGPT 官网</a>。已有账号就点 <strong>Log in（登录）</strong>；没有就点 <strong>Sign up（注册）</strong>，按页面提示完成验证。</li>
     <li>确认自己的账号有 Codex 使用权限和剩余额度。能登录 ChatGPT，不代表一定能使用 Codex。</li>
@@ -122,7 +131,7 @@ def _auth() -> str:
         + "<ol><li>在打开的官方网页中，用第 1 步的账号登录并授权。</li><li>完成后返回终端。浏览器没自动打开时，手动打开终端给出的官方登录链接。</li></ol>"
         + "<p>这条路线不用设置 API Key。登录链接和验证码不要分享给别人。</p></div>"
         + """
-<section data-auth='api' id='setup-key' hidden>
+<section data-auth='api' id='setup-key-reference' hidden>
   <h3>1. 创建自己的 Key</h3>
   <ol>
     <li>登录 <a href='https://platform.openai.com/' target='_blank' rel='noopener noreferrer'>开发者平台</a>，确认当前项目和账单设置。</li>
@@ -200,7 +209,7 @@ def _help() -> str:
 <details class='guide-faq'><summary>禁止运行脚本 / npm.ps1 无法加载</summary><p>Windows 按本文使用 <code>npm.cmd</code> 和 <code>codex.cmd</code>，包括 .cmd 后缀。无需修改 PowerShell 执行策略；公司设备的其他安装限制应由管理员处理。</p></details>
 <details class='guide-faq'><summary>Mac 提示 EACCES / permission denied</summary><p>使用 <a href='#setup-install'>第 3 步</a>带 <code>--prefix "$HOME/.local"</code> 的命令，安装到自己的目录。若之前用过其他安装方式，先核对目录归属，不要直接给命令加 sudo。</p></details>
 <details class='guide-faq' id='help-windows'><summary>Windows 不支持 / 沙箱初始化失败</summary><p>核对系统版本、CPU 架构、Codex 版本与 <a href='https://developers.openai.com/codex/windows' target='_blank' rel='noopener noreferrer'>官方 Windows 支持说明</a>。本文是原生 PowerShell 路线；若你的环境需要 WSL，应按对应的 Linux 环境说明操作，不要混用命令或关闭沙箱来硬跑。</p></details>
-<details class='guide-faq'><summary>环境变量设了，仍然读不到 Key</summary><p>Windows 检查名称是否为 OPENAI_API_KEY、是否属于当前用户，再完全退出并重开终端。Mac 的临时变量要在同一个窗口使用，并执行 export。回到 <a href='#setup-key'>Key 配置</a>做存在性检查，不要输出密钥。</p><p>新建 .env 文件不会让所有程序自动读取它，只有明确支持的程序才会使用。</p></details>
+<details class='guide-faq' id='help-key'><summary>环境变量设了，仍然读不到 Key</summary><p>Windows 检查名称是否为 OPENAI_API_KEY、是否属于当前用户，再完全退出并重开终端。Mac 的临时变量要在同一个窗口使用，并执行 export。回到 <a href='#setup-key'>Key 配置</a>做存在性检查，不要输出密钥。</p><p>新建 .env 文件不会让所有程序自动读取它，只有明确支持的程序才会使用。</p></details>
 <details class='guide-faq'><summary>401 / invalid API key / 认证失败</summary><p>确认 Key 来自 OpenAI、项目正确、未被撤销，复制时没有空格或引号。更换 Key 后，更新变量并重新执行 Key 登录；仅修改变量不一定会替换 Codex 保存的登录。账号路线则重新完成授权。</p></details>
 <details class='guide-faq'><summary>无权限 / 额度不足 / 429</summary><p>账号路线查套餐、组织权限和额度；API 路线查项目账单、用量和模型权限。429 可能是频率限制，也可能是额度问题，要看错误正文，不能一律靠充值或反复重试解决。</p></details>
 <details class='guide-faq'><summary>下载失败 / 超时 / connection refused</summary><p>先分清发生在哪一步：下载失败查官方软件下载和 npm 错误；登录失败查官网是否能打开；发请求失败查网络、服务状态和报错中的地址。</p><p>127.0.0.1 代表你自己的电脑。若错误指向它，可能是原先配置的本地服务没启动。本文的官方云服务路线不需要填本地地址，先核对是否残留其他配置。</p></details>
@@ -240,9 +249,9 @@ def render_codex_guide() -> str:
         """
 <section class='codex-guide' id='codex-start' aria-labelledby='codex-guide-title'>
   <header class='lesson-cover' id='start-here'>
-    <div><p class='eyebrow'>实战教程 / 01</p><h1 id='codex-guide-title'>把 Codex 装好，<br />再问它第一句话。</h1>
-      <p class='cover-description' id='choose-tool'>Codex 是能按你的描述读写文件的 AI 助手。这里用命令行版，从下载安装到登录，按顺序做完六步。</p>
-      <div class='hero-actions'><a class='button-link' href='#codex-account'>开始安装</a><a href='#codex-help'>找一个报错</a></div>
+    <div><p class='eyebrow'>实战教程 / 01 · 看图跟练</p><h1 id='codex-guide-title'>第一次用 Codex，<br />我们从打开窗口开始。</h1>
+      <p class='cover-description' id='choose-tool'>不知道 Key 是什么，也没用过终端？把教程放在旁边，一屏做一件事。先装好，再收到第一条回复。</p>
+      <div class='hero-actions'><a class='button-link' href='#codex-account'>开始跟练</a><a href='#codex-help'>我卡在某一步</a></div>
       <p class='cover-meta'>从零开始使用 Codex · Windows / macOS<br />无需编程基础 · 需要可用账号与网络</p>
     </div>
     <aside class='lesson-demo' aria-label='本课目标示意'>
@@ -250,7 +259,7 @@ def render_codex_guide() -> str:
       <p class='demo-command'>&gt; Codex 已打开</p>
       <p class='demo-message'>请只回复：连接成功。</p>
       <p class='demo-reply'>↳ 连接成功。</p>
-      <small>对话示意，实际界面可能不同。</small>
+      <small>这一课的终点：在你自己的电脑上收到回复。<br />此处为对话示意。</small>
     </aside>
   </header>
   <div class='lesson-intro-line'><p>只在自己的电脑上安装工具，这一课不用购买服务器。</p><a href='#setup-key'>已经卡在 Key 配置？直接看这里</a></div>
@@ -270,7 +279,7 @@ def render_codex_guide() -> str:
       <span id='guide-os-status' class='lesson-sr-only' role='status'></span>
     </aside>
     <div class='lesson-paper'>
-      <div class='lesson-toolbar' data-enhance hidden><span id='guide-reading-status' aria-live='polite'>第 1 步 / 共 6 步</span><button type='button' id='guide-read-all' aria-pressed='false'>阅读全文</button></div>
+      <div class='lesson-toolbar' data-enhance hidden><span id='guide-reading-status' aria-live='polite'>第 1 章 / 共 6 章</span><button type='button' id='guide-read-all' aria-pressed='false'>展开全部操作</button></div>
 """
         + lessons
         + """
@@ -282,7 +291,9 @@ def render_codex_guide() -> str:
         + _help()
         + _exercise()
         + """
-  <details class='lesson-references'><summary>版本、适用范围与官方参考 · 修订于 2026-10-26</summary>
+  <details class='lesson-references'><summary>图片来源、适用范围与参考 · 修订于 2026-10-27</summary>
+    <p>Node.js 下载区是 2026-10-27 的官网截图，点击可放大。其余操作画面为本站绘制的示意，不冒充实机截图；网页里的练习不会安装软件或设置环境变量。</p>
+    <p>结构参考：<a href='https://www.bilibili.com/video/BV1SjGi6nEZ6/' target='_blank' rel='noopener noreferrer'>枫枫知道 · Codex 新手教程</a>及其公开安装图文。只参考可公开访问的内容，未转载课程视频。具体命令以本课说明及官方资料为准。</p>
     <p>命令选项曾对照本机 Codex CLI 0.153.2 帮助信息核对。Windows 全新安装、真实新账号注册和付费调用尚未逐项实测；这篇教程不保证所有新账号免费可用。</p>
     <p>官方资料：<a href='https://developers.openai.com/codex/cli' target='_blank' rel='noopener noreferrer'>CLI 安装</a> · <a href='https://developers.openai.com/codex/windows' target='_blank' rel='noopener noreferrer'>Windows 支持</a> · <a href='https://developers.openai.com/codex/auth' target='_blank' rel='noopener noreferrer'>认证方式</a> · <a href='https://developers.openai.com/codex/pricing' target='_blank' rel='noopener noreferrer'>费用与额度</a>。</p>
     <p>上一轮核验时文档访问返回 403，当前系统要求、地区、套餐及额度未复核。以官方页面和账号内提示为准。</p>

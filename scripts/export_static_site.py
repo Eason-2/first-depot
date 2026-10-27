@@ -8,6 +8,7 @@ from apps.api.ai_toolbox import render_ai_toolbox_page
 from apps.api.ai_writer import render_ai_writer_page
 from apps.api.blog_view import load_post_by_slug, post_slug_from_path, render_blog_index, render_blog_post
 from apps.api.journal_view import render_journal_index, render_journal_post
+from apps.api.guide_assets import ASSET_DIR, ASSET_NAMES, ASSET_URL
 from apps.api.portfolio_view import render_about_page, render_home_page, render_projects_page, render_tutorials_page
 
 
@@ -45,6 +46,9 @@ def _apply_base_path(html: str, base_path: str) -> str:
         updated = updated.replace(f'href="{route}', f'href="{base_path}{route}')
     updated = updated.replace("href='/'", f"href='{base_path}/'")
     updated = updated.replace('href="/"', f'href="{base_path}/"')
+    for quote in ("'", '"'):
+        updated = updated.replace(f"src={quote}{ASSET_URL}", f"src={quote}{base_path}{ASSET_URL}")
+        updated = updated.replace(f"srcset={quote}{ASSET_URL}", f"srcset={quote}{base_path}{ASSET_URL}")
     return updated
 
 
@@ -81,6 +85,10 @@ def export_static_site(
     }
     for page_dir in page_dirs.values():
         page_dir.mkdir(parents=True, exist_ok=True)
+    guide_assets = page_dirs['tutorials'] / 'assets'
+    guide_assets.mkdir(parents=True, exist_ok=True)
+    for name in sorted(ASSET_NAMES):
+        (guide_assets / name).write_bytes((ASSET_DIR / name).read_bytes())
     blog_dir = page_dirs['blog']
     ai_writer_dir = page_dirs['ai-writer']
     ai_toolbox_dir = page_dirs['ai-toolbox']

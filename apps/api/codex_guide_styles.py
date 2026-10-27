@@ -1,5 +1,7 @@
 """Styles for the beginner lesson, scoped to the tutorials page."""
 
+from apps.api.codex_walkthrough_styles import WALKTHROUGH_STYLES
+
 GUIDE_STYLES = """
 .tutorials-page{--lesson-ink:#17263d;--lesson-muted:#607086;--lesson-line:#dce5f2;--lesson-paper:#fff;--lesson-accent:#2457e6;}
 .codex-guide [hidden],.tutorials-page [hidden]{display:none!important;}
@@ -64,3 +66,5 @@ GUIDE_STYLES = """
 @media print{.lesson-step[hidden],.codex-guide [data-auth][hidden]{display:block!important;}.lesson-sidebar,.lesson-toolbar,.lesson-controls,.guide-copy,.site-header{display:none!important;}.lesson-frame{display:block;}.lesson-paper{border:0;box-shadow:none;}.lesson-step{break-inside:auto;}.lesson-cover{grid-template-columns:1fr;}.lesson-demo{display:none;}}
 @media(max-width:620px){.lesson-sidebar .lesson-os-settings,.lesson-sidebar .lesson-help-link{grid-column:1/-1;}.lesson-sidebar .lesson-help-link{text-align:left;padding:0;font-size:12px;}.lesson-step .step-settings{display:block;}.lesson-os-options label{min-width:0;}.lesson-step-header{gap:12px;}}
 """
+
+GUIDE_STYLES += WALKTHROUGH_STYLES

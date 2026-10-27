@@ -358,9 +358,19 @@ title: '这次尝试中遇到的一个问题'
 
 教程选用 Codex CLI，依次覆盖账号与费用条件、Node.js / npm 安装、Codex 安装与 PATH、账号登录或 API Key 认证、练习目录和首次实际回复。API 路线包含官方平台创建 Key、Windows 用户环境变量、Mac 隐藏输入临时变量、存在性检查与登录状态检查；不要求把真实 Key 放进命令历史或仓库。网页制作作为配置成功后的选做练习。旧 `#start-here`、`#choose-tool`、`#first-task`、`#check-result` 等入口仍可访问；直接访问 `#setup-key` 或排错锚点会展开相应内容。复制按钮遇到剪贴板权限限制时会选中文字供手动复制。
 
-教程默认分步阅读：桌面侧栏显示六个章节，手机用下拉目录；“阅读全文”可显示全部步骤。账号和 API 两条路线按读者选择显示，直达 `#setup-key` 会切到 API 路线并显示登录章节。上一/下一步、浏览器前进/后退、旧锚点保持可用。禁用 JavaScript 时退回完整正文。文案以具体操作为主，术语和排错按需展开；网页练习和本地工具箱默认折叠，版本限制移到文末。
+教程默认逐屏跟练：桌面侧栏显示六个章节，手机用下拉目录；每章拆成小动作，每屏展示操作位置、要做的事、成功标志。只有本章最后一屏出现下一章按钮，目录仍允许自由跳转。每章的完成勾选是读者自查，不代表网页检测了电脑。系统或认证路线改变会重置自查勾选；不存储账户或进度。通过“展开全部操作”可查看当前路线的全部操作屏，完整文字步骤单独折叠保留。直达 `#setup-key` 会切到 API 路线，具体 `#walk-…` 操作屏链接会选择所需系统与路线。新开无指定操作屏的教程始终默认 Windows。
 
-正文在 `apps/api/codex_guide.py`，交互在 `apps/api/codex_guide_script.py`，独立样式在 `apps/api/codex_guide_styles.py`（仅教程页面注入）；首页与其他教程在 `apps/api/portfolio_view.py` 维护。2026-10-26 对照本机 Codex CLI 0.153.2 的 `--help`、`login --help` 和安装包说明核对命令；官方 CLI、认证、Windows 与费用文档访问返回 403，当前系统要求、套餐价格、免费额度及地区可用性未复核。Windows 全新安装、真实新账号注册和真实计费调用未逐项实测，不应把页面自动化验证写成安装实测。更新相关内容时须重新核对官方资料。
+操作展示使用官网局部实拍与明确标注的 HTML 示意。Node.js 下载区提供桌面和手机宽度的实拍，点击图片可放大；图片来源见 `apps/api/guide_assets/SOURCES.md`。环境变量练习只展示固定无效值，不能输入真实 Key，不调用接口，不会修改读者电脑。其余系统、终端与授权画面不能宣称为真实安装截图。禁用 JavaScript 时各系统、路线与操作屏均可读，动态按钮隐藏；旧锚点、排错、复制权限拒绝时的手工复制仍可用。
+
+操作屏与画面在 `apps/api/codex_walkthrough.py`，专属样式在 `apps/api/codex_walkthrough_styles.py`；参考正文在 `apps/api/codex_guide.py`，交互在 `apps/api/codex_guide_script.py`，独立样式在 `apps/api/codex_guide_styles.py`（仅教程页面注入）。`guide_assets.py` 为本地服务提供明确允许的图片文件，静态导出复制同一组图片，并处理 `href`、`src`、`srcset` 的项目路径。首页与其他教程在 `apps/api/portfolio_view.py` 维护。2026-10-26 对照本机 Codex CLI 0.153.2 的 `--help`、`login --help` 和安装包说明核对命令；本轮能读取官方 GitHub 安装 README，官方 CLI、认证、Windows 与费用文档仍访问受限，当前系统要求、套餐价格、免费额度及地区可用性未复核。Windows 全新安装、真实新账号注册和真实计费调用未逐项实测，不应把页面自动化验证写成安装实测。更新相关内容时须重新核对官方资料。
+
+跟练页面浏览器验收（需已安装 Playwright 和 Chrome，不自动安装依赖）：
+
+```bash
+GUIDE_BASE=http://127.0.0.1:8780/first-depot node scripts/verify_codex_guide.cjs
+```
+
+通过 `PLAYWRIGHT_MODULE` 可指定已安装的 Playwright 模块路径；`GUIDE_WIDTHS=1280,390` 可缩小发布后复测范围，`GUIDE_REPORT=/tmp/guide-report.json` 可保存测量结果。脚本检查默认系统、路线切换、逐屏操作、深链接、浏览历史、复制、无 JS 阅读、图片资源与 9 种宽度。展示占比按每条路线中所有操作屏的 `walk-display` 面积总和除以 `walk-layout` 面积总和计算，门槛 70%；包括实拍和标注的操作示意，不代表 70% 都是实机截图，也不把侧栏、封面、折叠参考文、排错区计入这个指标。
 
 运行 `python -m scripts.export_static_site --output-dir site` 后即可预览；推送到 `main` 会通过现有 Pages 工作流发布首页、简报、教程与成长记录。
 
