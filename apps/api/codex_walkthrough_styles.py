@@ -33,8 +33,8 @@ WALKTHROUGH_STYLES = """
 .walk-scene-heading>span{font-size:11px;color:#607086;border:1px solid #dce5f2;padding:4px 7px;border-radius:4px;}
 .lesson-step .walk-scene-heading h3{font-size:19px;font-weight:650;margin:0;line-height:1.5;}
 .walk-layout{display:grid;grid-template-columns:minmax(0,3.8fr) minmax(0,1fr);gap:18px;align-items:start;}
-.walk-display{margin:0;min-width:0;border:1px solid #d4deec;border-radius:10px;overflow:hidden;background:#edf2f8;box-shadow:0 8px 24px #17263d08;}
-.walk-display>figcaption{padding:10px 16px;font-size:10px;color:#53667f;background:#f6f8fc;border-bottom:1px solid #dce5f2;}
+.walk-display{margin:0;min-width:0;border:0;border-radius:0;overflow:hidden;background:#f1f3f6;box-shadow:none;}
+.walk-display>figcaption{padding:10px 0;font-size:10px;color:#607086;background:#fff;border-bottom:1px solid #dce5f2;}
 .walk-instruction{padding:0 0 0 2px;min-width:0;}
 .lesson-step .walk-instruction p{font-size:13px;line-height:1.8;margin:6px 0;color:#334155;}
 .lesson-step .walk-instruction .walk-do-label{font-size:10px;color:#2457e6;letter-spacing:.08em;margin:3px 0 9px;font-weight:700;}
@@ -147,4 +147,154 @@ WALKTHROUGH_STYLES = """
 @media(max-width:620px){.tutorials-page .lesson-cover h1{font-size:34px;}.tutorials-page .lesson-step h2{font-size:23px;}.walk-layout{grid-template-columns:1fr;gap:14px;}.walk-display{border-radius:7px;}.walk-instruction{padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}.walk-instruction .walk-do-label{grid-column:1;}.lesson-step .walk-instruction p{font-size:12px;line-height:1.75;margin:0;}.walk-instruction>p:nth-child(2){grid-column:1;grid-row:2;}.walk-check{grid-column:2;grid-row:1/3;margin:0;padding:0 0 0 12px;border-top:0;border-left:2px solid #b4c8ee;}.walk-check>span{display:block;margin-bottom:6px;font-size:10px;}.walk-help{grid-column:1/-1;margin-top:10px;}.walk-window{margin:10px;}.walk-window-body{padding:18px 14px;}.walk-titlebar{font-size:10px;padding:9px 11px;}.walk-account-paths{gap:8px;}.walk-account-paths>div{padding:18px 7px;gap:12px;}.walk-account-paths b{font-size:11px;padding:9px 11px;}.walk-reading{font-size:10px;}.walk-scene-heading{gap:8px;}.lesson-step .walk-scene-heading h3{font-size:17px;}.walk-photo>a:first-child{padding:10px 0 0;}.walk-photo-notes{gap:0;padding:0 12px;}.walk-photo-notes .walk-mark{width:100%;padding:10px 0;}.walk-photo img{min-height:0;}.walk-controls{gap:10px;}.codex-guide .walk-button{padding:9px 13px;font-size:12px;}.walk-display .guide-code-heading{flex-wrap:wrap;gap:8px;}.walk-display .guide-code pre{font-size:12px;padding:12px;}.walk-specs{gap:18px 10px;font-size:12px;}.walk-branch{gap:8px;}.walk-branch>div{padding:16px 10px;}.walk-branch b{font-size:12px;}.walk-file-view{grid-template-columns:70px 1fr;}.walk-env-table>div{grid-template-columns:1fr 1.5fr;}.walk-app-result{padding:12px;gap:10px;}.walk-app-result>div{font-size:12px;}.walk-titlebar>span:last-child{display:none;}.walk-proof{padding:12px;}.walk-proof label{font-size:12px;}.walk-mark{font-size:12px;}.walk-key-dialog{padding:14px;}.walk-display>figcaption{font-size:10px;padding:9px 12px;}.walk-through{scroll-margin-top:20px;}}
 @media print{.walk-scene[hidden]{display:block!important;}.walk-controls,.walk-reading,.walk-demo-actions,.walk-proof input{display:none!important;}.walk-layout{display:block;}.walk-display{break-inside:avoid;}.lesson-text{display:block;}}
 @media(max-width:620px){.lesson-title-row{flex-wrap:wrap;gap:4px;}.lesson-title-row>h2{flex-basis:100%;}.lesson-reason{flex:0 1 100%;width:100%;}.lesson-reason>summary{min-height:36px;}.lesson-step .lesson-reason>p{margin-top:4px;}}
+
+/* The shape follows the task: a choice, a photo, a console, settings, or a conversation. */
+.tutorials-page .lesson-route-choices{display:flex;max-width:none;gap:24px;border-bottom:1px solid #dce5f2;margin-bottom:24px;}
+.tutorials-page .lesson-route-choices button{flex:1;min-height:0;padding:8px 0 14px;border:0;border-radius:0;background:transparent;text-align:left;}
+.tutorials-page .lesson-route-choices button[aria-pressed='true']{padding:8px 0 12px;border:0;border-bottom:2px solid #2457e6;background:transparent;}
+.tutorials-page .lesson-route-choices button:hover{background:transparent;color:#2457e6;}
+.tutorials-page .lesson-route-choices button:after{display:none;}
+.tutorials-page .lesson-route-choices button>small:first-child{display:none;}
+.tutorials-page .lesson-route-choices strong{margin:0 0 5px;font-size:15px;}
+.walk-scene-heading>span{border:0;border-radius:0;padding:0;color:#6d7e94;}
+.lesson-step .walk-scene-heading h3{font-size:21px;letter-spacing:-.02em;}
+.walk-proof{background:transparent;border-left:0;border-top:1px solid #dce5f2;padding:18px 0 0;}
+.walk-window{box-shadow:none;}
+
+/* Choices read as two alternatives on a page, with no pretend browser around them. */
+.walk-scene--choice .walk-layout{grid-template-columns:1fr;gap:20px;}
+.walk-scene--choice .walk-display{background:#fff;border-top:2px solid #17263d;}
+.walk-scene--choice .walk-window{margin:0;border:0;border-radius:0;}
+.walk-scene--choice .walk-titlebar{background:#fff;border:0;padding:18px 0 0;color:#607086;}
+.walk-scene--choice .walk-titlebar>span:last-child{display:none;}
+.walk-scene--choice .walk-window-body{padding:22px 0 28px;}
+.walk-scene--choice .walk-browser-start{text-align:left;}
+.walk-scene--choice .walk-browser-start>strong{font-size:38px;letter-spacing:-.04em;}
+.walk-scene--choice .walk-browser-start>p{display:inline;margin-left:20px;color:#6d7e94;}
+.walk-scene--choice .walk-account-paths{gap:0;margin:24px 0 30px;counter-reset:route;}
+.walk-scene--choice .walk-account-paths>div{position:relative;align-items:flex-start;gap:12px;padding:0 26px 0 0;background:transparent;counter-increment:route;}
+.walk-scene--choice .walk-account-paths>div+div{border-left:1px solid #dce5f2;padding-left:26px;}
+.walk-scene--choice .walk-account-paths>div:before{content:'0' counter(route);font:500 38px/1.2 'Segoe UI',sans-serif;color:#bdc7d6;margin-bottom:6px;}
+.walk-scene--choice .walk-account-paths b{background:transparent;color:#17263d;border-radius:0;font-size:19px;padding:0;}
+.walk-scene--choice .walk-account-paths small{font-size:12px;}
+.walk-scene--choice .walk-branch>div{border-top:1px solid #dce5f2;background:transparent;padding:18px 0;}
+.walk-scene--choice .walk-branch>div:last-child{border-color:#dce5f2;}
+
+/* A photo with a numbered legend, as in an illustrated manual. */
+.walk-scene--photo .walk-layout{grid-template-columns:1fr;gap:18px;}
+.walk-scene--photo .walk-display{background:#fff;border-top:2px solid #17263d;}
+.walk-scene--photo .walk-display>figcaption{border:0;}
+.walk-scene--photo .walk-photo>a:first-child{padding:26px 12px;background:#fff;border:1px solid #dce5f2;margin:8px 0 0;}
+.walk-scene--photo .walk-photo-notes{padding:0;gap:30px;}
+.walk-scene--photo .walk-photo-notes .walk-mark{padding:18px 0;gap:12px;}
+.walk-scene--photo .walk-photo-notes .walk-mark>b{background:transparent;color:#2457e6;border-radius:0;font-size:21px;font-weight:500;}
+.walk-scene--photo .walk-external{padding:18px 0 10px;font-weight:650;}
+.walk-scene--photo .walk-photo>small{padding:0 0 16px;}
+
+/* Console commands and results share one dark surface, without nested frames. */
+.walk-scene--console .walk-layout{grid-template-columns:1fr;gap:18px;}
+.walk-scene--console .walk-display{background:#152238;color:#e7effa;border-radius:5px;}
+.walk-scene--console .walk-display>figcaption{background:#152238;color:#9caec5;border:0;padding:14px 24px 0;}
+.walk-scene--console .walk-window{margin:0;border:0;border-radius:0;background:transparent;}
+.walk-scene--console .walk-titlebar{background:transparent;border:0;padding:14px 24px;color:#a9bdd7;font-size:11px;}
+.walk-scene--console .walk-titlebar>span:last-child{display:none;}
+.walk-scene--console .walk-window+.walk-window{border-top:1px solid #3a4a60;}
+.walk-scene--console .walk-window-body{padding:0 24px 24px;}
+.walk-scene--console .guide-code{background:transparent;border-radius:0;}
+.walk-scene--console .guide-code-heading{background:transparent;padding:6px 0;color:#a9bdd7;}
+.walk-scene--console .guide-code pre{padding:18px 0 22px;font-size:15px;line-height:1.9;}
+.walk-scene--console .walk-output{margin-top:4px;padding-top:18px;}
+.walk-scene--console .walk-output pre{font-size:15px;}
+.walk-scene--console .walk-path-diagram{flex-direction:row;align-items:center;justify-content:space-between;padding:20px 24px;border-top:1px solid #3a4a60;gap:16px;}
+.walk-scene--console .walk-path-diagram>b{border:0;background:transparent;padding:0;max-width:40%;color:#dce8fb;font-size:12px;}
+.walk-scene--console .walk-path-diagram>span{color:#9caec5;white-space:nowrap;}
+.walk-scene--console .walk-status-examples{grid-template-columns:1fr 1fr;gap:0;padding:8px 24px 24px;}
+.walk-scene--console .walk-status-examples>div{background:transparent;border-left:1px solid #516079;padding:10px 16px;}
+.walk-scene--console .walk-status-examples small{color:#9caec5;}
+.walk-scene--console .walk-codex-pane{background:transparent;border-top:1px solid #3a4a60;margin:0 24px;padding:22px 0;}
+.walk-scene--console .walk-callout{background:#22334c;border-color:#7b9bc6;color:#d0dff3;margin:0 24px 24px;}
+
+/* Below full-width exhibits, short notes sit side by side like figure captions. */
+.walk-scene:is(.walk-scene--choice,.walk-scene--photo,.walk-scene--console,.walk-scene--files) .walk-instruction{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);column-gap:28px;row-gap:0;padding:0;}
+.walk-scene:is(.walk-scene--choice,.walk-scene--photo,.walk-scene--console,.walk-scene--files) .walk-do-label{grid-column:1;grid-row:1;margin:0 0 6px;}
+.walk-scene:is(.walk-scene--choice,.walk-scene--photo,.walk-scene--console,.walk-scene--files) .walk-instruction>p:nth-child(2){grid-column:1;grid-row:2;margin:0;}
+.walk-scene:is(.walk-scene--choice,.walk-scene--photo,.walk-scene--console,.walk-scene--files) .walk-check{grid-column:2;grid-row:1/3;border-top:0;border-left:1px solid #b8c9df;padding:0 0 0 20px;margin:0;}
+.walk-scene:is(.walk-scene--choice,.walk-scene--photo,.walk-scene--console,.walk-scene--files) .walk-check>p{margin:6px 0 0;}
+.walk-scene:is(.walk-scene--choice,.walk-scene--photo,.walk-scene--console,.walk-scene--files) .walk-help{grid-column:1/-1;margin-top:10px;justify-self:start;}
+
+/* System information is a reference table; installation is a numbered sequence. */
+.walk-scene--reference .walk-display,.walk-scene--sequence .walk-display{background:#fff;border-left:1px solid #dce5f2;padding-left:24px;}
+.walk-scene--reference .walk-window,.walk-scene--sequence .walk-window:not(.is-terminal){margin:0;border:0;border-radius:0;}
+.walk-scene--reference .walk-titlebar,.walk-scene--sequence .walk-window:not(.is-terminal) .walk-titlebar{padding:18px 0 0;border:0;background:transparent;color:#607086;}
+.walk-scene--reference .walk-titlebar>span:last-child,.walk-scene--sequence .walk-titlebar>span:last-child{display:none;}
+.walk-scene--reference .walk-window-body,.walk-scene--sequence .walk-window:not(.is-terminal) .walk-window-body{padding:20px 0;}
+.walk-scene--reference .walk-path{background:transparent;border:0;border-bottom:1px solid #dce5f2;border-radius:0;padding:10px 0 20px;font-size:14px;}
+.walk-scene--reference .walk-specs{gap:0;padding:0;}
+.walk-scene--reference .walk-specs>b,.walk-scene--reference .walk-specs>span{padding:24px 0;border:0;border-bottom:1px solid #dce5f2;background:transparent;}
+.walk-scene--reference .walk-specs>span{padding-left:20px;}
+.walk-scene--reference .walk-callout{background:transparent;border:0;padding:0;font-size:12px;}
+.walk-scene--sequence .walk-mark{position:relative;border-left:1px solid #dce5f2;padding:12px 0 22px 20px;margin-left:14px;align-items:baseline;}
+.walk-scene--sequence .walk-mark>b{margin-left:-35px;background:#fff;color:#2457e6;border-radius:0;font-size:24px;width:28px;flex-basis:28px;}
+.walk-scene--sequence .walk-feature-list{margin:0 0 24px 34px;background:#f7f8fa;border:0;border-left:2px solid #b9c7d9;}
+.walk-scene--sequence .walk-installer-end{margin-left:34px;background:transparent;border:0;border-top:1px solid #dce5f2;padding:20px 0;}
+.walk-scene--sequence .walk-return{padding:18px 0;}
+.walk-scene--sequence .walk-return>.walk-callout{background:transparent;border-left:0;border-top:1px solid #dce5f2;margin-top:8px;padding:20px 0;}
+
+/* Settings keep recognizable window controls; the note is on the left. */
+@media(min-width:621px){.walk-scene--settings .walk-layout{grid-template-columns:minmax(0,1fr) minmax(0,3.8fr);gap:18px;}.walk-scene--settings .walk-instruction{grid-column:1;grid-row:1;}.walk-scene--settings .walk-display{grid-column:2;grid-row:1;}}
+.walk-scene--settings .walk-display{background:#f0f2f5;}
+.walk-scene--settings .walk-window{margin:22px 18px;border-color:#b9c3d1;border-radius:3px;}
+.walk-scene--settings .walk-titlebar{background:#e6eaf0;border-color:#cdd5df;}
+.walk-scene--settings .walk-display>figcaption{background:#fff;border:0;}
+
+/* A folder is shown in a wide file view, with its path as the main landmark. */
+.walk-scene--files .walk-layout{grid-template-columns:1fr;gap:20px;}
+.walk-scene--files .walk-display{background:#fff;border-top:2px solid #17263d;border-bottom:1px solid #dce5f2;}
+.walk-scene--files .walk-window{margin:0;border:0;border-radius:0;}
+.walk-scene--files .walk-titlebar{background:#fff;padding:16px 0;border:0;color:#607086;}
+.walk-scene--files .walk-titlebar>span:last-child{display:none;}
+.walk-scene--files .walk-window-body{padding:0;}
+.walk-scene--files .walk-path{padding:16px 0;background:transparent;border:0;border-top:1px solid #dce5f2;border-bottom:1px solid #dce5f2;border-radius:0;font-size:16px;}
+.walk-scene--files .walk-file-view{grid-template-columns:150px minmax(0,1fr);padding:0;min-height:240px;}
+.walk-scene--files .walk-file-view>aside{background:#f7f8fa;padding:26px 18px;border-color:#e5e9f0;}
+.walk-scene--files .walk-file-view>div{align-items:flex-start;justify-content:center;text-align:left;padding:32px;}
+.walk-scene--files .walk-file-view b{font-size:17px;font-weight:600;}
+
+/* The first reply reads as a conversation, with a clear change of speaker. */
+.walk-scene--conversation .walk-display{background:#fff;border:0;}
+.walk-scene--conversation .walk-display>figcaption{border:0;}
+.walk-scene--conversation .walk-window{margin:0;background:#fff;border:0;border-radius:0;color:#17263d;}
+.walk-scene--conversation .walk-titlebar{background:#fff;border:0;padding:16px 0;color:#607086;}
+.walk-scene--conversation .walk-titlebar>span:last-child{display:none;}
+.walk-scene--conversation .walk-window-body{padding:16px 0 28px;}
+.walk-scene--conversation .guide-code.is-prompt{margin-left:36px;border:0;border-radius:14px 14px 2px 14px;background:#eef3fb;}
+.walk-scene--conversation .guide-code-heading{background:transparent;padding:14px 18px 0;color:#607086;}
+.walk-scene--conversation .guide-code pre{padding:20px;font-size:14px;}
+.walk-scene--conversation .walk-reply-example{border-left:2px solid #2457e6;padding:0 0 0 22px;margin:40px 0 0;gap:14px;}
+.walk-scene--conversation .walk-reply-example>span{color:#607086;}
+.walk-scene--conversation .walk-reply-example>b{color:#17263d;font-size:34px;font-weight:500;letter-spacing:-.035em;}
+.walk-scene--conversation .walk-reply-example>small{color:#607086;}
+
+@media(max-width:620px){
+ .lesson-step .walk-scene-heading h3{font-size:18px;}
+ .tutorials-page .lesson-route-choices{gap:20px;}.tutorials-page .lesson-route-choices strong{font-size:14px;}
+ .walk-scene--choice .walk-browser-start>strong{font-size:30px;}.walk-scene--choice .walk-browser-start>p{display:block;margin:10px 0 0;}
+ .walk-scene--choice .walk-account-paths>div{padding-right:14px;}.walk-scene--choice .walk-account-paths>div+div{padding-left:14px;}
+ .walk-scene--choice .walk-account-paths b{font-size:15px;}.walk-scene--choice .walk-account-paths>div:before{font-size:30px;}
+ .walk-scene--photo .walk-photo>a:first-child{padding:16px 0;}.walk-scene--photo .walk-photo-notes{gap:0;}
+ .walk-scene--photo .walk-photo-notes .walk-mark{padding:12px 0;}.walk-scene--photo .walk-photo>small{padding-bottom:8px;}
+ .walk-scene--console .walk-display>figcaption{padding:12px 16px 0;}.walk-scene--console .walk-titlebar{padding:14px 16px;}
+ .walk-scene--console .walk-window-body{padding:0 16px 20px;}.walk-scene--console .guide-code pre{font-size:13px;padding:18px 0;}
+ .walk-scene--console .walk-output pre{font-size:13px;}.walk-scene--console .walk-path-diagram{flex-direction:column;padding:20px 16px;gap:12px;}
+ .walk-scene--console .walk-path-diagram>b{max-width:100%;}.walk-scene--console .walk-status-examples{grid-template-columns:1fr;gap:16px;padding:8px 16px 20px;}
+ .walk-scene--console .walk-codex-pane{margin:0 16px;}.walk-scene--console .walk-callout{margin:0 16px 20px;}
+ .walk-scene:is(.walk-scene--choice,.walk-scene--photo,.walk-scene--console,.walk-scene--files) .walk-instruction{column-gap:16px;grid-template-columns:1fr 1fr;}
+ .walk-scene:is(.walk-scene--choice,.walk-scene--photo,.walk-scene--console,.walk-scene--files) .walk-check{padding-left:12px;}
+ .walk-scene--reference .walk-display,.walk-scene--sequence .walk-display{padding-left:14px;}
+ .walk-scene--reference .walk-specs>span{padding-left:12px;}.walk-scene--settings .walk-window{margin:16px 10px;}
+ .walk-scene--files .walk-path{font-size:13px;}.walk-scene--files .walk-file-view{grid-template-columns:75px minmax(0,1fr);min-height:220px;}
+ .walk-scene--files .walk-file-view>aside{padding:20px 10px;font-size:11px;}.walk-scene--files .walk-file-view>div{padding:24px 18px;}
+ .walk-scene--files .walk-file-view b{font-size:14px;}.walk-scene--conversation .guide-code.is-prompt{margin-left:20px;}
+ .walk-scene--conversation .guide-code pre{font-size:13px;}.walk-scene--conversation .walk-reply-example>b{font-size:30px;}
+}
 """

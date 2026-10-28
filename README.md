@@ -362,6 +362,8 @@ title: '这次尝试中遇到的一个问题'
 
 操作展示使用官网局部实拍与明确标注的 HTML 示意。Node.js 下载区提供桌面和手机宽度的实拍，点击图片可放大；图片来源见 `apps/api/guide_assets/SOURCES.md`。环境变量练习只展示固定无效值，不能输入真实 Key，不调用接口，不会修改读者电脑。其余系统、终端与授权画面不能宣称为真实安装截图。禁用 JavaScript 时各系统、路线与操作屏均可读，动态按钮隐藏；旧锚点、排错、复制权限拒绝时的手工复制仍可用。
 
+教程各步骤按内容选用不同版式：账号为左右选择，下载为大图与编号图注，安装向导为纵向流程，系统信息为对照表，命令为完整终端区，环境变量保留设置窗口，文件夹使用横向文件视图，首次回复使用对话排版。版式由 `_scene(..., layout=...)` 显式指定，保留统一的上一步/下一步、复制和章节原因折叠控件；手机按阅读顺序排列，不依赖桌面左右位置理解步骤。
+
 操作屏与画面在 `apps/api/codex_walkthrough.py`，专属样式在 `apps/api/codex_walkthrough_styles.py`；参考正文在 `apps/api/codex_guide.py`，交互在 `apps/api/codex_guide_script.py`，独立样式在 `apps/api/codex_guide_styles.py`（仅教程页面注入）。`guide_assets.py` 为本地服务提供明确允许的图片文件，静态导出复制同一组图片，并处理 `href`、`src`、`srcset` 的项目路径。首页与其他教程在 `apps/api/portfolio_view.py` 维护。2026-10-26 对照本机 Codex CLI 0.153.2 的 `--help`、`login --help` 和安装包说明核对命令；本轮能读取官方 GitHub 安装 README，官方 CLI、认证、Windows 与费用文档仍访问受限，当前系统要求、套餐价格、免费额度及地区可用性未复核。Windows 全新安装、真实新账号注册和真实计费调用未逐项实测，不应把页面自动化验证写成安装实测。更新相关内容时须重新核对官方资料。
 
 跟练页面浏览器验收（需已安装 Playwright 和 Chrome，不自动安装依赖）：
