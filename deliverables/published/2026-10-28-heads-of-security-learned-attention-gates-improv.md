@@ -1,6 +1,6 @@
 ---
 title: 'Heads of Security: Learned Attention Gates Improv...：核心变化与验证重点'
-draft_id: 'draft_c234ab13aac0'
+draft_id: 'draft_6c3005c940cf'
 cluster_id: 'cluster_070883bf5db5'
 confidence: 0.86
 tags: [ai-news, automation, longform, zh]
