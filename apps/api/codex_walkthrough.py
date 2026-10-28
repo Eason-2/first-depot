@@ -59,7 +59,7 @@ def _node(code) -> str:
         about = ("苹果菜单", "关于本机") if mac else ("设置", "系统", "关于")
         specs = "<b>芯片：Apple M…</b><span>下载选 ARM64</span><b>处理器：Intel…</b><span>下载选 x64</span>" if mac else "<b>基于 x64 的处理器</b><span>下载选 x64</span><b>基于 ARM 的处理器</b><span>下载选 ARM64</span>"
         scenes.append(_scene(f"{os}-system", "看一眼自己的系统类型", "在电脑里打开图中位置，记下芯片 / 系统类型。安装包要与它一致。",
-                             _window("关于本机" if mac else "设置 · 系统 · 关于", _path(*about) + "<div class='walk-specs'>" + specs + "</div><p class='walk-callout'>如果系统太旧，先核对 Node.js 的支持要求。</p>"), "知道下一屏该选 x64 还是 ARM64。", os=os))
+                             _window("关于本机" if mac else "设置 · 系统 · 关于", _path(*about) + "<div class='walk-specs'>" + specs + "</div><p class='walk-callout'>如果系统太旧，先核对 Node.js 的支持要求。</p>"), "知道下一步该选 x64 还是 ARM64。", os=os))
         download = "macos" if mac else "windows"
         scenes.append(_scene(f"{os}-download", "下载这个安装包", "打开下载页，选 LTS。往下找到图中这块，核对系统和芯片，再点安装包。上面的脚本先不用。",
                              f"<div class='walk-photo'><a href='/tutorials/assets/node-{download}-download.webp' target='_blank' rel='noopener'><picture><source media='(max-width:620px)' srcset='/tutorials/assets/node-{download}-mobile.webp' /><img src='/tutorials/assets/node-{download}-download.webp' alt='Node.js 官网下载区：{'macOS，ARM64，macOS Installer (.pkg)' if mac else 'Windows，x64，Windows Installer (.msi)'}；按自己电脑更改架构' width='735' height='122' loading='lazy' /></picture></a><div class='walk-photo-notes'>" + _mark(1, "核对系统和架构") + _mark(2, "点 Installer 安装包") + "</div><a class='walk-external' href='https://nodejs.org/en/download' target='_blank' rel='noopener noreferrer'>去 Node.js 官网下载</a><small>截图中的架构仅为示例，点图片可放大。</small></div>",
@@ -87,7 +87,7 @@ def _install(code) -> str:
                              "安装过程没有 error。npm 的更新通知不是 Codex 安装失败。", os=os, help="#help-command"))
         if mac:
             scenes.append(_scene("mac-path-now", "让这个窗口找到 Codex", "整行复制执行。$HOME 代表你的用户目录，直接照抄。",
-                                 _terminal(code, 'export PATH="$HOME/.local/bin:$PATH"', mac=True) + "<div class='walk-path-diagram'><b>$HOME/.local/bin</b><span>加入 PATH 后</span><b>终端能找到 codex</b></div>", "这行通常没有输出，也不是报错。下一屏保存它。", os=os))
+                                 _terminal(code, 'export PATH="$HOME/.local/bin:$PATH"', mac=True) + "<div class='walk-path-diagram'><b>$HOME/.local/bin</b><span>加入 PATH 后</span><b>终端能找到 codex</b></div>", "这行通常没有输出，也不是报错。下一步保存它。", os=os))
             scenes.append(_scene("mac-path-editor", "把这个设置留到下次", "先执行 nano 命令。在打开的编辑器末尾加上图中这一行；已有内容请保留。",
                                  _terminal(code, 'nano "$HOME/.zprofile"', mac=True) + _window("nano · ~/.zprofile", "<p class='walk-editor-note'>原有文字保留。在末尾另起一行：</p>" + code('export PATH="$HOME/.local/bin:$PATH"', "复制到 nano 编辑器里，不是终端提示符后") + "<div class='walk-editor-keys'><b>Control + O</b><span>保存</span><b>Enter</b><span>确认文件名</span><b>Control + X</b><span>退出</span></div>", kind="editor"),
                                  "保存、退出，完全关闭再重新打开终端。已有同一行不用再加。", os=os))
@@ -110,7 +110,7 @@ def _auth(code) -> str:
         scenes.append(_scene(f"{os}-login", "让 Codex 打开登录页面", "执行下面这一行。如果出现登录方式选项，选 Sign in with ChatGPT。",
                              _terminal(code, cmd + " login", "浏览器会打开官方授权页；\n没打开时，终端会给出登录链接。", mac=mac), "浏览器打开了官方登录 / 授权页。", os=os, auth="account"))
         scenes.append(_scene(f"{os}-authorize", "网页登录完，记得回终端", "用第 1 章的账号登录，按官方页面完成授权。不要把登录链接或验证码发给别人。",
-                             "<div class='walk-handoff'>" + _window("浏览器 · 官方登录 / 授权页", _mark(1, "选原来的登录方式") + _mark(2, "按页面提示验证、授权") + "<b class='walk-state'>页面提示完成后</b>", kind="browser") + "<span class='walk-handoff-label'>切回刚才的窗口</span>" + _window("终端", "<p>等待登录命令结束</p><b>下一屏检查登录状态</b>", kind="terminal") + "</div>",
+                             "<div class='walk-handoff'>" + _window("浏览器 · 官方登录 / 授权页", _mark(1, "选原来的登录方式") + _mark(2, "按页面提示验证、授权") + "<b class='walk-state'>页面提示完成后</b>", kind="browser") + "<span class='walk-handoff-label'>切回刚才的窗口</span>" + _window("终端", "<p>等待登录命令结束</p><b>下一步检查登录状态</b>", kind="terminal") + "</div>",
                              "回到终端。浏览器没有自动打开，就用终端给出的官方链接。", os=os, auth="account"))
         if not mac:
             scenes.append(_scene("windows-env-open", "找到“用户变量”", "按 Windows 键搜索“编辑账户的环境变量”。如果先打开系统属性，再点“环境变量”。",
@@ -128,11 +128,11 @@ def _auth(code) -> str:
                                  "按回车回到提示符。继续用同一个终端窗口。", os=os, auth="api"))
             scenes.append(_scene("mac-key-export", "让 Codex 能读到这个设置", "在同一个窗口逐行执行。export 让程序读取变量，下一行只检查有没有值。",
                                  _terminal(code, 'export OPENAI_API_KEY\nif [[ -n "$OPENAI_API_KEY" ]]; then printf "已配置（不显示密钥）\\n"; else printf "未读取到，请重新输入\\n"; fi', "已配置（不显示密钥）", mac=True),
-                                 "看到“已配置”。此时不要关窗口，临时变量还要用于下一屏登录。", os=os, auth="api", help="#help-key"))
+                                 "看到“已配置”。此时不要关窗口，临时变量还要用于下一步登录。", os=os, auth="api", help="#help-key"))
         scenes.append(_scene(f"{os}-key-login", "把 Key 交给本机的 Codex", "整行复制执行。不要只运行竖线前面的部分，那样会把 Key 显示出来。",
                              _terminal(code, 'printenv OPENAI_API_KEY | codex login --with-api-key' if mac else '$env:OPENAI_API_KEY | codex.cmd login --with-api-key', mac=mac)
                              + "<div class='walk-path-diagram'><b>环境变量里的 Key</b><span>通过 | 交给</span><b>Codex 登录命令</b></div>",
-                             "命令结束后，下一屏查登录状态。这里只连接官方 OpenAI Key。", os=os, auth="api"))
+                             "命令结束后，下一步查登录状态。这里只连接官方 OpenAI Key。", os=os, auth="api"))
         scenes.append(_scene(f"{os}-login-status", "看一眼登录方式是否正确", "复制检查命令。输出可能含账号或密钥片段，不要直接发截图。",
                              _terminal(code, cmd + " login status", mac=mac) + "<div class='walk-status-examples'><div><b>账号路线</b><code>Logged in using ChatGPT</code></div><div><b>Key 路线</b><code>Logged in using an API key</code><small>密钥片段不在这里展示</small></div></div>",
                              "显示已登录，且方式与你选的一致。能否实际调用，最后一章再确认。", os=os))
@@ -184,8 +184,8 @@ def render_walkthrough(index: int, code) -> str:
         f"<div class='walkthrough' data-walkthrough='{index}'>"
         "<div class='walk-reading' hidden><span data-scene-count role='status'></span><span>看图，在自己的电脑上做</span></div>"
         + scenes
-        + "<nav class='walk-controls' aria-label='本章操作屏' hidden><button type='button' class='walk-button secondary' data-scene-prev>上一屏</button>"
-        "<button type='button' class='walk-button' data-scene-next>下一屏</button><button type='button' class='walk-button secondary' data-scene-replay hidden>从本章第一屏重看</button></nav>"
+        + "<nav class='walk-controls' aria-label='本章操作步骤' hidden><button type='button' class='walk-button secondary' data-scene-prev>上一步</button>"
+        "<button type='button' class='walk-button' data-scene-next>下一步</button><button type='button' class='walk-button secondary' data-scene-replay hidden>从本章第一步重看</button></nav>"
         f"<div class='walk-proof'><label><input type='checkbox' data-proof disabled />{proofs[index]}</label>"
         "<small>自己核对后勾选；本网页无法检测你的电脑。</small></div></div>"
     )

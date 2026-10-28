@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
       walk.querySelectorAll('[data-scene]').forEach(scene => {
         scene.hidden = !eligible.includes(scene) || (!fullText && scene !== eligible[index]);
       });
-      walk.querySelector('[data-scene-count]').textContent = `本章 ${index + 1} / ${eligible.length} 屏`;
+      walk.querySelector('[data-scene-count]').textContent = `本章第 ${index + 1} 步 / 共 ${eligible.length} 步`;
       walk.querySelector('.walk-reading').hidden = fullText;
       walk.querySelector('.walk-controls').hidden = fullText;
       walk.querySelector('[data-scene-prev]').disabled = index === 0;
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     previous.hidden = current === 0;
     previous.href = '#' + steps[Math.max(0, current - 1)].id;
     next.href = current < steps.length - 1 ? '#' + steps[current + 1].id : '#first-task';
-    next.textContent = current < steps.length - 1 ? '下一步：' + steps[current + 1].dataset.shortTitle : '选做：做一个网页';
+    next.textContent = current < steps.length - 1 ? '下一章：' + steps[current + 1].dataset.shortTitle : '选做：做一个网页';
     updateWalkthroughs();
   }
   function revealHash(scroll = true) {
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
   readAll.addEventListener('click', () => {
     fullText = !fullText;
     readAll.setAttribute('aria-pressed', String(fullText));
-    readAll.textContent = fullText ? '返回逐屏跟练' : '展开全部操作';
+    readAll.textContent = fullText ? '返回分步跟练' : '展开全部操作';
     showStep(current);
     if (!fullText) guide.querySelector('.lesson-paper').scrollIntoView({block: 'start'});
   });

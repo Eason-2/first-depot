@@ -9,12 +9,12 @@ from apps.api.codex_walkthrough import render_walkthrough
 
 
 STEPS = (
-    ("codex-account", "确认账号", "选一种登录方式", "后面的步骤会跟随你的选择。"),
-    ("setup-terminal", "安装 Node.js", "先装 Node.js", "它自带 npm，用来安装下一步的 Codex。"),
-    ("setup-install", "安装 Codex", "把 Codex 装好", "接着检查命令能不能运行。"),
-    ("setup-auth", "完成登录", "连接你的账号", "在这一节完成登录，再检查状态。"),
-    ("codex-folder", "建练习文件夹", "给练习留一个文件夹", "之后生成的文件，都放在这里。"),
-    ("connection-check", "发出第一句话", "现在，问它一句话", "这次收到回复，才说明账号和服务都能用。"),
+    ("codex-account", "确认账号", "选一种登录方式", "Codex 需要可用的账号或 API Key。先确认使用权限和费用，免得装完才发现账号用不了。选账号登录，就不必再准备 Key。"),
+    ("setup-terminal", "安装 Node.js", "先装 Node.js", "这条教程用 npm 安装 Codex，npm 会随 Node.js 一起装到电脑上。你不用先学 JavaScript，把它装好、能显示版本号就可以。"),
+    ("setup-install", "安装 Codex", "把 Codex 装好", "刚才装的 Node.js 提供了安装工具；这一步才把 Codex 本身装到电脑上。检查版本号，是为了确认终端能找到并启动它。"),
+    ("setup-auth", "完成登录", "连接你的账号", "软件装好了，还需要知道用谁的账号、从哪里扣额度。登录就是把本机 Codex 与你的账号或 Key 关联起来，两种方式选一种即可。"),
+    ("codex-folder", "建练习文件夹", "给练习留一个文件夹", "Codex 会围绕当前文件夹工作。单独建一个空的练习目录，方便找到生成的文件，也避免一开始就让它接触工作资料。"),
+    ("connection-check", "发出第一句话", "现在，问它一句话", "显示“已登录”还不能证明网络和额度都可用。真正发出一句话并收到回复，才能确认这次连接走通了。"),
 )
 
 
@@ -41,13 +41,15 @@ def _result(title: str, text: str) -> str:
 
 
 def _step(index: int, body: str) -> str:
-    anchor, short_title, title, description = STEPS[index]
+    anchor, short_title, title, reason = STEPS[index]
     return (
         f"<article class='lesson-step' id='{anchor}' data-step='{index}' data-short-title='{short_title}' tabindex='-1'>"
         "<header class='lesson-step-header'>"
         f"<span class='lesson-step-number' aria-hidden='true'>{index + 1:02d}</span><div>"
         "<p class='step-settings'><a href='#guide-system'>切换系统 / 跳转章节 ↑</a></p>"
-        f"<h2>{title}</h2></div></header>"
+        f"<div class='lesson-title-row'><h2>{title}</h2>"
+        "<details class='lesson-reason'><summary>为什么做这一步？</summary>"
+        f"<p>{escape(reason)}</p></details></div></div></header>"
         + (_route_choices() if index == 0 else "")
         + render_walkthrough(index, _code)
         + f"<details class='lesson-text'><summary>完整文字步骤与补充说明</summary><div>{body}</div></details></article>"
@@ -283,7 +285,7 @@ def render_codex_guide() -> str:
 """
         + lessons
         + """
-      <nav class='lesson-controls' aria-label='翻到上一或下一步' data-enhance hidden><a href='#codex-account' data-previous>上一步</a><a href='#setup-terminal' data-next>下一步：安装 Node.js</a></nav>
+      <nav class='lesson-controls' aria-label='翻到上一或下一章' data-enhance hidden><a href='#codex-account' data-previous>上一章</a><a href='#setup-terminal' data-next>下一章：安装 Node.js</a></nav>
     </div>
   </div>
   <div class='lesson-afterword'><p>不需要一次记住所有命令。哪一步出错，就记下那一步和解决方法，下次换电脑时还能用。</p><a href='/about/journal'>我的实践记录</a></div>

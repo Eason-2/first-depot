@@ -9,6 +9,14 @@ WALKTHROUGH_STYLES = """
 .tutorials-page .lesson-step-header{margin-bottom:20px;gap:14px;}
 .tutorials-page .lesson-step-number{font:500 28px/1.4 'Segoe UI',sans-serif;color:#8fa8cd;}
 .tutorials-page .lesson-step h2{font-size:26px;}
+.lesson-title-row{display:flex;align-items:baseline;gap:20px;}
+.lesson-title-row>h2{flex:1;min-width:0;}
+.lesson-reason{flex:0 0 230px;min-width:0;}
+.lesson-reason>summary{display:flex;justify-content:flex-end;align-items:center;gap:8px;min-height:40px;list-style:none;color:#2457e6;font-size:12px;font-weight:600;cursor:pointer;}
+.lesson-reason>summary::-webkit-details-marker{display:none;}
+.lesson-reason>summary:after{content:'＋';font-size:16px;}
+.lesson-reason[open]>summary:after{content:'−';}
+.lesson-step .lesson-reason>p{margin:6px 0 0;padding:12px 14px;border:1px solid #dce5f2;border-radius:8px;background:#f6f9ff;color:#485d7c;font-size:13px;line-height:1.8;}
 .tutorials-page .lesson-controls{margin:0;padding:18px 0;}
 .tutorials-page .lesson-route-choices{max-width:540px;margin:0 0 20px;gap:10px;}
 .tutorials-page .lesson-route-choices button{min-height:90px;padding:15px;}
@@ -138,4 +146,5 @@ WALKTHROUGH_STYLES = """
 @media(max-width:900px){.tutorials-page .lesson-frame{grid-template-columns:1fr;gap:18px;}.tutorials-page .lesson-sidebar{padding:16px;}.walk-layout{grid-template-columns:minmax(0,3.8fr) minmax(0,1fr);}}
 @media(max-width:620px){.tutorials-page .lesson-cover h1{font-size:34px;}.tutorials-page .lesson-step h2{font-size:23px;}.walk-layout{grid-template-columns:1fr;gap:14px;}.walk-display{border-radius:7px;}.walk-instruction{padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}.walk-instruction .walk-do-label{grid-column:1;}.lesson-step .walk-instruction p{font-size:12px;line-height:1.75;margin:0;}.walk-instruction>p:nth-child(2){grid-column:1;grid-row:2;}.walk-check{grid-column:2;grid-row:1/3;margin:0;padding:0 0 0 12px;border-top:0;border-left:2px solid #b4c8ee;}.walk-check>span{display:block;margin-bottom:6px;font-size:10px;}.walk-help{grid-column:1/-1;margin-top:10px;}.walk-window{margin:10px;}.walk-window-body{padding:18px 14px;}.walk-titlebar{font-size:10px;padding:9px 11px;}.walk-account-paths{gap:8px;}.walk-account-paths>div{padding:18px 7px;gap:12px;}.walk-account-paths b{font-size:11px;padding:9px 11px;}.walk-reading{font-size:10px;}.walk-scene-heading{gap:8px;}.lesson-step .walk-scene-heading h3{font-size:17px;}.walk-photo>a:first-child{padding:10px 0 0;}.walk-photo-notes{gap:0;padding:0 12px;}.walk-photo-notes .walk-mark{width:100%;padding:10px 0;}.walk-photo img{min-height:0;}.walk-controls{gap:10px;}.codex-guide .walk-button{padding:9px 13px;font-size:12px;}.walk-display .guide-code-heading{flex-wrap:wrap;gap:8px;}.walk-display .guide-code pre{font-size:12px;padding:12px;}.walk-specs{gap:18px 10px;font-size:12px;}.walk-branch{gap:8px;}.walk-branch>div{padding:16px 10px;}.walk-branch b{font-size:12px;}.walk-file-view{grid-template-columns:70px 1fr;}.walk-env-table>div{grid-template-columns:1fr 1.5fr;}.walk-app-result{padding:12px;gap:10px;}.walk-app-result>div{font-size:12px;}.walk-titlebar>span:last-child{display:none;}.walk-proof{padding:12px;}.walk-proof label{font-size:12px;}.walk-mark{font-size:12px;}.walk-key-dialog{padding:14px;}.walk-display>figcaption{font-size:10px;padding:9px 12px;}.walk-through{scroll-margin-top:20px;}}
 @media print{.walk-scene[hidden]{display:block!important;}.walk-controls,.walk-reading,.walk-demo-actions,.walk-proof input{display:none!important;}.walk-layout{display:block;}.walk-display{break-inside:avoid;}.lesson-text{display:block;}}
+@media(max-width:620px){.lesson-title-row{flex-wrap:wrap;gap:4px;}.lesson-title-row>h2{flex-basis:100%;}.lesson-reason{flex:0 1 100%;width:100%;}.lesson-reason>summary{min-height:36px;}.lesson-step .lesson-reason>p{margin-top:4px;}}
 """
