@@ -23,13 +23,14 @@ def _terminal(code, command: str, output: str = "", *, label: str = "复制到�
 
 
 def _scene(key: str, title: str, instruction: str, display: str, result: str,
-           *, os: str = "", auth: str = "", real: bool = False, help: str = "", anchor: str = "", layout: str = "settings") -> str:
+           *, os: str = "", auth: str = "", real: bool = False, help: str = "", anchor: str = "", layout: str = "settings", intro: str = "") -> str:
     attrs = f" data-scene-os='{os}' data-scene-auth='{auth}'"
     labels = " · ".join(x for x in (("macOS" if os == "mac" else "Windows") if os else "", "账号登录" if auth == "account" else "API Key" if auth else "") if x)
     return (
         f"<section class='walk-scene walk-scene--{layout}' id='{anchor or 'walk-' + key}' data-scene='{key}'{attrs} aria-label='{escape(title)}'>"
         f"<header class='walk-scene-heading'><span>{labels or '两种系统通用'}</span><h3>{title}</h3></header>"
-        "<div class='walk-layout'><figure class='walk-display'>"
+        + (f"<p class='lesson-context'>{intro}</p>" if intro else "")
+        + "<div class='walk-layout'><figure class='walk-display'>"
         f"<figcaption>{'官网实拍 · 2026-10-27' if real else '操作示意 · 按钮位置随版本可能不同'}</figcaption>{display}</figure>"
         f"<aside class='walk-instruction'><p class='walk-do-label'>在你的电脑上</p><p>{instruction}</p>"
         f"<div class='walk-check'><span>做到这里</span><p>{result}</p></div>"
@@ -61,7 +62,7 @@ def _node(code) -> str:
         scenes.append(_scene(f"{os}-system", "看一眼自己的系统类型", "在电脑里打开图中位置，记下芯片 / 系统类型。安装包要与它一致。",
                              _window("关于本机" if mac else "设置 · 系统 · 关于", _path(*about) + "<div class='walk-specs'>" + specs + "</div><p class='walk-callout'>如果系统太旧，先核对 Node.js 的支持要求。</p>"), "知道下一步该选 x64 还是 ARM64。", os=os, layout="reference"))
         download = "macos" if mac else "windows"
-        scenes.append(_scene(f"{os}-download", "下载这个安装包", "打开下载页，选 LTS。往下找到图中这块，核对系统和芯片，再点安装包。上面的脚本先不用。",
+        scenes.append(_scene(f"{os}-download", "下载这个安装包", "打开下载页，选 LTS（长期支持版）。往下找到图中这块，核对系统和芯片，再点安装包。上面的脚本先不用。",
                              f"<div class='walk-photo'><a href='/tutorials/assets/node-{download}-download.webp' target='_blank' rel='noopener'><picture><source media='(max-width:620px)' srcset='/tutorials/assets/node-{download}-mobile.webp' /><img src='/tutorials/assets/node-{download}-download.webp' alt='Node.js 官网下载区：{'macOS，ARM64，macOS Installer (.pkg)' if mac else 'Windows，x64，Windows Installer (.msi)'}；按自己电脑更改架构' width='735' height='122' loading='lazy' /></picture></a><div class='walk-photo-notes'>" + _mark(1, "核对系统和架构") + _mark(2, "点 Installer 安装包") + "</div><a class='walk-external' href='https://nodejs.org/en/download' target='_blank' rel='noopener noreferrer'>去 Node.js 官网下载</a><small>截图中的架构仅为示例，点图片可放大。</small></div>",
                              "下载文件以 .pkg 结尾。" if mac else "下载文件以 .msi 结尾。不要选 Standalone Binary 压缩包。", os=os, real=True, layout="photo"))
         installer = (_mark(1, "在“下载”里双击 .pkg 文件") + _mark(2, "按“继续”，阅读许可并同意后安装") + _mark(3, "如系统要求，输入这台 Mac 的登录密码") + "<div class='walk-installer-end'><b>安装完成</b><span>关闭安装器，再开一个新的终端</span></div>" if mac else
@@ -70,7 +71,8 @@ def _node(code) -> str:
         search = "终端" if mac else "PowerShell"
         scenes.append(_scene(f"{os}-terminal", "打开输入命令的窗口", "按 Command + 空格，搜索“终端”，按回车。粘贴命令用 Command + V，执行用回车。" if mac else "按 Windows 键搜索 PowerShell，点普通的“打开”，无需管理员权限。粘贴用 Ctrl + V，执行用回车。",
                              _window("Spotlight 搜索" if mac else "开始菜单 · 搜索", f"<div class='walk-search'><span>搜索</span><b>{search}</b></div><div class='walk-app-result'><span class='walk-app-icon' aria-hidden='true'>&gt;_</span><div><b>{'终端' if mac else 'Windows PowerShell'}</b><span>应用</span></div><em>打开</em></div><div class='walk-terminal-hint'><code>{'~ %' if mac else 'PS C:\\Users\\你的用户名&gt;'}</code><span>打开后，会有一行这样的提示符。<br>从光标处输入，不用抄提示符。</span></div>"),
-                             "有一个可以输入文字的终端窗口。旧窗口要完全退出后重新打开。", os=os))
+                             "有一个可以输入文字的终端窗口。旧窗口要完全退出后重新打开。", os=os,
+                             intro="<strong>终端</strong>就是用文字给电脑下指令的窗口。一行指令叫一条<strong>命令</strong>，比如检查软件版本。Windows 这里用 PowerShell，Mac 用“终端”应用。下面的命令要在那个窗口里执行，不是发给 AI。"))
         scenes.append(_scene(f"{os}-node-check", "先试一行，再试下一行", "复制第一行，粘贴到刚才的窗口，按回车；出结果后再做第二行。",
                              _terminal(code, "node --version", "v24.x.x", mac=mac) + _terminal(code, "npm --version" if mac else "npm.cmd --version", "11.x.x", mac=mac),
                              "两条命令都返回版本号。数字可以不同；报错先别往下走。", os=os, help="#help-command", layout="console"))
@@ -84,10 +86,12 @@ def _install(code) -> str:
         cmd = 'npm install --global --prefix "$HOME/.local" @openai/codex' if mac else "npm.cmd install -g @openai/codex"
         scenes.append(_scene(f"{os}-install", "安装 Codex，等命令结束", "复制这一行到刚才的终端，按回车。下载时先等；重新出现提示符后再继续。",
                              _terminal(code, cmd, "added … packages in …s\n… %" if mac else "added … packages in …s\nPS C:\\Users\\…>", mac=mac),
-                             "安装过程没有 error。npm 的更新通知不是 Codex 安装失败。", os=os, help="#help-command", layout="console"))
+                             "安装过程没有 error。npm 的更新通知不是 Codex 安装失败。", os=os, help="#help-command", layout="console",
+                             intro="<strong>npm</strong> 是刚才随 Node.js 装好的软件下载工具。这条命令让它下载并安装 Codex。我们用的是 <strong>CLI（命令行版）</strong>，安装后在终端里打开。"))
         if mac:
             scenes.append(_scene("mac-path-now", "让这个窗口找到 Codex", "整行复制执行。$HOME 代表你的用户目录，直接照抄。",
-                                 _terminal(code, 'export PATH="$HOME/.local/bin:$PATH"', mac=True) + "<div class='walk-path-diagram'><b>$HOME/.local/bin</b><span>加入 PATH 后</span><b>终端能找到 codex</b></div>", "这行通常没有输出，也不是报错。下一步保存它。", os=os, layout="console"))
+                                 _terminal(code, 'export PATH="$HOME/.local/bin:$PATH"', mac=True) + "<div class='walk-path-diagram'><b>$HOME/.local/bin</b><span>加入 PATH 后</span><b>终端能找到 codex</b></div>", "这行通常没有输出，也不是报错。下一步保存它。", os=os, layout="console",
+                                 intro="<strong>PATH</strong> 是电脑查找命令时会去看的文件夹清单。把 Codex 所在的文件夹加进去，之后输入 codex，电脑才找得到它。"))
             scenes.append(_scene("mac-path-editor", "把这个设置留到下次", "先执行 nano 命令。在打开的编辑器末尾加上图中这一行；已有内容请保留。",
                                  _terminal(code, 'nano "$HOME/.zprofile"', mac=True) + _window("nano · ~/.zprofile", "<p class='walk-editor-note'>原有文字保留。在末尾另起一行：</p>" + code('export PATH="$HOME/.local/bin:$PATH"', "复制到 nano 编辑器里，不是终端提示符后") + "<div class='walk-editor-keys'><b>Control + O</b><span>保存</span><b>Enter</b><span>确认文件名</span><b>Control + X</b><span>退出</span></div>", kind="editor"),
                                  "保存、退出，完全关闭再重新打开终端。已有同一行不用再加。", os=os))
@@ -99,7 +103,8 @@ def _install(code) -> str:
 def _key_creation() -> str:
     return _scene("create-key", "在官网创建一个 Key", "进入 API keys，点 Create new secret key。确认项目与权限后创建，复制并存到自己的密码管理器。",
                   _window("浏览器 · platform.openai.com/api-keys", _path("当前项目", "API keys") + "<a class='walk-external' href='https://platform.openai.com/api-keys' target='_blank' rel='noopener noreferrer'>打开官网的 API keys 页面</a><div class='walk-key-dialog'><b>Create new secret key</b><span>Name / 名称</span><div>codex-practice</div><span>Project / 项目</span><div>你刚确认账单的项目</div><span>Permissions / 权限</span><p>按需要授权；权限不足时核对 API 报错。</p><span class='walk-fake-button'>Create secret key</span></div><div class='walk-callout'>创建后按平台提示保存。<br>真实 Key 不要粘贴到本博客。</div>", kind="browser"),
-                  "手里有一个自己项目的官方 Key。它相当于调用凭据，需要保密。", auth="api", anchor="setup-key")
+                  "已经创建并保存好自己的 Key。下一步把它设置到电脑里。", auth="api", anchor="setup-key",
+                  intro="<strong>Key 是什么？</strong>全名 API Key（密钥），是一串交给软件使用的秘密字符。Codex 带着它，才能以你的项目身份请求 AI 服务；产生的费用也记在该项目上。<strong>它不是账号密码，也不是买了就能无限用。</strong>选 ChatGPT 账号登录就不用创建它；还没选路线，可以先回 <a href='#codex-account'>第 1 章确认</a>。")
 
 
 def _auth(code) -> str:
@@ -115,7 +120,8 @@ def _auth(code) -> str:
         if not mac:
             scenes.append(_scene("windows-env-open", "找到“用户变量”", "按 Windows 键搜索“编辑账户的环境变量”。如果先打开系统属性，再点“环境变量”。",
                                  _window("环境变量", "<div class='walk-search'><span>开始菜单搜索</span><b>编辑账户的环境变量</b></div><div class='walk-env-table'><b>上半部分：用户变量</b><div><span>变量</span><span>值</span></div><div><span>Path</span><span>原有项保持不动</span></div><span class='walk-fake-button'>新建…</span></div><div class='walk-env-table is-muted'><b>下半部分：系统变量</b><p>这一课不改这里</p></div>"),
-                                 "在上半部分点“新建”。有 OPENAI_API_KEY 同名项时先确认用途，再编辑。", os=os, auth="api"))
+                                 "在上半部分点“新建”。有 OPENAI_API_KEY 同名项时先确认用途，再编辑。", os=os, auth="api",
+                                 intro="<strong>环境变量</strong>是电脑里供程序读取的一项设置，由“名称”和“值”组成。这次名称是 <code>OPENAI_API_KEY</code>，值是你刚创建的 Key；后面的登录命令会从这里取走它。"))
             scenes.append(_scene("windows-env-fill", "名字和值，分别填进这两格", "在自己的设置窗口，变量名填 OPENAI_API_KEY；变量值填真实 Key，不加引号。然后逐层点“确定”。",
                                  _window("新建用户变量 · 下方仅是网页练习", "<div class='walk-env-demo' data-env-demo><div><span>变量名</span><code>OPENAI_API_KEY</code></div><div><span>变量值</span><code data-demo-value>（这里不接收真实 Key）</code></div><p>想先看一遍填写效果，可以点下面的按钮。</p><div class='walk-demo-actions' hidden><button type='button' class='walk-button' data-demo-fill>填入演示值</button><button type='button' class='walk-button secondary' data-demo-save disabled>练习点“确定”</button></div><p class='walk-demo-feedback' role='status'>演示值固定为 DEMO-KEY-NOT-VALID，没有调用能力。</p></div>"),
                                  "电脑里的变量已保存。网页练习不会修改你的电脑。", os=os, auth="api"))
@@ -125,7 +131,8 @@ def _auth(code) -> str:
         else:
             scenes.append(_scene("mac-key-input", "粘贴 Key 时，屏幕不会显示字符", "先只执行下面这一行，再在提示后粘贴自己的 Key，按回车。没有星号、没有文字都是正常的。",
                                  _terminal(code, 'read -rs "OPENAI_API_KEY?粘贴 API Key 后按回车（输入不显示）: "', "粘贴 API Key 后按回车（输入不显示）: ▋", mac=True) + "<div class='walk-callout'>先执行命令，再输入 Key。<br>不要把 Key 放进命令文本或贴在网页上。</div>",
-                                 "按回车回到提示符。继续用同一个终端窗口。", os=os, auth="api", layout="console"))
+                                 "按回车回到提示符。继续用同一个终端窗口。", os=os, auth="api", layout="console",
+                                 intro="<strong>环境变量</strong>是给程序读取的设置。这次用 <code>OPENAI_API_KEY</code> 这个名字暂存你的 Key，后面的命令会把它交给 Codex。这里先只存在当前终端里，关闭窗口就失效。"))
             scenes.append(_scene("mac-key-export", "让 Codex 能读到这个设置", "在同一个窗口逐行执行。export 让程序读取变量，下一行只检查有没有值。",
                                  _terminal(code, 'export OPENAI_API_KEY\nif [[ -n "$OPENAI_API_KEY" ]]; then printf "已配置（不显示密钥）\\n"; else printf "未读取到，请重新输入\\n"; fi', "已配置（不显示密钥）", mac=True),
                                  "看到“已配置”。此时不要关窗口，临时变量还要用于下一步登录。", os=os, auth="api", help="#help-key", layout="console"))
@@ -163,7 +170,8 @@ def _reply(code) -> str:
                              "看到 Codex 对话输入位置。沙箱初始化报错时先排查，别关闭保护硬跑。", os=os, help="#help-windows", layout="console"))
     scenes.append(_scene("first-message", "把这句话发给 Codex", "复制下面这段，粘贴到 Codex 的输入位置，再按回车。不要粘到还没打开 Codex 的终端提示符后。",
                          _window("Codex · 对话练习示意", code("请只回复：连接成功。\n不要读取或修改文件，不要运行命令。", "发给 Codex，不是终端命令", prompt=True) + "<div class='walk-reply-example'><span>等待它的回答</span><b>连接成功。</b><small>这是目标示例。要以你电脑实际收到的回复为准。</small></div>", kind="terminal"),
-                         "自己的电脑收到回复，且没有认证、网络或额度错误，才算真正用上了。", help="#codex-help", layout="conversation"))
+                         "自己的电脑收到回复，且没有认证、网络或额度错误，才算真正用上了。", help="#codex-help", layout="conversation",
+                         intro="<strong>提示词（Prompt）</strong>就是你发给 AI 的要求，用平常说话的方式写就行。这次只让它回复一句话，先确认能正常对话。"))
     scenes.append(_scene("again", "关掉以后，下次这样打开", "本次完成后可按 Ctrl + C 退出（Mac 用 Control）。下次按图中三步打开，无需重新安装。",
                          "<div class='walk-return'>" + _mark(1, "打开 PowerShell / Mac 终端") + _mark(2, "重复第 5 章命令，进入练习文件夹") + _mark(3, "运行本章启动命令，再输入你的问题") + "<div class='walk-callout'>登录失效才回第 4 章。<br>接下来可以展开“做一张学习名片”，试着生成文件。</div></div>",
                          "能独立再打开一次，并发出第二条消息。", layout="sequence"))

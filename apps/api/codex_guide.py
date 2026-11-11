@@ -40,6 +40,25 @@ def _result(title: str, text: str) -> str:
     return f"<div class='lesson-result'><p><strong>{escape(title)}</strong>{text}</p></div>"
 
 
+def _basics() -> str:
+    return """
+<section class='lesson-basics' id='before-start' aria-labelledby='basics-title'>
+  <header><p>动手前 · 先花一分钟</p><h2 id='basics-title'>Agent 是什么？<br />看一个例子就明白了。</h2></header>
+  <div class='lesson-basics-body'>
+    <p><strong>Agent（智能体）</strong>，可以先理解为能调用工具、分步骤做事的 AI 助手。Codex 就属于这一类：你告诉它想做什么，它可以在获得权限后读文件、写代码、运行命令。</p>
+    <div class='lesson-task-example' aria-label='让 Codex 做网页的例子'>
+      <p><span>你提出要求</span><q>帮我做一张介绍自己的网页。</q></p>
+      <p><span>Codex 动手做</span>先说明计划，你确认后，它在练习文件夹里创建网页文件。</p>
+      <p><span>你检查结果</span>用浏览器打开文件。哪里不满意，再告诉它改。</p>
+    </div>
+    <p class='lesson-basics-footnote'><strong>模型</strong>负责理解要求、生成回答和下一步建议；Codex 把模型和文件、命令等工具接起来。结果仍需要你检查。</p>
+    <details class='lesson-basics-extra'><summary>这算“部署 AI”吗？需要买服务器吗？</summary><p>这一课只把 Codex 工具安装到你的电脑上，使用的模型在服务商那边运行，所以需要联网。先不买服务器，也不在电脑上安装大模型。把做好的网页发布到网上、让别人能访问，是后面的事。</p></details>
+    <a class='lesson-basics-next' href='#codex-account'>明白了，开始第一步</a>
+  </div>
+</section>
+"""
+
+
 def _step(index: int, body: str) -> str:
     anchor, short_title, title, reason = STEPS[index]
     return (
@@ -51,6 +70,7 @@ def _step(index: int, body: str) -> str:
         "<details class='lesson-reason'><summary>为什么做这一步？</summary>"
         f"<p>{escape(reason)}</p></details></div></div></header>"
         + (_route_choices() if index == 0 else "")
+        + ("<p class='lesson-context'><strong>Node.js</strong> 是让一些软件在电脑上运行的基础工具。安装它时会一起装好 <strong>npm</strong>，接下来用 npm 下载和安装 Codex。你不用先学编程。</p>" if index == 1 else "")
         + render_walkthrough(index, _code)
         + f"<details class='lesson-text'><summary>完整文字步骤与补充说明</summary><div>{body}</div></details></article>"
     )
@@ -58,9 +78,14 @@ def _step(index: int, body: str) -> str:
 
 def _route_choices() -> str:
     return """
+<div class='lesson-login-intro'>
+  <p><strong>没有 Key 也可以开始。</strong>先看“ChatGPT 账号”这条路线；确认账号能用 Codex 后，按网页登录即可。</p>
+  <p><strong>API Key（密钥）</strong>是一串交给软件使用的秘密字符，用来确认它有权使用哪个项目的 AI 服务。它不是聊天内容，也不是你的账号登录密码。</p>
+  <details class='lesson-basics-extra'><summary>那 API 是什么？为什么还有一条路线？</summary><p>API 是软件向另一个服务发送请求的接口。走这条路线时，Codex 会带着 Key 向 OpenAI 发送请求；费用计在 Key 所属项目上，与 ChatGPT 订阅分开。第一次用、还不清楚这些设置，先检查账号路线是否可用。</p></details>
+</div>
 <div class='lesson-route-choices' role='group' aria-label='选择登录方式'>
-  <button type='button' data-route-choice='account' aria-pressed='true' hidden><small>用已有的产品账号</small><strong>ChatGPT 账号</strong><small>不需要填写 API Key</small></button>
-  <button type='button' data-route-choice='api' aria-pressed='false' hidden><small>用开发者接口</small><strong>API Key</strong><small>单独按 API 用量计费</small></button>
+  <button type='button' data-route-choice='account' aria-pressed='true' hidden><small>新手先看这条</small><strong>ChatGPT 账号</strong><small>按网页登录，不用填 Key</small></button>
+  <button type='button' data-route-choice='api' aria-pressed='false' hidden><small>确定要用接口时再选</small><strong>API Key（密钥）</strong><small>自己创建 Key，另外按用量付费</small></button>
 </div>
 """
 
@@ -252,8 +277,8 @@ def render_codex_guide() -> str:
 <section class='codex-guide' id='codex-start' aria-labelledby='codex-guide-title'>
   <header class='lesson-cover' id='start-here'>
     <div><p class='eyebrow'>实战教程 / 01 · 看图跟练</p><h1 id='codex-guide-title'>第一次用 Codex，<br />我们从打开窗口开始。</h1>
-      <p class='cover-description' id='choose-tool'>不知道 Key 是什么，也没用过终端？把教程放在旁边，一屏做一件事。先装好，再收到第一条回复。</p>
-      <div class='hero-actions'><a class='button-link' href='#codex-account'>开始跟练</a><a href='#codex-help'>我卡在某一步</a></div>
+      <p class='cover-description' id='choose-tool'>Codex 是一个能帮你写代码、修改文件的 AI 工具。我们先把它装好，收到第一条回复；用顺手了，再试着让它做一个小网页。没接触过下面这些名字？先看一分钟介绍。</p>
+      <div class='hero-actions'><a class='button-link' href='#before-start'>先了解，再动手</a><a href='#codex-account'>直接开始跟练</a></div>
       <p class='cover-meta'>从零开始使用 Codex · Windows / macOS<br />无需编程基础 · 需要可用账号与网络</p>
     </div>
     <aside class='lesson-demo' aria-label='本课目标示意'>
@@ -264,6 +289,9 @@ def render_codex_guide() -> str:
       <small>这一课的终点：在你自己的电脑上收到回复。<br />此处为对话示意。</small>
     </aside>
   </header>
+"""
+        + _basics()
+        + """
   <div class='lesson-intro-line'><p>只在自己的电脑上安装工具，这一课不用购买服务器。</p><a href='#setup-key'>已经卡在 Key 配置？直接看这里</a></div>
   <noscript><style>.codex-guide [data-guide-os][hidden],.codex-guide [data-auth][hidden]{display:block!important}.lesson-os-settings{display:none}</style><p>当前浏览器未启用 JavaScript，下面显示完整教程及两套系统步骤，请选择与你的电脑对应的部分。</p></noscript>
   <div class='lesson-frame'>
@@ -272,11 +300,12 @@ def render_codex_guide() -> str:
         <label><input type='radio' name='guide-os' value='windows' checked /><span>Windows</span></label>
         <label><input type='radio' name='guide-os' value='mac' /><span>macOS</span></label>
       </div></fieldset>
-      <div data-enhance hidden><label class='lesson-select-label' for='guide-auth'>登录方式</label><select id='guide-auth'><option value='account'>ChatGPT 账号</option><option value='api'>API Key</option></select></div>
+      <div data-enhance hidden><label class='lesson-select-label' for='guide-auth'>登录方式</label><select id='guide-auth'><option value='account'>ChatGPT 账号（不用 Key）</option><option value='api'>API Key（密钥）</option></select></div>
 """
         + f"<nav aria-label='教程章节'><ol>{links}</ol></nav>"
         + f"<div class='lesson-mobile-navigation' data-enhance hidden><label class='lesson-select-label' for='guide-step-select'>跳到某一步</label><select id='guide-step-select'>{options}</select></div>"
         + """
+      <a class='lesson-help-link' href='#before-start'>Codex / Agent 是什么？</a>
       <a class='lesson-help-link' href='#codex-help'>遇到问题？查看排错</a>
       <span id='guide-os-status' class='lesson-sr-only' role='status'></span>
     </aside>
@@ -293,7 +322,7 @@ def render_codex_guide() -> str:
         + _help()
         + _exercise()
         + """
-  <details class='lesson-references'><summary>图片来源、适用范围与参考 · 修订于 2026-10-27</summary>
+  <details class='lesson-references'><summary>图片来源、适用范围与参考 · 入门说明修订于 2026-11-11</summary>
     <p>Node.js 下载区是 2026-10-27 的官网截图，点击可放大。其余操作画面为本站绘制的示意，不冒充实机截图；网页里的练习不会安装软件或设置环境变量。</p>
     <p>结构参考：<a href='https://www.bilibili.com/video/BV1SjGi6nEZ6/' target='_blank' rel='noopener noreferrer'>枫枫知道 · Codex 新手教程</a>及其公开安装图文。只参考可公开访问的内容，未转载课程视频。具体命令以本课说明及官方资料为准。</p>
     <p>命令选项曾对照本机 Codex CLI 0.153.2 帮助信息核对。Windows 全新安装、真实新账号注册和付费调用尚未逐项实测；这篇教程不保证所有新账号免费可用。</p>
