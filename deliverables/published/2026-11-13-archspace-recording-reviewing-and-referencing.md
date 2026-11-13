@@ -1,6 +1,6 @@
 ---
 title: 'ArchSpace: Recording, Reviewing, and Referencing...：核心变化与验证重点'
-draft_id: 'draft_19d41ddd0742'
+draft_id: 'draft_1ea82f048440'
 cluster_id: 'cluster_2fac7c732c22'
 confidence: 0.86
 tags: [ai-news, automation, longform, zh]
