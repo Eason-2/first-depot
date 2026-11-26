@@ -1,13 +1,12 @@
 ---
 title: 'One Ocean, Many Tasks: A Data-Grounded Simulation...：核心变化与验证重点'
-draft_id: 'draft_55a4b6eb0817'
+draft_id: 'draft_d250015b7d27'
 cluster_id: 'cluster_a93ebdb4bdf7'
 confidence: 0.86
 tags: [ai-news, automation, longform, zh]
 sources:
   - 'https://arxiv.org/abs/2611.34925v1'
   - 'https://arxiv.org/abs/2611.34930v1'
-  - 'https://bjin.github.io/go-codegolf-benchmark/#leaderboard'
   - 'https://arxiv.org/abs/2611.34920v1'
 ---
 
@@ -15,9 +14,9 @@ sources:
 
 ## 先说我的判断
 
-这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”，聚类评分为 65.6/100。资料来自 2 个来源渠道，构成为 arxiv 3 条、hackernews 1 条；证据形态包括 研究 3 条、社区讨论 1 条。
+这篇不从泛泛的行业趋势谈起，而是先检查本轮资料能支持哪些结论。本轮聚焦“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”，聚类评分为 65.6/100。资料来自 1 个来源渠道，构成为 arxiv 3 条；证据形态包括 研究 3 条。
 
-对“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”而言，这些材料的平均 AI 相关度为 0.69，平均可信度为 0.84。公开互动数据合计约 316 个赞、89 条评论，可用于观察讨论强度，但不能替代产品效果或研究结论。因此，下面的判断会把已知事实、推断和待验证项明确分开。
+对“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”而言，这些材料的平均 AI 相关度为 0.65，平均可信度为 0.90。当前来源没有可用的点赞、评论数据，因此本文不会用“热度高”代替证据强。因此，下面的判断会把已知事实、推断和待验证项明确分开。
 
 ## 我先把关键事实摆出来
 
@@ -27,7 +26,7 @@ sources:
 
 这一版先用“基线对照”检查主题，不急着扩展到所有业务场景。围绕“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”，需要保留来源之间的证据差异。目前只有“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”这一条核心材料，缺少第二来源对它的关键结论进行交叉验证。
 
-以“基线对照”为观察轴，整体相关度均值为 0.69，说明这些材料与主题的贴合度较高；可信度均值为 0.84，来源间差值为 0.00。研究材料还要检查数据集覆盖范围、基线设置和复现实验，论文指标不能直接替代线上效果。现阶段对“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
+以“基线对照”为观察轴，整体相关度均值为 0.65，说明这些材料与主题的贴合度较高；可信度均值为 0.90，来源间差值为 0.00。研究材料还要检查数据集覆盖范围、基线设置和复现实验，论文指标不能直接替代线上效果。现阶段对“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”更稳妥的结论是：它值得进入验证队列，但价值大小仍要由具体场景、基线数据和失败样本决定。
 
 ## 如果你真要做，可以先从这几步开始
 
@@ -39,9 +38,9 @@ sources:
 
 ## 最容易踩的坑
 
-- 来源集中：arxiv 占 3/4 条；从“基线对照”看，转述同一公告不能算独立旁证。
-- 证据强度：平均相关度 0.69 与平均可信度 0.84 只是筛选信号，无法单独证明“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”在“基线对照”上有效。
-- 热度误读：“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”现有 316 个赞和 89 条评论只能反映关注度，不能证明效果、成本或稳定性。
+- 来源集中：arxiv 占 3/3 条；从“基线对照”看，转述同一公告不能算独立旁证。
+- 证据强度：平均相关度 0.65 与平均可信度 0.90 只是筛选信号，无法单独证明“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”在“基线对照”上有效。
+- 热度缺口：“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”的现有资料没有可用互动数据，无法判断讨论扩散范围，更不能据此推断市场接受度。
 - 外部有效性：关于“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”的实验结果可能依赖特定数据集与硬件，换到业务数据后需要重新测量。
 - 复现风险：若“One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics”没有公开代码、随机种子或完整参数，单次高分不足以支持工程选型。
 
@@ -55,5 +54,4 @@ sources:
 
 - [1] One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics - https://arxiv.org/abs/2611.34925v1
 - [2] A gene informed benchmark for BioScoring of pathology foundation models - https://arxiv.org/abs/2611.34930v1
-- [3] GPT-6.2 Astra is the first model to beat Googlers' code golf records - https://bjin.github.io/go-codegolf-benchmark/#leaderboard
-- [4] $μ$-Bench: Benchmarking Multi-User Task Completion in Shared Interaction Voice Agents - https://arxiv.org/abs/2611.34920v1
+- [3] $μ$-Bench: Benchmarking Multi-User Task Completion in Shared Interaction Voice Agents - https://arxiv.org/abs/2611.34920v1
